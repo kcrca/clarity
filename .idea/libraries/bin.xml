@@ -1,0 +1,14 @@
+<component name="libraryTable">
+  <library name="bin">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/mcp722/jars/bin/minecraft.jar!/" />
+      <root url="jar://$PROJECT_DIR$/mcp722/jars/bin/emibackup.jar!/" />
+      <root url="jar://$PROJECT_DIR$/mcp722/jars/bin/lwjgl.jar!/" />
+      <root url="jar://$PROJECT_DIR$/mcp722/jars/bin/audiomod.zip!/" />
+      <root url="jar://$PROJECT_DIR$/mcp722/jars/bin/jinput.jar!/" />
+      <root url="jar://$PROJECT_DIR$/mcp722/jars/bin/lwjgl_util.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

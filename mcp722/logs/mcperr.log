@@ -1,0 +1,9 @@
+19:08:01 - !! Modified jar detected. Unpredictable results (jars/bin/minecraft.jar) !!
+19:10:15 - 'patch -p1 -u -i ../../temp/temp.patch -d src/minecraft' failed : 1
+19:10:15 - 
+19:10:15 - == ERRORS FOUND ==
+19:10:15 - 
+19:10:15 - 1 out of 1 hunk ignored -- saving rejects to file net/minecraft/src/IntegratedServer.java.rej
+19:10:15 - ==================
+19:10:15 - 
+19:10:28 - !! Modified jar detected. Unpredictable results (jars/minecraft_server.jar) !!
