@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" build-on-make="true" name="ken:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/ken_jar</output-path>
+    <root id="archive" name="ken.jar">
+      <element id="module-output" name="ken" />
+    </root>
+  </artifact>
+</component>

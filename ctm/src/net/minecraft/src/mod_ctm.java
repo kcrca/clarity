@@ -54,19 +54,26 @@ public class mod_ctm extends BaseMod {
     if (bookshelfEnabled)
       newBlocksList[47] = null;
     try {
-      setFinalStatic(Block.class.getField("m"), newBlocksList);
+      setFinalStatic(Block.class, "m", "blocksList", newBlocksList);
       if (glassEnabled)
-        setFinalStatic(Block.class.getField("M"), (new ctm_BlockGlass(20, 49, Material.glass, false)).setHardness(0.3F).setStepSound(Block.soundGlassFootstep).setBlockName("glass"));
+        setFinalStatic(Block.class, "M", "glass", (new ctm_BlockGlass(20, 49, Material.glass, false)).setHardness(0.3F).setStepSound(Block.soundGlassFootstep).setBlockName("glass"));
       if (sandstoneEnabled)
-        setFinalStatic(Block.class.getField("Q"), (new ctm_BlockSandStone(24)).setStepSound(Block.soundStoneFootstep).setHardness(0.8F).setBlockName("sandStone"));
+        setFinalStatic(Block.class, "Q", "stone", (new ctm_BlockSandStone(24)).setStepSound(Block.soundStoneFootstep).setHardness(0.8F).setBlockName("sandStone"));
       if (bookshelfEnabled)
-        setFinalStatic(Block.class.getField("an"), (new ctm_BlockBookshelf(47, 35)).setHardness(1.5F).setStepSound(Block.soundWoodFootstep).setBlockName("bookshelf"));
+        setFinalStatic(Block.class, "an", "bookShelf", (new ctm_BlockBookshelf(47, 35)).setHardness(1.5F).setStepSound(Block.soundWoodFootstep).setBlockName("bookshelf"));
     } catch (Exception e) {
+        e.printStackTrace();
       System.out.println("[CTM] Reflection exception: " + e.getMessage());
     }
   }
 
-  private void setFinalStatic(Field field, Object newValue) throws Exception {
+  private void setFinalStatic(Class cls, String encName, String clearName, Object newValue) throws Exception {
+      Field field;
+      try {
+          field = cls.getField(encName);
+      } catch (NoSuchFieldException e) {
+          field = cls.getField(clearName);
+      }
     field.setAccessible(true);
     Field modifiersField = Field.class.getDeclaredField("modifiers");
     modifiersField.setAccessible(true);

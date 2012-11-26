@@ -4,6 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/mcp/src/Mcp.iml" filepath="$PROJECT_DIR$/mcp/src/Mcp.iml" />
       <module fileurl="file://$PROJECT_DIR$/ctm/ctm.iml" filepath="$PROJECT_DIR$/ctm/ctm.iml" />
+      <module fileurl="file://$PROJECT_DIR$/ken/ken.iml" filepath="$PROJECT_DIR$/ken/ken.iml" />
     </modules>
   </component>
 </project>
