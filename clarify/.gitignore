@@ -1,0 +1,6 @@
+.idea
+.*.swp
+*.bak
+.DS_Store
+tmp
+?
