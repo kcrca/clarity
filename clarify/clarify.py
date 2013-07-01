@@ -33,7 +33,9 @@ for mask_name, mask_targets in masks:
 
 unused_masks = set(masks_for.keys())
 
-texture_dir = normpath('%s/assets/minecraft/textures/blocks/' % dst_dir)
+inner_top = normpath('%s/assets/minecraft' % dst_dir)
+inner_top_len = len(inner_top)
+texture_dir = normpath('%s/textures/blocks/' % inner_top)
 texture_dir_len = len(texture_dir)
 overrides_dir = normpath('%s/override' % config_dir)
 
@@ -93,7 +95,8 @@ def copytree(src, dst, symlinks=False, ignore=None, copy_function=shutil.copy2,
                 linkto = os.readlink(srcname)
                 os.symlink(linkto, dstname)
             elif os.path.isdir(srcname):
-                copytree(srcname, dstname, symlinks, ignore, copy_function, overlay)
+                copytree(srcname, dstname, symlinks, ignore, copy_function,
+                         overlay)
             else:
                 # Will raise a SpecialFileError for unsupported file types
                 copy_function(srcname, dstname)
@@ -137,6 +140,9 @@ def subpath_for(dst):
 def clarify(src, dst):
     dst, subpath = subpath_for(dst)
     mask_name, mask = mask_for(subpath)
+    if not mask and dst[:inner_top_len] == inner_top:
+        base = dst[inner_top_len+1:]
+        mask_name, mask = mask_for(base)
     if not mask and dst[:texture_dir_len] == texture_dir:
         base = os.path.basename(dst)
         mask_name, mask = mask_for(base)
@@ -167,7 +173,8 @@ def verbose_copy(src, dst):
 
 
 copytree(src_dir, dst_dir, ignore=ignore_dots, copy_function=clarify)
-copytree(overrides_dir, dst_dir, ignore=ignore_dots, copy_function=verbose_copy, overlay=True)
+copytree(overrides_dir, dst_dir, ignore=ignore_dots, copy_function=verbose_copy,
+         overlay=True)
 
 if len(unused_masks):
     print 'Not found to mask: %s' % (', '.join(unused_masks))
