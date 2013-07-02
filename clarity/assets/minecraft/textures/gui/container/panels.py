@@ -59,6 +59,8 @@ for panel, part_str in panels:
     x_size, y_size = map(int, size.split('x'))
     output.paste(bg, (0, 0, int(x_size), int(y_size)))
 
+    print "Generating %s" % panel
+
     for desc in parts[1:]:
         m = desc_re.match(desc)
         if not m:
