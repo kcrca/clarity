@@ -1,8 +1,0 @@
-<component name="ArtifactManager">
-  <artifact type="jar" build-on-make="true" name="ctm:jar">
-    <output-path>$PROJECT_DIR$/out/artifacts/ctm_jar</output-path>
-    <root id="archive" name="ctm.jar">
-      <element id="module-output" name="ctm" />
-    </root>
-  </artifact>
-</component>
