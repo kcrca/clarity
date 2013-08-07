@@ -67,9 +67,8 @@ EOF
 # Files that are expected to be only in the resource pack (intereal use)
 for f in \
     .gitignore report.sh font/alternate.properties font/default.properties \
-    textures/entity/horse/donkey_colored.png \
-    textures/entity/horse/horse_colored.png textures/gui/container/parts \
-    '.*\.pxm' '.*\.py' '.*\.cfg' '.*/.'
+    textures/gui/container/parts \
+    '.*_colored\.png' '.*\.pxm' '.*\.py' '.*\.cfg' '.*/.'
 do
     e=${f:gs,/,\\/,}
     cat >> $sed_file << EOF
@@ -93,6 +92,7 @@ done
 # Files that are expected to be missing (which means we use the default)
 for f in \
     lang texts font/glyph_sizes.bin textures/colormap/foliage.png \
+    textures/entity/end_portal.png \
     textures/entity/chest/christmas.png \
     textures/entity/chest/christmas_double.png textures/misc/shadow.png \
     textures/misc/shadow.png.mcmeta textures/misc/underwater.png \
@@ -100,6 +100,7 @@ for f in \
     textures/misc/enchanted_item_glint.png.mcmeta \
     textures/environment/clouds.png textures/environment/end_sky.png \
     textures/environment/moon_phases.png textures/environment/sun.png \
+    textures/entity/wolf/wolf_collar.png \
     'textures/items/.*' 'textures/gui/title/.*' \
     'textures/font/unicode_page_..\.png' 'textures/blocks/fire_layer_.\.png.*' \
     \ 'textures/blocks/lava_.*\.png.*' 'textures/blocks/water_.*\.png.*'
