@@ -101,9 +101,10 @@ for f in \
     textures/environment/clouds.png textures/environment/end_sky.png \
     textures/environment/moon_phases.png textures/environment/sun.png \
     textures/entity/wolf/wolf_collar.png \
+    textures/entity/spider_eyes.png \
     'textures/items/.*' 'textures/gui/title/.*' \
     'textures/font/unicode_page_..\.png' 'textures/blocks/fire_layer_.\.png.*' \
-    \ 'textures/blocks/lava_.*\.png.*' 'textures/blocks/water_.*\.png.*'
+    'textures/blocks/lava_.*\.png.*' 'textures/blocks/water_.*\.png.*' 'textures/blocks/portal.*\.png.*'
 do
     e=${f:gs,/,\\/,}
     cat >> $sed_file << EOF
