@@ -103,6 +103,7 @@ for f in \
     textures/entity/wolf/wolf_collar.png \
     textures/entity/spider_eyes.png \
     textures/gui/achievement/achievement_icons.png \
+    textures/entity/enderdragon/dragon_eyes.png \
     'textures/items/.*' 'textures/gui/title/.*' \
     'textures/font/unicode_page_..\.png' 'textures/blocks/fire_layer_.\.png.*' \
     'textures/blocks/lava_.*\.png.*' 'textures/blocks/water_.*\.png.*' 'textures/blocks/portal.*\.png.*'
