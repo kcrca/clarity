@@ -15,12 +15,33 @@
 top=`dirname $0`
 cd $top
 
-other="../../../default_resourcepack/assets/minecraft"
+# Files that are expected to be only in the resource pack (internal use)
+added=(
+    .gitignore
+    report.sh
+    font/alternate.properties
+    font/default.properties
+    textures/gui/container/parts
+    'report_.*\.config'
+    '.*_colored\.png'
+    '.*\.pxm'
+    '.*\.py'
+    '.*\.cfg'
+    '.*/.'
+)
+
+config=$1
+if [ -z "$config" ]; then
+    config=report_default.config
+fi
+. $config
+
 if [ ! -d $other ]; then
     echo Cannot find $other 1>&2
     exit 1
 fi
 
+# Create the sed file that will massage the diff output into useful info
 sed_file=/tmp/clarity_report.sed
 rm -f $sed_file
 cat > $sed_file << EOF
@@ -64,12 +85,8 @@ cat > $sed_file << EOF
 s/: \.\//: /
 EOF
 
-# Files that are expected to be only in the resource pack (intereal use)
-for f in \
-    .gitignore report.sh font/alternate.properties font/default.properties \
-    textures/gui/container/parts \
-    '.*_colored\.png' '.*\.pxm' '.*\.py' '.*\.cfg' '.*/.'
-do
+# Files that are expected to be only in the resource pack (internal use)
+for f in $added; do
     e=${f:gs,/,\\/,}
     cat >> $sed_file << EOF
 /^Extra: $e\$/d
@@ -78,10 +95,7 @@ EOF
 done
 
 # Files that are expected to be identical (should be very few)
-for f in \
-    textures/items/clock.png.mcmeta textures/misc/pumpkinblur.png.mcmeta \
-    textures/misc/vignette.png.mcmeta
-do
+for f in $same; do
     e=${f:gs,/,\\/,}
     cat >> $sed_file << EOF
 /^Same: $e\$/d
@@ -90,24 +104,7 @@ EOF
 done
 
 # Files that are expected to be missing (which means we use the default)
-for f in \
-    lang texts font/glyph_sizes.bin textures/colormap/foliage.png \
-    textures/entity/end_portal.png \
-    textures/entity/chest/christmas.png \
-    textures/entity/chest/christmas_double.png textures/misc/shadow.png \
-    textures/misc/shadow.png.mcmeta textures/misc/underwater.png \
-    textures/particle/footprint.png textures/misc/enchanted_item_glint.png \
-    textures/misc/enchanted_item_glint.png.mcmeta \
-    textures/environment/clouds.png textures/environment/end_sky.png \
-    textures/environment/moon_phases.png textures/environment/sun.png \
-    textures/entity/wolf/wolf_collar.png \
-    textures/entity/spider_eyes.png \
-    textures/gui/achievement/achievement_icons.png \
-    textures/entity/enderdragon/dragon_eyes.png \
-    'textures/items/.*' 'textures/gui/title/.*' \
-    'textures/font/unicode_page_..\.png' 'textures/blocks/fire_layer_.\.png.*' \
-    'textures/blocks/lava_.*\.png.*' 'textures/blocks/water_.*\.png.*' 'textures/blocks/portal.*\.png.*'
-do
+for f in $missing; do
     e=${f:gs,/,\\/,}
     cat >> $sed_file << EOF
 /^Missing: $e\$/d
@@ -117,13 +114,11 @@ done
 
 # Files that are expected to be changed but were matched by general rules that
 # complained about them
-for f in \
-    textures/gui/title/minecraft.png textures/items/clock.png
-do
+for f in $suppress_complaint; do
     e=${f:gs,/,\\/,}
     cat >> $sed_file << EOF
 /^UNEXPECTED: Changed: $e/ {
-    s/.*/Changed: $e /
+    s/.*/Changed: $e/
 }
 EOF
 done
