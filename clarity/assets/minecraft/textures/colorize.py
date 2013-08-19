@@ -1,4 +1,5 @@
 import os
+import shutil
 import sys
 import getopt
 import ConfigParser
@@ -149,6 +150,16 @@ def main(argv=None):
                         pass
                     dst_data[x, y] = r, g, b
             dst_img.save(dst_file, "png")
+
+    tweaks = config.items('tweaks')
+    for _, tweak in tweaks:
+        params = tweak.split()
+        action = params[0]
+        path = params[1]
+        for target in params[2:]:
+            shutil.copy2(path, target)
+        if action == 'move':
+            os.remove(path)
 
 
 if __name__ == "__main__":
