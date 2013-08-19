@@ -5,6 +5,8 @@ import sys
 
 __author__ = 'arnold'
 
+status_by_name = {}
+
 
 class FileStatus(object):
     def __init__(self, prefix, pattern, ignore_pats=()):
@@ -18,6 +20,7 @@ class FileStatus(object):
             self.ignore = [re.compile(pat) for pat in all_ignored]
         except ConfigParser.NoOptionError:
             pass
+        status_by_name[self.prefix] = self
 
     def status_match(self, line):
         m = self.pat.search(line)
@@ -71,11 +74,7 @@ for line in diff.stdout:
             break
 
 print_order = ['Missing', 'Added', 'Same', 'Changed']
-ordered_status = {}
-
-for status in statuses:
-    ordered_status[status.prefix] = status
 
 for name in print_order:
-    status = ordered_status[name]
+    status = status_by_name[name]
     status.dump()
