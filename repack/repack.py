@@ -17,7 +17,7 @@ src_dir, dst_dir, config_dir = sys.argv[1:]
 src_dir = normpath(src_dir)
 dst_dir = normpath(dst_dir)
 
-config.read('%s/clarify.cfg' % config_dir)
+config.read('%s/repack.cfg' % config_dir)
 
 if os.path.isdir(dst_dir):
     shutil.rmtree(dst_dir)
