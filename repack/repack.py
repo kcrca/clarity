@@ -11,32 +11,49 @@ class Transform(object):
     def transform(self, src, dst, subpath):
         print "%s -> %s" % (self.name(), subpath)
         src_img = Image.open(src).convert('RGBA')
+        self.do_transform(dst, src_img)
+
+    def do_transform(self, dst, src_img):
+        pass
+
+    def name(self):
+        pass
+
+class CopyTransform(Transform):
+    def transform(self, src, dst, subpath):
+        shutil.copy2(src, dst)
+
+    def name(self):
+        return 'Copy'
+
+class SimpleTransform(Transform):
+    def do_transform(self, dst, src_img):
         dst_img = Image.new('RGBA', src_img.size)
         self.simple_transform(src_img, dst_img)
         dst_img.save(dst)
 
-    def name(self):
-        pass
-
     def simple_transform(self, src_img, dst_img):
         pass
 
 
-class MaskTransform(Transform):
+class MaskTransform(SimpleTransform):
     def __init__(self, mask_name):
         super(MaskTransform, self).__init__()
         self.mask_name = mask_name
-        mask_file = '%s/masks/%s.png' % (config_dir, mask_name)
+        mask_file = os.path.join(config_dir, 'masks', '%s.png' % mask_name)
         self.img = Image.open(mask_file)
-
-    def simple_transform(self, src_img, dst_img):
-        dst_img.paste(src_img, self.img)
 
     def name(self):
         return 'Mask %s' % self.mask_name
 
+    def simple_transform(self, src_img, dst_img):
+        dst_img.paste(src_img, self.img)
 
-class EraseEdgeTransform(Transform):
+
+class EraseEdgeTransform(SimpleTransform):
+    def name(self):
+        return 'Erase Edge'
+
     def simple_transform(self, src_img, dst_img):
         dst_img.paste(src_img)
 
@@ -64,11 +81,11 @@ class EraseEdgeTransform(Transform):
         t = src_img.crop((e - 1, 1, e, b))
         dst_img.paste(t, (e, 1))
 
+
+class TileOverEdge(SimpleTransform):
     def name(self):
-        return 'Erase Edge'
+        return 'Tile over edge'
 
-
-class TileOverEdge(Transform):
     def simple_transform(self, src_img, dst_img):
         w, h = src_img.size
         b = h - 1 # index of bottom row
@@ -80,17 +97,106 @@ class TileOverEdge(Transform):
         dst_img.paste(t, (e - 1, 0))
         t = dst_img.crop((0, 2, w, 4))
         dst_img.paste(t, (0, b - 1))
-        # t = src_img.crop((1, 1, e, 3))
-        # dst_img.paste(t, (0, b - 1))
-        # t = src_img.crop((1, 1, 3, 3))
-        # dst_img.paste(t, (e - 1, b - 1))
-
-    def name(self):
-        return 'Tile over edge'
 
 
 class ContinuousTransform(Transform):
-    pass
+    def __init__(self, template_name):
+        super(Transform, self)
+        self.template_name = template_name
+        self.template_dir = '%s/ctm_templates/%s' % (config_dir, template_name)
+
+
+    def name(self):
+        return 'CTM(%s)' % self.template_name
+
+    def do_transform(self, dst, src_img):
+        ctm_top_dir = os.path.join(inner_top, 'mcpatcher', 'ctm')
+        if not os.path.isdir(ctm_top_dir):
+            os.makedirs(ctm_top_dir)
+
+        base = os.path.basename(dst)[:-4]
+        block_id = config.get('ids', base)
+        ctm_dir = os.path.join(ctm_top_dir, base)
+
+        edgeless_img = Image.new('RGBA', src_img.size)
+        EraseEdgeTransform().simple_transform(src_img, edgeless_img)
+
+        mask_sides = lambda src, dst: self._mask_block(src, dst, src_img,
+                                                       edgeless_img)
+        copytree(self.template_dir, ctm_dir, ignore=only_png,
+                 copy_function=mask_sides)
+
+        prop_file = os.path.join(ctm_dir, 'block%s.properties' % block_id)
+        template_props = os.path.join(self.template_dir, 'block.properties')
+        shutil.copy(template_props, prop_file)
+
+        edgeless_png = os.path.join(ctm_dir, base + '.png')
+
+
+    def _mask_block(self, src, dst, block_img, edgeless_img):
+        # block_img.show()
+        mask_img = Image.open(src).convert('RGBA')
+        # mask_img.show()
+        dst_img = edgeless_img.copy()
+        dst_img.paste(block_img, mask_img)
+        dst_img.save(dst)
+        # dst_img.show()
+        return
+
+
+class Pass(object):
+    def __init__(self):
+        self.xform_for = {}
+        self.default_xform = None
+
+    def set_xform(self, target, xform):
+        path = target + '.png'
+        if path in self.xform_for:
+            existing = self.xform_for[target]
+            print 'Duplicate transform for %s: %s and %s' % (
+                target, xform.name(), existing.name())
+        else:
+            self.xform_for[path] = xform
+
+    def _find_xform(self, path):
+        k = None
+        if path in self.xform_for:
+            k = path
+        elif path + '.png' in self.xform_for:
+            k = path + '.png'
+        if k:
+            self.unused_xforms.remove(k)
+            return self.xform_for[k]
+        return None
+
+    def run(self):
+        self.unused_xforms = set(self.xform_for.keys())
+        copytree(src_dir, dst_dir, ignore=ignore_dots,
+                 copy_function=self.transform,
+                 overlay=True)
+        if len(self.unused_xforms):
+            print 'Transforms not done: Files not found: %s' % ', '.join(
+                self.unused_xforms)
+
+
+    def transform(self, src, dst):
+        dst, subpath = subpath_for(dst)
+        xform = self._find_xform(subpath)
+        if not xform and dst[:inner_top_len] == inner_top:
+            base = dst[inner_top_len + 1:]
+            xform = self._find_xform(base)
+        if not xform and dst[:texture_dir_len] == texture_dir:
+            base = os.path.basename(dst)
+            xform = self._find_xform(base)
+        if not xform:
+            xform = self.default_xform
+        if not xform:
+            return
+        overrides_path = os.path.join(overrides_dir, subpath)
+        if os.path.isfile(overrides_path):
+            print '%s ignored: %s (overridden)' % (xform.name(), subpath)
+            return
+        xform.transform(src, dst, subpath)
 
 
 def normpath(path):
@@ -108,46 +214,43 @@ config.read(os.path.join(config_dir, 'repack.cfg'))
 if os.path.isdir(dst_dir):
     shutil.rmtree(dst_dir)
 
-
-def set_xform(target, xform):
-    path = target + '.png'
-    if path in xform_for:
-        existing = xform_for[target]
-        print 'Duplicate transform for %s: %s and %s' % (
-            target, xform.name(), existing.name())
-    else:
-        xform_for[path] = xform
-
-
-xform_for = {}
-
-try:
-    for mask_name, targets in config.items('masks'):
-        xform = MaskTransform(mask_name)
-        for target in targets.split():
-            set_xform(target, xform)
-except ConfigParser.NoSectionError:
-    pass
-
-xform_by_name = {}
-xform_by_name['erase_edge'] = EraseEdgeTransform()
-xform_by_name['tile_over_edge'] = TileOverEdge()
-
-try:
-    for xform_name, targets in config.items('changes'):
-        xform = xform_by_name[xform_name]
-        for target in targets.split():
-            set_xform(target, xform)
-except ConfigParser.NoSectionError:
-    pass
-
-unused_xforms = set(xform_for.keys())
-
 inner_top = normpath('%s/assets/minecraft' % dst_dir)
 inner_top_len = len(inner_top)
 texture_dir = normpath('%s/textures/blocks/' % inner_top)
 texture_dir_len = len(texture_dir)
 overrides_dir = normpath('%s/override' % config_dir)
+
+passes = (Pass(), Pass())
+
+passes[0].default_xform = CopyTransform()
+
+try:
+    for mask_name, targets in config.items('masks'):
+        xform = MaskTransform(mask_name)
+        for target in targets.split():
+            passes[0].set_xform(target, xform)
+except ConfigParser.NoSectionError:
+    pass
+
+try:
+    xform_by_name = {
+        'erase_edge': EraseEdgeTransform(),
+        'tile_over_edge': TileOverEdge()}
+
+    for xform_name, targets in config.items('changes'):
+        xform = xform_by_name[xform_name]
+        for target in targets.split():
+            passes[0].set_xform(target, xform)
+except ConfigParser.NoSectionError:
+    pass
+
+try:
+    for template_name, targets in config.items('ctm'):
+        xform = ContinuousTransform(template_name)
+        for target in targets.split():
+            passes[1].set_xform(target, xform)
+except ConfigParser.NoSectionError:
+    pass
 
 
 # This is copied from shutil, because I need the copy_function option which
@@ -229,45 +332,18 @@ def copytree(src, dst, symlinks=False, ignore=None, copy_function=shutil.copy2,
         raise shutil.Error, errors
 
 
-def find_xform(path):
-    k = None
-    if path in xform_for:
-        k = path
-    elif path + '.png' in xform_for:
-        k = path + '.png'
-    if k:
-        unused_xforms.remove(k)
-        return xform_for[k]
-    return None
-
-
 def subpath_for(dst):
     dst = normpath(dst)
     subpath = dst[len(dst_dir) + 1:]
     return dst, subpath
 
 
-def transform(src, dst):
-    dst, subpath = subpath_for(dst)
-    xform = find_xform(subpath)
-    if not xform and dst[:inner_top_len] == inner_top:
-        base = dst[inner_top_len + 1:]
-        xform = find_xform(base)
-    if not xform and dst[:texture_dir_len] == texture_dir:
-        base = os.path.basename(dst)
-        xform = find_xform(base)
-    if not xform:
-        shutil.copy2(src, dst)
-        return
-    overrides_path = os.path.join(overrides_dir, subpath)
-    if os.path.isfile(overrides_path):
-        print '%s ignored: %s (overridden)' % (xform.name(), subpath)
-        return
-    xform.transform(src, dst, subpath)
-
-
 def ignore_dots(directory, files):
     return [f for f in files if f[0] == '.']
+
+
+def only_png(directory, files):
+    return [f for f in files if f[-4:] != '.png']
 
 
 def verbose_copy(src, dst):
@@ -278,11 +354,11 @@ def verbose_copy(src, dst):
     shutil.copy2(src, dst)
 
 
-copytree(src_dir, dst_dir, ignore=ignore_dots, copy_function=transform)
+for p in passes:
+    p.run()
+
 if os.path.exists(overrides_dir):
     copytree(overrides_dir, dst_dir, ignore=ignore_dots,
              copy_function=verbose_copy,
              overlay=True)
 
-if len(unused_xforms):
-    print 'Transforms not done: Files not found: %s' % ', '.join(unused_xforms)
