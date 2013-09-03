@@ -8,17 +8,17 @@ __author__ = 'arnold'
 
 
 class Transform(object):
-    def act(self, src, dst, subpath):
+    def transform(self, src, dst, subpath):
         print "%s -> %s" % (self.name(), subpath)
         src_img = Image.open(src).convert('RGBA')
         dst_img = Image.new('RGBA', src_img.size)
-        self.xform(src_img, dst_img)
+        self.simple_transform(src_img, dst_img)
         dst_img.save(dst)
 
     def name(self):
         pass
 
-    def xform(self, src_img, dst_img):
+    def simple_transform(self, src_img, dst_img):
         pass
 
 
@@ -29,15 +29,15 @@ class MaskTransform(Transform):
         mask_file = '%s/masks/%s.png' % (config_dir, mask_name)
         self.img = Image.open(mask_file)
 
-    def xform(self, src_img, dst_img):
+    def simple_transform(self, src_img, dst_img):
         dst_img.paste(src_img, self.img)
 
     def name(self):
-        return 'Mask %s' % mask_name
+        return 'Mask %s' % self.mask_name
 
 
-class NoEdgeTransform(Transform):
-    def xform(self, src_img, dst_img):
+class EraseEdgeTransform(Transform):
+    def simple_transform(self, src_img, dst_img):
         dst_img.paste(src_img)
 
         w, h = src_img.size
@@ -65,7 +65,32 @@ class NoEdgeTransform(Transform):
         dst_img.paste(t, (e, 1))
 
     def name(self):
-        return 'No Edge'
+        return 'Erase Edge'
+
+
+class TileOverEdge(Transform):
+    def simple_transform(self, src_img, dst_img):
+        w, h = src_img.size
+        b = h - 1 # index of bottom row
+        e = w - 1 # index of end column
+
+        t = src_img.crop((1, 1, e, b))
+        dst_img.paste(t, (0, 0))
+        t = src_img.crop((3, 1, 5, b))
+        dst_img.paste(t, (e - 1, 0))
+        t = dst_img.crop((0, 2, w, 4))
+        dst_img.paste(t, (0, b - 1))
+        # t = src_img.crop((1, 1, e, 3))
+        # dst_img.paste(t, (0, b - 1))
+        # t = src_img.crop((1, 1, 3, 3))
+        # dst_img.paste(t, (e - 1, b - 1))
+
+    def name(self):
+        return 'Tile over edge'
+
+
+class ContinuousTransform(Transform):
+    pass
 
 
 def normpath(path):
@@ -105,7 +130,8 @@ except ConfigParser.NoSectionError:
     pass
 
 xform_by_name = {}
-xform_by_name['no_edge'] = NoEdgeTransform()
+xform_by_name['erase_edge'] = EraseEdgeTransform()
+xform_by_name['tile_over_edge'] = TileOverEdge()
 
 try:
     for xform_name, targets in config.items('changes'):
@@ -221,7 +247,7 @@ def subpath_for(dst):
     return dst, subpath
 
 
-def mask(src, dst):
+def transform(src, dst):
     dst, subpath = subpath_for(dst)
     xform = find_xform(subpath)
     if not xform and dst[:inner_top_len] == inner_top:
@@ -237,7 +263,7 @@ def mask(src, dst):
     if os.path.isfile(overrides_path):
         print '%s ignored: %s (overridden)' % (xform.name(), subpath)
         return
-    xform.act(src, dst, subpath)
+    xform.transform(src, dst, subpath)
 
 
 def ignore_dots(directory, files):
@@ -252,7 +278,7 @@ def verbose_copy(src, dst):
     shutil.copy2(src, dst)
 
 
-copytree(src_dir, dst_dir, ignore=ignore_dots, copy_function=mask)
+copytree(src_dir, dst_dir, ignore=ignore_dots, copy_function=transform)
 if os.path.exists(overrides_dir):
     copytree(overrides_dir, dst_dir, ignore=ignore_dots,
              copy_function=verbose_copy,
