@@ -7,6 +7,67 @@ import Image
 __author__ = 'arnold'
 
 
+class Transform(object):
+    def act(self, src, dst, subpath):
+        print "%s -> %s" % (self.name(), subpath)
+        src_img = Image.open(src).convert('RGBA')
+        dst_img = Image.new('RGBA', src_img.size)
+        self.xform(src_img, dst_img)
+        dst_img.save(dst)
+
+    def name(self):
+        pass
+
+    def xform(self, src_img, dst_img):
+        pass
+
+
+class MaskTransform(Transform):
+    def __init__(self, mask_name):
+        super(MaskTransform, self).__init__()
+        self.mask_name = mask_name
+        mask_file = '%s/masks/%s.png' % (config_dir, mask_name)
+        self.img = Image.open(mask_file)
+
+    def xform(self, src_img, dst_img):
+        dst_img.paste(src_img, self.img)
+
+    def name(self):
+        return 'Mask %s' % mask_name
+
+
+class NoEdgeTransform(Transform):
+    def xform(self, src_img, dst_img):
+        dst_img.paste(src_img)
+
+        w, h = src_img.size
+        b = h - 1 # index of bottom row
+        e = w - 1 # index of end column
+
+        # set the top row from its neighbor
+        t = src_img.crop((1, 1, e, 2))
+        dst_img.paste(t, (0, 0)) # set the upper left pixel
+        dst_img.paste(t, (2, 0)) # set the upper right pixel
+        dst_img.paste(t, (1, 0))
+
+        # set the bottom row from its neighbor
+        t = src_img.crop((1, b - 1, e, b))
+        dst_img.paste(t, (0, b)) # set the lower left pixel
+        dst_img.paste(t, (2, b)) # set the lower right pixel
+        dst_img.paste(t, (1, b))
+
+        # set the left row from its neighbor
+        t = src_img.crop((1, 1, 2, b))
+        dst_img.paste(t, (0, 1))
+
+        # set the right row form its neighbor
+        t = src_img.crop((e - 1, 1, e, b))
+        dst_img.paste(t, (e, 1))
+
+    def name(self):
+        return 'No Edge'
+
+
 def normpath(path):
     return os.path.normcase(os.path.normpath(path)).replace('\\', '/')
 
@@ -17,21 +78,44 @@ src_dir, dst_dir, config_dir = sys.argv[1:]
 src_dir = normpath(src_dir)
 dst_dir = normpath(dst_dir)
 
-config.read('%s/repack.cfg' % config_dir)
+config.read(os.path.join(config_dir, 'repack.cfg'))
 
 if os.path.isdir(dst_dir):
     shutil.rmtree(dst_dir)
 
-masks = config.items('masks')
-masks_for = {}
 
-for mask_name, mask_targets in masks:
-    mask_file = '%s/masks/%s.png' % (config_dir, mask_name)
-    img = Image.open(mask_file)
-    for target in mask_targets.split():
-        masks_for[target + '.png'] = mask_name, img
+def set_xform(target, xform):
+    path = target + '.png'
+    if path in xform_for:
+        existing = xform_for[target]
+        print 'Duplicate transform for %s: %s and %s' % (
+            target, xform.name(), existing.name())
+    else:
+        xform_for[path] = xform
 
-unused_masks = set(masks_for.keys())
+
+xform_for = {}
+
+try:
+    for mask_name, targets in config.items('masks'):
+        xform = MaskTransform(mask_name)
+        for target in targets.split():
+            set_xform(target, xform)
+except ConfigParser.NoSectionError:
+    pass
+
+xform_by_name = {}
+xform_by_name['no_edge'] = NoEdgeTransform()
+
+try:
+    for xform_name, targets in config.items('changes'):
+        xform = xform_by_name[xform_name]
+        for target in targets.split():
+            set_xform(target, xform)
+except ConfigParser.NoSectionError:
+    pass
+
+unused_xforms = set(xform_for.keys())
 
 inner_top = normpath('%s/assets/minecraft' % dst_dir)
 inner_top_len = len(inner_top)
@@ -119,16 +203,16 @@ def copytree(src, dst, symlinks=False, ignore=None, copy_function=shutil.copy2,
         raise shutil.Error, errors
 
 
-def mask_for(path):
+def find_xform(path):
     k = None
-    if path in masks_for:
+    if path in xform_for:
         k = path
-    elif path + '.png' in masks_for:
+    elif path + '.png' in xform_for:
         k = path + '.png'
     if k:
-        unused_masks.remove(k)
-        return masks_for[k]
-    return None, None
+        unused_xforms.remove(k)
+        return xform_for[k]
+    return None
 
 
 def subpath_for(dst):
@@ -137,27 +221,23 @@ def subpath_for(dst):
     return dst, subpath
 
 
-def clarify(src, dst):
+def mask(src, dst):
     dst, subpath = subpath_for(dst)
-    mask_name, mask = mask_for(subpath)
-    if not mask and dst[:inner_top_len] == inner_top:
-        base = dst[inner_top_len+1:]
-        mask_name, mask = mask_for(base)
-    if not mask and dst[:texture_dir_len] == texture_dir:
+    xform = find_xform(subpath)
+    if not xform and dst[:inner_top_len] == inner_top:
+        base = dst[inner_top_len + 1:]
+        xform = find_xform(base)
+    if not xform and dst[:texture_dir_len] == texture_dir:
         base = os.path.basename(dst)
-        mask_name, mask = mask_for(base)
-    overrides_path = '%s/%s' % (overrides_dir, subpath)
-    if not mask:
+        xform = find_xform(base)
+    if not xform:
         shutil.copy2(src, dst)
         return
+    overrides_path = os.path.join(overrides_dir, subpath)
     if os.path.isfile(overrides_path):
-        print 'mask ignored: %s (overridden)' % subpath
+        print '%s ignored: %s (overridden)' % (xform.name(), subpath)
         return
-    print "mask: %s -> %s" % (mask_name, subpath)
-    src_img = Image.open(src).convert('RGBA')
-    dst_img = Image.new('RGBA', src_img.size)
-    dst_img.paste(src_img, mask)
-    dst_img.save(dst)
+    xform.act(src, dst, subpath)
 
 
 def ignore_dots(directory, files):
@@ -172,9 +252,11 @@ def verbose_copy(src, dst):
     shutil.copy2(src, dst)
 
 
-copytree(src_dir, dst_dir, ignore=ignore_dots, copy_function=clarify)
-copytree(overrides_dir, dst_dir, ignore=ignore_dots, copy_function=verbose_copy,
-         overlay=True)
+copytree(src_dir, dst_dir, ignore=ignore_dots, copy_function=mask)
+if os.path.exists(overrides_dir):
+    copytree(overrides_dir, dst_dir, ignore=ignore_dots,
+             copy_function=verbose_copy,
+             overlay=True)
 
-if len(unused_masks):
-    print 'Not found to mask: %s' % (', '.join(unused_masks))
+if len(unused_xforms):
+    print 'Transforms not done: Files not found: %s' % ', '.join(unused_xforms)
