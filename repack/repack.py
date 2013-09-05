@@ -1,10 +1,14 @@
 import ConfigParser
 import os
+import re
 import shutil
 import sys
 import Image
 
 __author__ = 'arnold'
+
+re_pat = re.compile(r'[][?*()\\+|]')
+block_id_pat = re.compile(r'(\d+):?(\d*)')
 
 
 class Transform(object):
@@ -19,12 +23,14 @@ class Transform(object):
     def name(self):
         pass
 
+
 class CopyTransform(Transform):
     def transform(self, src, dst, subpath):
         shutil.copy2(src, dst)
 
     def name(self):
         return 'Copy'
+
 
 class SimpleTransform(Transform):
     def do_transform(self, dst, src_img):
@@ -115,7 +121,8 @@ class ContinuousTransform(Transform):
             os.makedirs(ctm_top_dir)
 
         base = os.path.basename(dst)[:-4]
-        block_id = config.get('ids', base)
+        block_id_str = config.get('ids', base)
+        block_id, block_dmg = block_id_pat.match(block_id_str).groups()
         ctm_dir = os.path.join(ctm_top_dir, base)
 
         edgeless_img = Image.new('RGBA', src_img.size)
@@ -128,9 +135,11 @@ class ContinuousTransform(Transform):
 
         prop_file = os.path.join(ctm_dir, 'block%s.properties' % block_id)
         template_props = os.path.join(self.template_dir, 'block.properties')
-        shutil.copy(template_props, prop_file)
-
-        edgeless_png = os.path.join(ctm_dir, base + '.png')
+        with open(template_props) as t:
+            with open(prop_file, mode='w') as o:
+                o.writelines(t)
+                if len(block_dmg):
+                    o.write('metadata=%s\n' % block_dmg)
 
 
     def _mask_block(self, src, dst, block_img, edgeless_img):
@@ -147,30 +156,54 @@ class ContinuousTransform(Transform):
 class Pass(object):
     def __init__(self):
         self.xform_for = {}
+        self.re_xforms = []
         self.default_xform = None
 
     def set_xform(self, target, xform):
-        path = target + '.png'
-        if path in self.xform_for:
-            existing = self.xform_for[target]
-            print 'Duplicate transform for %s: %s and %s' % (
-                target, xform.name(), existing.name())
+        re = self._target_re(target)
+        if re:
+            self.re_xforms.append((re, xform))
         else:
-            self.xform_for[path] = xform
+            path = target + '.png'
+            if path in self.xform_for:
+                existing = self.xform_for[target]
+                print 'Duplicate transform for %s: %s and %s' % (
+                    target, xform.name(), existing.name())
+            else:
+                self.xform_for[path] = xform
 
     def _find_xform(self, path):
+        path_png = path + '.png'
+
+        # look for exact match of name
         k = None
         if path in self.xform_for:
             k = path
-        elif path + '.png' in self.xform_for:
-            k = path + '.png'
+        elif path_png in self.xform_for:
+            k = path_png
         if k:
             self.unused_xforms.remove(k)
             return self.xform_for[k]
+
+        # look for pattern match
+        for (re, xform) in self.re_xforms:
+            k = None
+            if re.search(path):
+                k = path
+            elif re.search(path_png):
+                k = path_png
+            if k:
+                try:
+                    self.unused_xforms.remove(re.pattern)
+                except KeyError:
+                    pass
+                return xform
+
         return None
 
     def run(self):
-        self.unused_xforms = set(self.xform_for.keys())
+        self.unused_xforms = set(
+            self.xform_for.keys() + [p[0].pattern for p in self.re_xforms])
         copytree(src_dir, dst_dir, ignore=ignore_dots,
                  copy_function=self.transform,
                  overlay=True)
@@ -197,6 +230,11 @@ class Pass(object):
             print '%s ignored: %s (overridden)' % (xform.name(), subpath)
             return
         xform.transform(src, dst, subpath)
+
+    def _target_re(self, target):
+        if re_pat.search(target):
+            return re.compile(target + '.png')
+        return None
 
 
 def normpath(path):
