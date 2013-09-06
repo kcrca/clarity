@@ -18,16 +18,16 @@ tile_spec_pat = re.compile(r'(\d+)x(\d+)(?:@(\d+),(\d+))?')
 warnings = []
 
 
-class Transform(object):
-    def transform(self, src, dst, subpath):
+class Change(object):
+    def change(self, src, dst, subpath):
         print "%s -> %s" % (self.name(), subpath)
         src_img = Image.open(src).convert('RGBA')
-        self.do_transform(dst, src_img)
+        self.do_change(dst, src_img)
 
     def set_options(self, opt_str):
         raise SyntaxError('%s:No options supported', self.__class__)
 
-    def do_transform(self, dst, src_img):
+    def do_change(self, dst, src_img):
         pass
 
     def name(self):
@@ -42,27 +42,27 @@ class Transform(object):
         return m
 
 
-class CopyTransform(Transform):
-    def transform(self, src, dst, subpath):
+class CopyChange(Change):
+    def change(self, src, dst, subpath):
         shutil.copy2(src, dst)
 
     def name(self):
         return 'Copy'
 
 
-class SimpleTransform(Transform):
-    def do_transform(self, dst, src_img):
+class SimpleChange(Change):
+    def do_change(self, dst, src_img):
         dst_img = Image.new('RGBA', src_img.size)
-        self.simple_transform(src_img, dst_img)
+        self.simple_change(src_img, dst_img)
         dst_img.save(dst)
 
-    def simple_transform(self, src_img, dst_img):
+    def simple_change(self, src_img, dst_img):
         pass
 
 
-class MaskTransform(SimpleTransform):
+class MaskChange(SimpleChange):
     def __init__(self, mask_name):
-        super(MaskTransform, self).__init__()
+        super(MaskChange, self).__init__()
         self.mask_name = mask_name
         mask_file = os.path.join(config_dir, 'masks', '%s.png' % mask_name)
         self.img = Image.open(mask_file)
@@ -70,13 +70,13 @@ class MaskTransform(SimpleTransform):
     def name(self):
         return 'Mask %s' % self.mask_name
 
-    def simple_transform(self, src_img, dst_img):
+    def simple_change(self, src_img, dst_img):
         dst_img.paste(src_img, self.img)
 
 
-class EraseEdgeTransform(SimpleTransform):
+class EraseEdgeChange(SimpleChange):
     def __init__(self, dup_size=None):
-        super(SimpleTransform, self).__init__()
+        super(SimpleChange, self).__init__()
         self.dup_size = dup_size
 
     def name(self):
@@ -86,7 +86,7 @@ class EraseEdgeTransform(SimpleTransform):
         if len(opt_str):
             self.dup_size = int(opt_str)
 
-    def simple_transform(self, src_img, dst_img):
+    def simple_change(self, src_img, dst_img):
         dst_img.paste(src_img)
 
         w, h = src_img.size
@@ -123,9 +123,9 @@ class EraseEdgeTransform(SimpleTransform):
         copy_col(e - 1, e) # set the right row form its neighbor
 
 
-class TileOverEdge(SimpleTransform):
+class TileOverEdge(SimpleChange):
     def __init__(self):
-        super(SimpleTransform, self).__init__()
+        super(SimpleChange, self).__init__()
         self.tile_size = None
 
     def name(self):
@@ -139,7 +139,7 @@ class TileOverEdge(SimpleTransform):
         if len(groups[3]):
             self.tile_pos = tuple(int(s) for s in groups[2:4])
 
-    def simple_transform(self, src_img, dst_img):
+    def simple_change(self, src_img, dst_img):
         if self.tile_size:
             size = self.tile_size
             pos = self.tile_pos
@@ -168,9 +168,9 @@ class TileOverEdge(SimpleTransform):
                 # dst_img.paste(tile, (0, b - 1))
 
 
-class ContinuousTransform(Transform):
+class ContinuousChange(Change):
     def __init__(self, template_name):
-        super(Transform, self)
+        super(Change, self)
         self.template_name = template_name
         self.template_dir = '%s/ctm_templates/%s' % (config_dir, template_name)
         self.dup_size = None
@@ -182,7 +182,7 @@ class ContinuousTransform(Transform):
         if len(opt_str):
             self.dup_size = int(opt_str)
 
-    def do_transform(self, dst, src_img):
+    def do_change(self, dst, src_img):
         ctm_top_dir = os.path.join(inner_top, 'mcpatcher', 'ctm')
         if not os.path.isdir(ctm_top_dir):
             os.makedirs(ctm_top_dir)
@@ -193,8 +193,8 @@ class ContinuousTransform(Transform):
         ctm_dir = os.path.join(ctm_top_dir, base)
 
         edgeless_img = Image.new('RGBA', src_img.size)
-        EraseEdgeTransform(self.dup_size).simple_transform(src_img,
-                                                           edgeless_img)
+        EraseEdgeChange(self.dup_size).simple_change(src_img,
+                                                     edgeless_img)
 
         mask_sides = lambda src, dst: self._mask_block(src, dst, src_img,
                                                        edgeless_img)
@@ -223,42 +223,42 @@ class ContinuousTransform(Transform):
 
 class Pass(object):
     def __init__(self):
-        self.xform_for = {}
-        self.re_xforms = []
-        self.default_xform = None
+        self.change_for = {}
+        self.re_changes = []
+        self.default_change = None
 
-    def set_xform(self, target, xform):
+    def set_change(self, target, change):
         m = target_opt_pat.match(target)
         if m:
             target, opt_str = m.groups()
-            xform = xform.modified(opt_str)
+            change = change.modified(opt_str)
         re = self._target_re(target)
         if re:
-            self.re_xforms.append((re, xform))
+            self.re_changes.append((re, change))
         else:
             path = target + '.png'
-            if path in self.xform_for:
-                existing = self.xform_for[target]
-                print 'Duplicate transform for %s: %s and %s' % (
-                    target, xform.name(), existing.name())
+            if path in self.change_for:
+                existing = self.change_for[target]
+                print 'Duplicate change for %s: %s and %s' % (
+                    target, change.name(), existing.name())
             else:
-                self.xform_for[path] = xform
+                self.change_for[path] = change
 
-    def _find_xform(self, path):
+    def _find_change(self, path):
         path_png = path + '.png'
 
         # look for exact match of name
         k = None
-        if path in self.xform_for:
+        if path in self.change_for:
             k = path
-        elif path_png in self.xform_for:
+        elif path_png in self.change_for:
             k = path_png
         if k:
-            self.unused_xforms.remove(k)
-            return self.xform_for[k]
+            self.unused_changes.remove(k)
+            return self.change_for[k]
 
         # look for pattern match
-        for (re, xform) in self.re_xforms:
+        for (re, change) in self.re_changes:
             k = None
             if re.search(path):
                 k = path
@@ -266,43 +266,42 @@ class Pass(object):
                 k = path_png
             if k:
                 try:
-                    self.unused_xforms.remove(re.pattern)
+                    self.unused_changes.remove(re.pattern)
                 except KeyError:
                     pass
-                return xform
+                return change
 
         return None
 
     def run(self):
-        self.unused_xforms = set(
-            self.xform_for.keys() + [p[0].pattern for p in self.re_xforms])
+        self.unused_changes = set(
+            self.change_for.keys() + [p[0].pattern for p in self.re_changes])
         copytree(src_dir, dst_dir, ignore=ignore_dots,
-                 copy_function=self.transform,
-                 overlay=True)
-        if len(self.unused_xforms):
+                 copy_function=self.change, overlay=True)
+        if len(self.unused_changes):
             global warnings
-            warnings += ('Transforms not done: Files not found: %s' % ', '.join(
-                self.unused_xforms),)
+            warnings += ('Changes not done: Files not found: %s' % ', '.join(
+                self.unused_changes),)
 
 
-    def transform(self, src, dst):
+    def change(self, src, dst):
         dst, subpath = subpath_for(dst)
-        xform = self._find_xform(subpath)
-        if not xform and dst[:inner_top_len] == inner_top:
+        change = self._find_change(subpath)
+        if not change and dst[:inner_top_len] == inner_top:
             base = dst[inner_top_len + 1:]
-            xform = self._find_xform(base)
-        if not xform and dst[:texture_dir_len] == texture_dir:
+            change = self._find_change(base)
+        if not change and dst[:texture_dir_len] == texture_dir:
             base = os.path.basename(dst)
-            xform = self._find_xform(base)
-        if not xform:
-            xform = self.default_xform
-        if not xform:
+            change = self._find_change(base)
+        if not change:
+            change = self.default_change
+        if not change:
             return
         overrides_path = os.path.join(overrides_dir, subpath)
         if os.path.isfile(overrides_path):
-            print '%s ignored: %s (overridden)' % (xform.name(), subpath)
+            print '%s ignored: %s (overridden)' % (change.name(), subpath)
             return
-        xform.transform(src, dst, subpath)
+        change.change(src, dst, subpath)
 
     def _target_re(self, target):
         if re_pat.search(target):
@@ -333,33 +332,33 @@ overrides_dir = normpath('%s/override' % config_dir)
 
 passes = (Pass(), Pass())
 
-passes[0].default_xform = CopyTransform()
+passes[0].default_change = CopyChange()
 
 try:
     for mask_name, targets in config.items('masks'):
-        xform = MaskTransform(mask_name)
+        change = MaskChange(mask_name)
         for target in targets.split():
-            passes[0].set_xform(target, xform)
+            passes[0].set_change(target, change)
 except ConfigParser.NoSectionError:
     pass
 
 try:
-    xform_by_name = {
-        'erase_edge': EraseEdgeTransform(),
+    change_by_name = {
+        'erase_edge': EraseEdgeChange(),
         'tile_over_edge': TileOverEdge()}
 
-    for xform_name, targets in config.items('changes'):
-        xform = xform_by_name[xform_name]
+    for change_name, targets in config.items('changes'):
+        change = change_by_name[change_name]
         for target in targets.split():
-            passes[0].set_xform(target, xform)
+            passes[0].set_change(target, change)
 except ConfigParser.NoSectionError:
     pass
 
 try:
     for template_name, targets in config.items('ctm'):
-        xform = ContinuousTransform(template_name)
+        change = ContinuousChange(template_name)
         for target in targets.split():
-            passes[1].set_xform(target, xform)
+            passes[1].set_change(target, change)
 except ConfigParser.NoSectionError:
     pass
 
