@@ -3,12 +3,19 @@ import os
 import re
 import shutil
 import sys
+import copy
+
 import Image
+
 
 __author__ = 'arnold'
 
 re_pat = re.compile(r'[][?*()\\+|]')
 block_id_pat = re.compile(r'(\d+):?(\d*)')
+target_opt_pat = re.compile(r'([^:]*):(.*)')
+tile_spec_pat = re.compile(r'(\d+)x(\d+)(?:@(\d+),(\d+))?')
+
+warnings = []
 
 
 class Transform(object):
@@ -17,11 +24,22 @@ class Transform(object):
         src_img = Image.open(src).convert('RGBA')
         self.do_transform(dst, src_img)
 
+    def set_options(self, opt_str):
+        raise SyntaxError('%s:No options supported', self.__class__)
+
     def do_transform(self, dst, src_img):
         pass
 
     def name(self):
         pass
+
+    def set_opt(self, opt_str):
+        raise SyntaxError('%s: No options allowed' % self.__class__)
+
+    def modified(self, opt_str):
+        m = copy.deepcopy(self)
+        m.set_opt(opt_str)
+        return m
 
 
 class CopyTransform(Transform):
@@ -57,8 +75,16 @@ class MaskTransform(SimpleTransform):
 
 
 class EraseEdgeTransform(SimpleTransform):
+    def __init__(self, dup_size=None):
+        super(SimpleTransform, self).__init__()
+        self.dup_size = dup_size
+
     def name(self):
         return 'Erase Edge'
+
+    def set_options(self, opt_str):
+        if len(opt_str):
+            self.dup_size = int(opt_str)
 
     def simple_transform(self, src_img, dst_img):
         dst_img.paste(src_img)
@@ -66,43 +92,80 @@ class EraseEdgeTransform(SimpleTransform):
         w, h = src_img.size
         b = h - 1 # index of bottom row
         e = w - 1 # index of end column
+        copy_start = 0
+        copy_width = src_img.size[0]
 
-        # set the top row from its neighbor
-        t = src_img.crop((1, 1, e, 2))
-        dst_img.paste(t, (0, 0)) # set the upper left pixel
-        dst_img.paste(t, (2, 0)) # set the upper right pixel
-        dst_img.paste(t, (1, 0))
+        dup_size = self.dup_size
+        if dup_size is not None:
+            copy_start = (src_img.size[0] - dup_size) / 2
+            copy_width = dup_size
+        else:
+            copy_start = 1
+            copy_width = src_img.size[0] - 2
 
-        # set the bottom row from its neighbor
-        t = src_img.crop((1, b - 1, e, b))
-        dst_img.paste(t, (0, b)) # set the lower left pixel
-        dst_img.paste(t, (2, b)) # set the lower right pixel
-        dst_img.paste(t, (1, b))
+        copy_end = copy_start + copy_width
 
-        # set the left row from its neighbor
-        t = src_img.crop((1, 1, 2, b))
-        dst_img.paste(t, (0, 1))
+        def copy_row(row_from, row_to):
+            t = src_img.crop((copy_start, row_from, copy_end, row_from + 1))
+            if dup_size is None:
+                dst_img.paste(t, (0, row_to)) # set the leftmost pixel
+                dst_img.paste(t, (2, row_to)) # set the rightmost pixel
+            dst_img.paste(t, (copy_start, row_to))
 
-        # set the right row form its neighbor
-        t = src_img.crop((e - 1, 1, e, b))
-        dst_img.paste(t, (e, 1))
+        def copy_col(col_from, col_to):
+            t = src_img.crop((col_from, copy_start, col_from + 1, copy_end))
+            dst_img.paste(t, (col_to, copy_start))
+
+
+        copy_row(1, 0) # set the top row from its neighbor
+        copy_row(b - 1, b) # set the bottom row from its neighbor
+        copy_col(1, 0) # set the left row from its neighbor
+        copy_col(e - 1, e) # set the right row form its neighbor
 
 
 class TileOverEdge(SimpleTransform):
+    def __init__(self):
+        super(SimpleTransform, self).__init__()
+        self.tile_size = None
+
     def name(self):
         return 'Tile over edge'
 
-    def simple_transform(self, src_img, dst_img):
-        w, h = src_img.size
-        b = h - 1 # index of bottom row
-        e = w - 1 # index of end column
+    def set_opt(self, opt_str):
+        m = tile_spec_pat.match(opt_str)
+        groups = m.groups()
+        self.tile_size = tuple(int(s) for s in groups[0:2])
+        self.tile_pos = (0, 0)
+        if len(groups[3]):
+            self.tile_pos = tuple(int(s) for s in groups[2:4])
 
-        t = src_img.crop((1, 1, e, b))
-        dst_img.paste(t, (0, 0))
-        t = src_img.crop((3, 1, 5, b))
-        dst_img.paste(t, (e - 1, 0))
-        t = dst_img.crop((0, 2, w, 4))
-        dst_img.paste(t, (0, b - 1))
+    def simple_transform(self, src_img, dst_img):
+        if self.tile_size:
+            size = self.tile_size
+            pos = self.tile_pos
+        else:
+            size = tuple(((i - 2) / 4) * 4 for i in src_img.size)
+            pos = (1, 1)
+
+        w, h = size
+
+        tile = src_img.crop((pos[0], pos[1], pos[0] + w, pos[1] + h))
+        for x in range(0, src_img.size[0], w):
+            x_end = x + w
+            for y in range(0, src_img.size[1], h):
+                y_end = y + h
+                if x_end >= src_img.size[0] or y_end >= src_img.size[1]:
+                    use_tile = tile.crop((0, 0, src_img.size[0] - x,
+                                          src_img.size[1] - y))
+                else:
+                    use_tile = tile
+                box = (x, y)
+                dst_img.paste(use_tile, box)
+                # dst_img.paste(tile, (0, 0))
+                # tile = src_img.crop((3, 1, 5, b))
+                # dst_img.paste(tile, (e - 1, 0))
+                # tile = dst_img.crop((0, 2, w, 4))
+                # dst_img.paste(tile, (0, b - 1))
 
 
 class ContinuousTransform(Transform):
@@ -110,10 +173,14 @@ class ContinuousTransform(Transform):
         super(Transform, self)
         self.template_name = template_name
         self.template_dir = '%s/ctm_templates/%s' % (config_dir, template_name)
-
+        self.dup_size = None
 
     def name(self):
         return 'CTM(%s)' % self.template_name
+
+    def set_opt(self, opt_str):
+        if len(opt_str):
+            self.dup_size = int(opt_str)
 
     def do_transform(self, dst, src_img):
         ctm_top_dir = os.path.join(inner_top, 'mcpatcher', 'ctm')
@@ -126,7 +193,8 @@ class ContinuousTransform(Transform):
         ctm_dir = os.path.join(ctm_top_dir, base)
 
         edgeless_img = Image.new('RGBA', src_img.size)
-        EraseEdgeTransform().simple_transform(src_img, edgeless_img)
+        EraseEdgeTransform(self.dup_size).simple_transform(src_img,
+                                                           edgeless_img)
 
         mask_sides = lambda src, dst: self._mask_block(src, dst, src_img,
                                                        edgeless_img)
@@ -160,6 +228,10 @@ class Pass(object):
         self.default_xform = None
 
     def set_xform(self, target, xform):
+        m = target_opt_pat.match(target)
+        if m:
+            target, opt_str = m.groups()
+            xform = xform.modified(opt_str)
         re = self._target_re(target)
         if re:
             self.re_xforms.append((re, xform))
@@ -208,8 +280,9 @@ class Pass(object):
                  copy_function=self.transform,
                  overlay=True)
         if len(self.unused_xforms):
-            print 'Transforms not done: Files not found: %s' % ', '.join(
-                self.unused_xforms)
+            global warnings
+            warnings += ('Transforms not done: Files not found: %s' % ', '.join(
+                self.unused_xforms),)
 
 
     def transform(self, src, dst):
@@ -400,3 +473,4 @@ if os.path.exists(overrides_dir):
              copy_function=verbose_copy,
              overlay=True)
 
+print '\n'.join(warnings)
