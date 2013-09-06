@@ -19,7 +19,10 @@ warnings = []
 
 
 class Change(object):
-    def change(self, src, dst, subpath):
+    def __init__(self):
+        self.use_override = False
+
+    def apply(self, src, dst, subpath):
         print "%s -> %s" % (self.name(), subpath)
         src_img = Image.open(src).convert('RGBA')
         self.do_change(dst, src_img)
@@ -31,7 +34,7 @@ class Change(object):
         pass
 
     def name(self):
-        pass
+        return self.__class__.__name__.replace('Change', '')
 
     def set_opt(self, opt_str):
         raise SyntaxError('%s: No options allowed' % self.__class__)
@@ -43,11 +46,8 @@ class Change(object):
 
 
 class CopyChange(Change):
-    def change(self, src, dst, subpath):
+    def apply(self, src, dst, subpath):
         shutil.copy2(src, dst)
-
-    def name(self):
-        return 'Copy'
 
 
 class SimpleChange(Change):
@@ -78,9 +78,6 @@ class EraseEdgeChange(SimpleChange):
     def __init__(self, dup_size=None):
         super(SimpleChange, self).__init__()
         self.dup_size = dup_size
-
-    def name(self):
-        return 'Erase Edge'
 
     def set_options(self, opt_str):
         if len(opt_str):
@@ -128,9 +125,6 @@ class TileOverEdge(SimpleChange):
         super(SimpleChange, self).__init__()
         self.tile_size = None
 
-    def name(self):
-        return 'Tile over edge'
-
     def set_opt(self, opt_str):
         m = tile_spec_pat.match(opt_str)
         groups = m.groups()
@@ -174,6 +168,7 @@ class ContinuousChange(Change):
         self.template_name = template_name
         self.template_dir = '%s/ctm_templates/%s' % (config_dir, template_name)
         self.dup_size = None
+        self.use_override = True
 
     def name(self):
         return 'CTM(%s)' % self.template_name
@@ -297,11 +292,16 @@ class Pass(object):
             change = self.default_change
         if not change:
             return
-        overrides_path = os.path.join(overrides_dir, subpath)
-        if os.path.isfile(overrides_path):
-            print '%s ignored: %s (overridden)' % (change.name(), subpath)
-            return
-        change.change(src, dst, subpath)
+        override = os.path.join(overrides_dir, subpath)
+        if os.path.isfile(override):
+            if change.use_override:
+                print '%s: using overridden file: %s' % (
+                    change.name(), override)
+                src = override
+            else:
+                print '%s ignored: %s (overridden)' % (change.name(), subpath)
+                return
+        change.apply(src, dst, subpath)
 
     def _target_re(self, target):
         if re_pat.search(target):
