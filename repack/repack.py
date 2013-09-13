@@ -354,7 +354,6 @@ class EraseEdgeChange(SimpleChange):
         b = h - 1 # index of bottom row
         e = w - 1 # index of end column
         copy_start = 0
-        copy_width = src_img.size[0]
 
         dup_size = self.dup_size
         if dup_size is not None:
@@ -431,7 +430,7 @@ change_by_name = {
     'tile_over_edge': TileOverEdge()}
 
 
-class ContinuousChange(Change):
+class ConnectedTextureChange(Change):
     def __init__(self, template_name):
         super(Change, self).__init__()
         self.template_name = template_name
@@ -629,7 +628,7 @@ except ConfigParser.NoSectionError:
 
 try:
     for template_name, targets in config.items('ctm'):
-        change = ContinuousChange(template_name)
+        change = ConnectedTextureChange(template_name)
         for target in targets.split():
             passes[1].set_change(target, change)
 except ConfigParser.NoSectionError:
