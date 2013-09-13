@@ -17,6 +17,7 @@ block_id_pat = re.compile(r'(\d+):?(\d*)')
 target_opt_pat = re.compile(r'([^:]*):(.*)')
 tile_spec_pat = re.compile(r'(\d+)x(\d+)(?:@(\d+),(\d+))?')
 ctm_opt_pat = re.compile(r'([a-z_]*):?(.*)')
+not_in_pack_pat = re.compile(r'^\.|\.(pxm|tiff)$')
 
 warnings = []
 
@@ -547,7 +548,7 @@ class Pass(object):
     def run(self):
         self.unused_changes = set(
             self.change_for.keys() + [p[0].pattern for p in self.re_changes])
-        copytree(src_dir, dst_dir, ignore=ignore_dots,
+        copytree(src_dir, dst_dir, ignore=only_pack_files,
                  copy_function=self.change, overlay=True)
         if len(self.unused_changes):
             global warnings
@@ -591,7 +592,11 @@ def normpath(path):
 
 config = ConfigParser.SafeConfigParser()
 
-src_dir, dst_dir, config_dir = sys.argv[1:]
+src_dir, dst_dir = sys.argv[1:]
+try:
+    config_dir = sys.argv[3]
+except:
+    config_dir = dst_dir + '.repack'
 src_dir = normpath(src_dir)
 dst_dir = normpath(dst_dir)
 
@@ -720,7 +725,7 @@ def subpath_for(dst):
     return dst, subpath
 
 
-def ignore_dots(directory, files):
+def only_pack_files(directory, files):
     return [f for f in files if f[0] == '.']
 
 
@@ -740,7 +745,7 @@ for p in passes:
     p.run()
 
 if os.path.exists(overrides_dir):
-    copytree(overrides_dir, dst_dir, ignore=ignore_dots,
+    copytree(overrides_dir, dst_dir, ignore=only_pack_files,
              copy_function=verbose_copy,
              overlay=True)
 
