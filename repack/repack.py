@@ -749,4 +749,5 @@ if os.path.exists(overrides_dir):
              copy_function=verbose_copy,
              overlay=True)
 
-print '\n'.join(warnings)
+if len(warnings):
+    print '\n'.join(warnings)
