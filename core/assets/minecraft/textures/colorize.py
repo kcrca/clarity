@@ -11,7 +11,7 @@ __author__ = 'arnold'
 config = ConfigParser.SafeConfigParser()
 config.read('colorize.cfg')
 
-color_re = re.compile(r'\(?(\d+),(\d+),(\d+)\)?')
+color_re = re.compile(r'\(?\s*(\d+),\s*(\d+),\s*(\d+),?\s*(\d+)?\s*\)?')
 
 
 def decode_color(color):
@@ -19,7 +19,10 @@ def decode_color(color):
     if not m:
         print('Bad color: %s' % color)
     else:
-        return tuple(map(int, m.groups()))
+        color_nums = m.groups()
+        if color_nums[3] is None:
+            color_nums = color_nums[:2]
+        return tuple(map(int, color_nums))
 
 
 def color_list(map_name, color_name, colors_config):
@@ -94,13 +97,26 @@ def list_coloring(coloring, exclude_colors):
             list_colors(color_name, '%s/%s' % (file_dir, f), exclude_colors)
 
 
+def list_image_colors(files):
+    for f in files:
+        src_img = Image.open(f)
+        src_data = src_img.load()
+        colors = set()
+        for x in xrange(src_img.size[0]):
+            for y in xrange(src_img.size[1]):
+                colors.add(src_data[x,y])
+        print "%s:" % f
+        for c in colors:
+            print "  %s" % str(c)
+
+
 def main(argv=None):
     if argv is None:
         argv = sys.argv
     try:
         try:
-            opts, args = getopt.getopt(argv[1:], "hl:x:",
-                                       ["help", "list", "exclude"])
+            opts, args = getopt.getopt(argv[1:], "hl:x:d",
+                                       ["help", "list", "exclude", "dump"])
         except getopt.error, msg:
             raise Usage(msg)
             # more code, unchanged
@@ -115,6 +131,9 @@ def main(argv=None):
     for o, a in opts:
         if o in ("-h", "--help"):
             print __doc__
+            return 0
+        if o in ("-d", "--dump"):
+            list_image_colors(args)
             return 0
         if o in ("-l", "--list"):
             list_colorings.append(a)
@@ -134,21 +153,26 @@ def main(argv=None):
         print "%s: reading %s" % (coloring, key_file)
         src_img = Image.open(key_file)
         src_data = src_img.load()
+        num_channels = len(src_data[0, 0])
+        has_alpha = num_channels > 3
 
         color_maps = map_for(map_name, key_color)
         for color_name, color_map in color_maps.iteritems():
             dst_file = file_from_color(file_pat, color_name)
             print ("    %s" % dst_file)
-            dst_img = Image.new('RGB', src_img.size, color=None)
+            mode = 'RGB'
+            if has_alpha:
+                mode = 'RGBA'
+            dst_img = Image.new(mode, src_img.size, color=None)
             dst_data = dst_img.load()
             for x in xrange(src_img.size[0]):
                 for y in xrange(src_img.size[1]):
-                    r, g, b = src_data[x, y][:3]
+                    data = src_data[x, y][:num_channels]
                     try:
-                        r, g, b = color_map[(r, g, b)]
+                        data = color_map[data]
                     except KeyError:
                         pass
-                    dst_data[x, y] = r, g, b
+                    dst_data[x, y] = data
             dst_img.save(dst_file, "png")
 
     tweaks = config.items('tweaks')
