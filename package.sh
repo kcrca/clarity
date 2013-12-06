@@ -11,8 +11,8 @@
 # If any dirs are specified on the command line, build only those
 declare -a dirs
 dirs=("$@")
-if test -z "$dirs"; then
-    dirs=(clarity clearity connectivity continuity)
+if [ -z "$dirs" ]; then
+    dirs=(clarity clearity connectivity continuity beguile)
 fi
 
 # Create the packs dir
@@ -20,14 +20,14 @@ test -d packs || mkdir packs
 packs=$PWD/packs
 
 # If this script is newer than core.zip, start from scratch
-if test packs/core.zip -ot $0; then
+if [ packs/core.zip -ot $0 ]; then
     echo Build script is new, starting from scratch
     rm packs/core.zip
 fi
 
 # If any file in core is newer than core.zip, generate things. This could
 # be more specific by checking only relevant files.
-if test ! -f packs/core.zip -o ! -z "`find core -type f -newer packs/core.zip`"; then
+if [ ! -f packs/core.zip -o ! -z "`find core -type f -newer packs/core.zip`" ]; then
     echo Regenerating derived files in core
     (cd core/assets/minecraft/textures ; python colorize.py)
     (cd core/assets/minecraft/textures/gui/container ; python panels.py)
@@ -52,9 +52,19 @@ function do_zip() {
 do_zip core
 
 for f in "${dirs[@]}"; do
-    if test ! -f packs/$f.zip -o packs/$f.zip -ot packs/core.zip -o packs/$f.zip -ot repack/repack.py; then
-	echo Repacking $f
-	python repack/repack.py core $f > packs/$f.repack.out
+    if [ ! -f packs/$f.zip -o packs/$f.zip -ot packs/core.zip -o packs/$f.zip -ot repack/repack.py ]; then
+	if [ "$f" = "beguile" ]; then
+	    # This isn't technically a "repack", but we use the "repack" directory for overrides
+	    # because inventing a new kind of suffix seems weird
+	    echo Creating $f
+	    mkdir -p $f
+	    tar c -C clarity assets/minecraft/textures/gui assets/minecraft/textures/font | tar xf - -C $f
+	    tar c -C $f.repack/override . | tar xf - -C $f
+	    rm $f/*.pxm
+	else
+	    echo Repacking $f
+	    python repack/repack.py core $f > packs/$f.repack.out
+	fi
 	do_zip $f
 	(
 	    cd home/resourcepacks
