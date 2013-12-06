@@ -18,6 +18,7 @@ target_opt_pat = re.compile(r'([^:]*):(.*)')
 tile_spec_pat = re.compile(r'(\d+)x(\d+)(?:@(\d+),(\d+))?')
 ctm_opt_pat = re.compile(r'([a-z_]*):?(.*)')
 not_in_pack_pat = re.compile(r'^\.|\.(pxm|tiff)$')
+do_not_copy_pat = re.compile(r'\.(py|cfg|sh|pxm|config|tiff)|/(.|\.DS_Store)$')
 
 warnings = []
 
@@ -324,7 +325,8 @@ class Change(object):
 
 class CopyChange(Change):
     def apply(self, src, dst, subpath):
-        shutil.copy2(src, dst)
+        if not do_not_copy_pat.search(dst):
+            shutil.copy2(src, dst)
 
 
 class SimpleChange(Change):
