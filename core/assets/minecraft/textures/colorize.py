@@ -14,33 +14,29 @@ config.read('colorize.cfg')
 color_re = re.compile(r'\(?\s*(\d+),\s*(\d+),\s*(\d+),?\s*(\d+)?\s*\)?')
 
 
-def decode_color(color):
-    m = color_re.match(color)
-    if not m:
-        print('Bad color: %s' % color)
-    else:
-        color_nums = m.groups()
-        if color_nums[3] is None:
-            color_nums = color_nums[:2]
-        return tuple(map(int, color_nums))
+def decode_color(color_nums, has_alpha):
+    if has_alpha and color_nums[3] is '':
+        color_nums = (color_nums[0], color_nums[1], color_nums[2], '255')
+    elif not has_alpha and len(color_nums) > 3:
+        color_nums = color_nums[:3]
+    return tuple(map(int, color_nums))
 
 
-def color_list(map_name, color_name, colors_config):
+def color_list(colors_config, has_alpha):
     l = []
-    colors = colors_config.split()
-    for color in colors:
-        l.append(decode_color(color))
+    for color_nums in color_re.findall(colors_config):
+        l.append(decode_color(color_nums, has_alpha))
     return l
 
 
-def map_for(map_name, key_color):
-    key_list = color_list(map_name, key_color, config.get(map_name, key_color))
+def map_for(map_name, key_color, has_alpha):
+    key_list = color_list(config.get(map_name, key_color), has_alpha)
     num_colors = len(key_list)
     color_map = {}
     for color_name, colors_config in config.items(map_name):
         if color_name == key_color:
             continue
-        l = color_list(map_name, color_name, colors_config)
+        l = color_list(colors_config, has_alpha)
         if len(l) != num_colors:
             print("Mismatch: %s: %s: expected %d colors, found %d" % (
                 map_name, color_name, num_colors, len(l)))
@@ -104,9 +100,9 @@ def list_image_colors(files):
         colors = set()
         for x in xrange(src_img.size[0]):
             for y in xrange(src_img.size[1]):
-                colors.add(src_data[x,y])
+                colors.add(src_data[x, y])
         print "%s:" % f
-        for c in colors:
+        for c in sorted(colors):
             print "  %s" % str(c)
 
 
@@ -156,7 +152,7 @@ def main(argv=None):
         num_channels = len(src_data[0, 0])
         has_alpha = num_channels > 3
 
-        color_maps = map_for(map_name, key_color)
+        color_maps = map_for(map_name, key_color, has_alpha)
         for color_name, color_map in color_maps.iteritems():
             dst_file = file_from_color(file_pat, color_name)
             print ("    %s" % dst_file)
