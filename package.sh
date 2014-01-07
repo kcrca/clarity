@@ -52,7 +52,7 @@ function do_zip() {
 do_zip core
 
 for f in "${dirs[@]}"; do
-    if [ ! -f packs/$f.zip -o packs/$f.zip -ot packs/core.zip -o packs/$f.zip -ot repack/repack.py ]; then
+    if [ ! -f packs/$f.zip -o packs/$f.zip -ot packs/core.zip -o packs/$f.zip -ot repack/repack.py -o packs/$f.zip -ot $f.repack/repack.cfg ]; then
 	if [ "$f" = "beguile" ]; then
 	    # This isn't technically a "repack", but we use the "repack" directory for overrides
 	    # because inventing a new kind of suffix seems weird
