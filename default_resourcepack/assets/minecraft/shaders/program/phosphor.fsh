@@ -14,6 +14,6 @@ uniform float LerpFactor = 1.0;
 void main() {
     vec4 CurrTexel = texture2D(DiffuseSampler, texCoord);
     vec4 PrevTexel = texture2D(PrevSampler, texCoord);
-    
-    gl_FragColor = vec4(max(PrevTexel.rgb * Phosphor, CurrTexel.rgb), CurrTexel.a);
+
+    gl_FragColor = vec4(max(PrevTexel.rgb * Phosphor, CurrTexel.rgb), 1.0);
 }

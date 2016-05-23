@@ -15,7 +15,7 @@ void main(){
     vec4 l2 = texture2D (DiffuseSampler, texCoord + vec2 (-oneTexel.x * 2.0,               0.0));
     vec4 r1 = texture2D (DiffuseSampler, texCoord + vec2 ( oneTexel.x,                     0.0));
     vec4 r2 = texture2D (DiffuseSampler, texCoord + vec2 ( oneTexel.x * 2.0,               0.0));
-    
+
     vec4 v1 = mix (c, mix (l1, l2, 0.667), 0.75);
     vec4 v2 = mix (c, mix (r1, r2, 0.667), 0.75);
     vec4 v3 = mix (c, mix (u1, u2, 0.667), 0.75);
@@ -25,5 +25,5 @@ void main(){
     vec4 v6 = mix (v3, v4, 0.5);
 
     vec4 color = mix (v5, v6, 0.5);
-    gl_FragColor = vec4(color.rgb, c.a);
+    gl_FragColor = vec4(color.rgb, 1.0);
 }

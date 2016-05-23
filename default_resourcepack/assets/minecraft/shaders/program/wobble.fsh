@@ -54,5 +54,5 @@ void main() {
     vec4 rgb = texture2D(DiffuseSampler, texCoord + offset);
     vec3 hsv = RGBtoHSV(rgb.rgb);
     hsv.x = fract(hsv.x + Time);
-    gl_FragColor = vec4(HSVtoRGB(hsv), rgb.a);
+    gl_FragColor = vec4(HSVtoRGB(hsv), 1.0);
 }

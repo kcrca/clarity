@@ -29,18 +29,18 @@ void main(){
     vec4 sum = uDiff + dDiff + lDiff + rDiff + u2Diff + d2Diff + l2Diff + r2Diff;
     vec4 gray = vec4(0.3, 0.59, 0.11, 0.0);
     float sumLuma = 1.0 - dot(clamp(sum, 0.0, 1.0), gray);
-    
+
     // Get luminance of center pixel and adjust
     float centerLuma = dot(center + (center - pow(center, vec4(LumaRamp))), gray);
-    
+
     // Quantize the luma value
     centerLuma = centerLuma - fract(centerLuma * LumaLevel) / LumaLevel;
-    
+
     // Re-scale to full range
     centerLuma = centerLuma * (LumaLevel / (LumaLevel - 1.0));
-    
+
     // Blend with outline
     centerLuma = centerLuma * sumLuma;
-    
-    gl_FragColor = vec4(centerLuma, centerLuma, centerLuma, center.a);
+
+    gl_FragColor = vec4(centerLuma, centerLuma, centerLuma, 1.0);
 }

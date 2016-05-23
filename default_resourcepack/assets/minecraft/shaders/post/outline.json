@@ -1,17 +1,18 @@
 {
     "targets": [
-        "swap"
+        "swap",
+        "final"
     ],
     "passes": [
         {
             "name": "outline",
-            "intarget": "minecraft:main",
+            "intarget": "final",
             "outtarget": "swap"
         },
         {
             "name": "blit",
             "intarget": "swap",
-            "outtarget": "minecraft:main"
+            "outtarget": "final"
         }
     ]
 }

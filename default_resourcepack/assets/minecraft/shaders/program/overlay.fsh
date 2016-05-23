@@ -15,12 +15,13 @@ uniform vec3 BlueMatrix  = vec3(0.0, 0.0, 1.0);
 void main(){
     vec2 mosaicInSize = InSize / MosaicSize;
     vec2 fractPix = fract(texCoord * mosaicInSize) / mosaicInSize;
-    
+
     vec4 baseTexel = texture2D(DiffuseSampler, texCoord - fractPix);
     float red = dot(baseTexel.rgb, RedMatrix);
     float green = dot(baseTexel.rgb, GreenMatrix);
     float blue = dot(baseTexel.rgb, BlueMatrix);
-    
+
     vec4 overlayTexel = texture2D(OverlaySampler, vec2(texCoord.x, 1.0 - texCoord.y));
-    gl_FragColor = mix(vec4(red, green, blue, baseTexel.a), overlayTexel, overlayTexel.a);
+    overlayTexel.a = 1.0;
+    gl_FragColor = mix(vec4(red, green, blue, 1.0), overlayTexel, overlayTexel.a);
 }

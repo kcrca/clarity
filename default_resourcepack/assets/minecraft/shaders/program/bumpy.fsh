@@ -30,5 +30,5 @@ void main(){
     f += (dr * i) - (dl * i);
 
     vec4 color = c * clamp(f, 0.5, 2);
-    gl_FragColor = vec4(color.rgb, c.a);
+    gl_FragColor = vec4(color.rgb, 1.0);
 }

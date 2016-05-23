@@ -17,5 +17,5 @@ void main(){
     vec4 rDiff = center - right;
     vec4 sum = uDiff + dDiff + lDiff + rDiff;
     vec3 clamped = clamp(center.rgb - sum.rgb, 0.0, 1.0);
-    gl_FragColor = vec4(clamped, center.a);
+    gl_FragColor = vec4(clamped, 1.0);
 }

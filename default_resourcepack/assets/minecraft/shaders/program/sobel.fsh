@@ -16,5 +16,5 @@ void main(){
     vec4 upDiff    = center - up;
     vec4 downDiff  = center - down;
     vec4 total = clamp(leftDiff + rightDiff + upDiff + downDiff, 0.0, 1.0);
-    gl_FragColor = vec4(total.rgb, center.a);
+    gl_FragColor = vec4(total.rgb, 1.0);
 }

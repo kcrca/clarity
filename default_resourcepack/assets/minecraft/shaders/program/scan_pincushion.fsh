@@ -26,12 +26,12 @@ const vec3 Power = vec3(0.8, 0.8, 0.8);
 
 void main() {
     vec4 InTexel = texture2D(DiffuseSampler, texCoord);
-    
+
     vec2 PinUnitCoord = texCoord * Two.xy - One.xy;
     float PincushionR2 = pow(length(PinUnitCoord), 2.0);
     vec2 PincushionCurve = PinUnitCoord * PincushionAmount * PincushionR2;
     vec2 ScanCoord = texCoord;
-    
+
     ScanCoord *= One.xy - PincushionAmount * 0.2;
     ScanCoord += PincushionAmount * 0.1;
     ScanCoord += PincushionCurve;
@@ -42,7 +42,7 @@ void main() {
     ScreenClipCoord *= One.xy - CurvatureAmount * 0.2;
     ScreenClipCoord += Half.xy;
     ScreenClipCoord += CurvatureClipCurve;
-    
+
     // -- Alpha Clipping --
     if (ScanCoord.x < 0.0) discard;
     if (ScanCoord.y < 0.0) discard;
@@ -54,11 +54,11 @@ void main() {
     float ScanBrightMod = sin(InnerSine * Pi + ScanlineOffset * InSize.y * 0.25);
     float ScanBrightness = mix(1.0, (pow(ScanBrightMod * ScanBrightMod, ScanlineHeight) * ScanlineBrightScale + 1.0) * 0.5, ScanlineAmount);
     vec3 ScanlineTexel = InTexel.rgb * ScanBrightness;
-    
+
     // -- Color Compression (increasing the floor of the signal without affecting the ceiling) --
     ScanlineTexel = Floor + (One.xyz - Floor) * ScanlineTexel;
-    
+
     ScanlineTexel.rgb = pow(ScanlineTexel.rgb, Power);
 
-    gl_FragColor = vec4(ScanlineTexel.rgb, InTexel.a);
+    gl_FragColor = vec4(ScanlineTexel.rgb, 1.0);
 }
