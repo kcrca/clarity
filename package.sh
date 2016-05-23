@@ -51,6 +51,8 @@ function do_zip() {
 # Build core.zip
 do_zip core
 
+rm -f home
+ln -s $HOME/Library/Application\ Support/minecraft home
 for f in "${dirs[@]}"; do
     if [ ! -f packs/$f.zip -o packs/$f.zip -ot packs/core.zip -o packs/$f.zip -ot repack/repack.py -o packs/$f.zip -ot $f.repack/repack.cfg ]; then
 	if [ "$f" = "beguile" ]; then
