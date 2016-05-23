@@ -75,11 +75,21 @@ def list_colors(color_name, file_name, exclude_colors):
 
 
 def file_from_color(file_pat, color_name):
-    return file_pat.replace('COLOR', color_name)
+    cpath = file_pat.replace('COLOR', color_name)
+    # Handle the case where one color is the canonical one. For example, as of 1.9,
+    # there is "sandstone.png" and "red_standstone.png". The first is a yellow sandstone,
+    # but it isn't called "yellow_standstong.png" because when it was created, there was
+    # only one color. So this code allows there to be a version of the file without the
+    # "COLOR_" part of the file name, but only if it actually exists.
+    if not os.path.isfile(cpath):
+	npath = file_pat.replace('COLOR_', '');
+	if os.path.isfile(npath):
+	    cpath = npath;
+    return cpath;
 
 
 def list_coloring(coloring, exclude_colors):
-    map_name, key_color, file_pat = decode_coloring(coloring)
+    map_name, key_color, file_pat, files = decode_coloring(coloring)
     key_file = file_from_color(file_pat, key_color)
     print "[%s]" % coloring
     print ""

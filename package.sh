@@ -9,6 +9,8 @@
 #
 
 # If any dirs are specified on the command line, build only those
+cd `dirname $0`
+
 declare -a dirs
 dirs=("$@")
 if [ -z "$dirs" ]; then
