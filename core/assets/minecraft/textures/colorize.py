@@ -13,6 +13,15 @@ config.read('colorize.cfg')
 
 color_re = re.compile(r'\(?\s*(\d+),\s*(\d+),\s*(\d+),?\s*(\d+)?\s*\)?')
 
+aliases = {}
+
+def configure_aliases():
+    spec = config.items('aliases')
+    for one, others in spec:
+	names = others.split() + [one]
+	for n in names:
+	    aliases[n] = names
+    print("aliases: %s" % aliases)
 
 def decode_color(color_nums, has_alpha):
     if has_alpha and color_nums[3] is '':
@@ -75,17 +84,27 @@ def list_colors(color_name, file_name, exclude_colors):
 
 
 def file_from_color(file_pat, color_name):
-    cpath = file_pat.replace('COLOR', color_name)
+    others = []
+    try:
+	others = aliases[color_name];
+    except KeyError:
+	others = [color_name]
+
+    for n in others:
+	cpath = file_pat.replace('COLOR', n)
+	if os.path.isfile(cpath):
+	    return cpath
+
     # Handle the case where one color is the canonical one. For example, as of 1.9,
     # there is "sandstone.png" and "red_standstone.png". The first is a yellow sandstone,
     # but it isn't called "yellow_standstong.png" because when it was created, there was
     # only one color. So this code allows there to be a version of the file without the
     # "COLOR_" part of the file name, but only if it actually exists.
-    if not os.path.isfile(cpath):
-	npath = file_pat.replace('COLOR_', '');
-	if os.path.isfile(npath):
-	    cpath = npath;
-    return cpath;
+    cpath = file_pat.replace('COLOR_', '')
+    if os.path.isfile(cpath):
+	return cpath
+
+    raise Exception("No path found for %s in %s" % (file_pat, others))
 
 
 def list_coloring(coloring, exclude_colors):
@@ -131,6 +150,8 @@ def main(argv=None):
         print >> sys.stderr, "for help use --help"
         return 2
 
+    aliases = {}
+
     list_colorings = []
     exclude_colors = set()
     # process options
@@ -152,6 +173,7 @@ def main(argv=None):
             list_coloring(coloring, exclude_colors)
         return 0
 
+    configure_aliases()
     colorings = config.items('colorings')
     for coloring, coloring_config in colorings:
         map_name, key_color, file_pat = decode_coloring(coloring)
