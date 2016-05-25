@@ -21,7 +21,6 @@ def configure_aliases():
 	names = others.split() + [one]
 	for n in names:
 	    aliases[n] = names
-    print("aliases: %s" % aliases)
 
 def decode_color(color_nums, has_alpha):
     if has_alpha and color_nums[3] is '':
