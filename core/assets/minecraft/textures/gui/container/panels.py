@@ -101,7 +101,7 @@ for panel, part_str in panels:
                 elif part == 'numbers':
                     draw = ImageDraw.Draw(output)
                     for i in range(1, 10):
-                        x = x_pos + (i - 1) * slot_width + font_size / 2 + 2
+                        x = x_pos + (i - 1) * slot_width + font_size / 2 + 4
                         y = y_pos + slot_height - 1
                         draw.bitmap((x, y), digits[i], fill=font_color)
                     used_part_files.append('digits.png')
