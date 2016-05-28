@@ -350,7 +350,16 @@ class MaskChange(SimpleChange):
         return 'Mask %s' % self.mask_name
 
     def simple_change(self, src_img, dst_img):
-        dst_img.paste(src_img, self.img)
+	mask_img = self.img
+	if mask_img.size != src_img.size:
+	    # Tile the mask into a larger mask
+	    mask_img = Image.new('RGBA', src_img.size)
+	    sw, sh = src_img.size
+	    mw, mh = self.img.size
+	    for x in range(0, sw, mw):
+		for y in range(0, sh, mh):
+		    mask_img.paste(self.img, (x, y))
+        dst_img.paste(src_img, mask_img)
 
 
 class EraseEdgeChange(SimpleChange):
