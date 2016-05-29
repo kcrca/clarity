@@ -114,7 +114,7 @@ for panel, part_str in panels:
 
     output.save('%s.png' % panel, 'PNG')
 
-parts_files = filter(lambda x: x[-4:] != '.bak', os.listdir('parts'))
+parts_files = filter(lambda x: x[-4:] == '.png', os.listdir('parts'))
 unused = set(parts_files) - set(used_part_files) - set('slot.png')
 
 if len(unused) > 0:
