@@ -56,7 +56,9 @@ do_zip core
 rm -f home
 ln -s $HOME/Library/Application\ Support/minecraft home
 for f in "${dirs[@]}"; do
-    if [ ! -f packs/$f.zip -o packs/$f.zip -ot packs/core.zip -o packs/$f.zip -ot repack/repack.py -o packs/$f.zip -ot $f.repack/repack.cfg ]; then
+    zip=packs/$f.zip
+    if [ ! -f $zip -o $zip -ot packs/core.zip -o $zip -ot repack/repack.py -o $zip -ot $f.repack/repack.cfg ] \
+	|| ( [ -f $zip ] &&  find $f.repack -newer $zip -type f | grep -q . ); then
 	if [ "$f" = "beguile" ]; then
 	    # This isn't technically a "repack", but we use the "repack" directory for overrides
 	    # because inventing a new kind of suffix seems weird
@@ -67,7 +69,14 @@ for f in "${dirs[@]}"; do
 	    rm $f/*.pxm
 	else
 	    echo Repacking $f
-	    python repack/repack.py core $f > packs/$f.repack.out
+	    out=packs/$f.repack.out
+	    rm -f $out
+	    if python repack/repack.py core $f > $out; then
+		:
+	    else
+		cat $out 
+		exit 1
+	    fi
 	fi
 	do_zip $f
 	(

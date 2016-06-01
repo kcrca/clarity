@@ -533,9 +533,10 @@ class Pass(object):
         else:
             path = target + '.png'
             if path in self.change_for:
-                existing = self.change_for[target]
+                existing = self.change_for[path]
                 print 'Duplicate change for %s: %s and %s' % (
                     target, change.name(), existing.name())
+		os.sys.exit(1)
             else:
                 self.change_for[path] = change
 
