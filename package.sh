@@ -11,10 +11,20 @@
 # If any dirs are specified on the command line, build only those
 cd `dirname $0`
 
+do_clean=0
+if [ x"$1" = x"--clean" ]; then
+    do_clean=1
+    shift
+fi
+
 declare -a dirs
 dirs=("$@")
 if [ -z "$dirs" ]; then
     dirs=(clarity clearity connectivity continuity beguile)
+fi
+
+if [ $do_clean -gt 0 ]; then
+    rm -rf packs $dirs
 fi
 
 # Create the packs dir
@@ -29,7 +39,7 @@ fi
 
 # If any file in core is newer than core.zip, generate things. This could
 # be more specific by checking only relevant files.
-if [ ! -f packs/core.zip -o ! -z "`find core -type f -newer packs/core.zip`" ]; then
+if [ ! -f packs/core.zip -o ! -z "`find core -newer packs/core.zip`" ]; then
     echo Regenerating derived files in core
     (cd core/assets/minecraft/textures ; python colorize.py)
     (cd core/assets/minecraft/textures/gui/container ; python panels.py)
@@ -58,7 +68,7 @@ ln -s $HOME/Library/Application\ Support/minecraft home
 for f in "${dirs[@]}"; do
     zip=packs/$f.zip
     if [ ! -f $zip -o $zip -ot packs/core.zip -o $zip -ot repack/repack.py -o $zip -ot $f.repack/repack.cfg ] \
-	|| ( [ -f $zip ] &&  find $f.repack -newer $zip -type f | grep -q . ); then
+	|| ( [ -f $zip ] &&  find $f.repack -newer $zip | grep -q . ); then
 	if [ "$f" = "beguile" ]; then
 	    # This isn't technically a "repack", but we use the "repack" directory for overrides
 	    # because inventing a new kind of suffix seems weird
