@@ -1,0 +1,3 @@
+sand and red_sand override normal blockstates to force the textures
+to all align no matter the block orienation, which is needed for
+the pattern to look uniform in a sea of sand.
