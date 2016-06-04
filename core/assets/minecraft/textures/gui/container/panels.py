@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 import ConfigParser
 import os
 import re
