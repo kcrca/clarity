@@ -19,20 +19,28 @@ for new in `find $dirs -name '*.png'`; do
     if [ -f $old ]; then
 	echo $new
 	base=`dirname $new`/`basename $new .png`
-	convert $new $old -gravity center -compose Overlay -composite ${base}_no.png
-	convert $old $new -gravity center -compose Overlay -composite ${base}_on.png
-	if [ $interact -gt 0 ]; then
-	    cp $new ${base}_nn.png
-	    cp $old ${base}_oo.png
-	    open -Wn -a /Applications/Preview.app ${base}_[no][on].png
-	    read -p "Edit? [yN] " keep
-	    echo $keep
-	    case "$keep" in
-	      [Yy]*) open -Wn -a /Applications/Pixelmator.app $new $old ;;
-	      *) rm ${base}_[no][on].png ;;
-	    esac
-	fi
+	stop=0
+	while [ $stop -eq 0 ]; do
+	    stop=1
+	    convert $new $old -gravity center -compose Overlay -composite ${base}_no.png
+	    convert $old $new -gravity center -compose Overlay -composite ${base}_on.png
+	    if [ $interact -ne 0 ]; then
+		cp $new ${base}_nn.png
+		cp $old ${base}_oo.png
+		open -Wn -a /Applications/Preview.app ${base}_[no][on].png
+		read -p "Edit? [yN] " edit
+		case "$edit" in
+		  [Yy]*)
+		      open -Wn -a /Applications/Pixelmator.app $new $old
+		      stop=1
+		      ;;
+		  *)
+		      rm ${base}_[no][on].png
+		      ;;
+		esac
+	    fi
+	done
     else
-	echo ... skipping $f
+	echo ... skipping $new
     fi
 done
