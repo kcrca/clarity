@@ -20,7 +20,7 @@ fi
 declare -a dirs
 dirs=("$@")
 if [ -z "$dirs" ]; then
-    dirs=(clarity clearity connectivity continuity beguile)
+    dirs=(clarity connectivity continuity beguile)
 fi
 
 if [ $do_clean -gt 0 ]; then

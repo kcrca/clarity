@@ -1,2 +1,0 @@
-Clarity
-A transparent version of Clarity
