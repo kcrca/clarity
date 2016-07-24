@@ -4,6 +4,7 @@
         "particle": "blocks/hopper_outside",
         "top": "blocks/hopper_top",
         "side": "blocks/hopper_outside",
+        "front": "blocks/hopper_front",
         "inside": "blocks/hopper_inside"
     },
     "elements": [
@@ -12,7 +13,7 @@
             "faces": {
                 "down":  { "texture": "#side" },
                 "up":    { "texture": "#inside" },
-                "north": { "texture": "#side" },
+                "north": { "texture": "#front" },
                 "south": { "texture": "#side" },
                 "west":  { "texture": "#side" },
                 "east":  { "texture": "#side" }
@@ -45,8 +46,8 @@
             "faces": {
                 "down":  { "texture": "#side" },
                 "up":    { "texture": "#top" },
-                "north": { "texture": "#side" },
-                "south": { "texture": "#side" },
+                "north": { "texture": "#front" },
+                "south": { "texture": "#front" },
                 "west":  { "texture": "#side" },
                 "east":  { "texture": "#side" }
             }
@@ -67,7 +68,7 @@
             "faces": {
                 "down":  { "texture": "#side" },
                 "up":    { "texture": "#side" },
-                "north": { "texture": "#side" },
+                "north": { "texture": "#front" },
                 "south": { "texture": "#side" },
                 "west":  { "texture": "#side" },
                 "east":  { "texture": "#side" }
@@ -78,7 +79,7 @@
             "faces": {
                 "down":  { "texture": "#side" },
                 "up":    { "texture": "#side" },
-                "north": { "texture": "#side" },
+                "north": { "texture": "#front" },
                 "south": { "texture": "#side" },
                 "west":  { "texture": "#side", "rotation": 90 },
                 "east":  { "texture": "#side", "rotation": 270 }
