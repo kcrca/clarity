@@ -80,8 +80,8 @@
                 "up":    { "texture": "#side" },
                 "north": { "texture": "#side" },
                 "south": { "texture": "#side" },
-                "west":  { "texture": "#side" },
-                "east":  { "texture": "#side" }
+                "west":  { "texture": "#side", "rotation": 90 },
+                "east":  { "texture": "#side", "rotation": 270 }
             }
         }
     ]
