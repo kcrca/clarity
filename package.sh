@@ -43,6 +43,7 @@ if [ ! -f packs/core.zip -o ! -z "`find core -newer packs/core.zip`" ]; then
     echo Regenerating derived files in core
     (cd core/assets/minecraft/textures ; python colorize.py)
     (cd core/assets/minecraft/textures/gui/container ; python panels.py)
+    (cd core/assets/minecraft/models ; sh reparent.sh)
 fi
 
 # This function will build a single zip file
