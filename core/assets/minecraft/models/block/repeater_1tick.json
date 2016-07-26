@@ -1,5 +1,5 @@
 {
-    "parent": "block/flat",
+    "parent": "block/thin_block",
     "ambientocclusion": false,
     "textures": {
         "particle": "blocks/repeater_off",
