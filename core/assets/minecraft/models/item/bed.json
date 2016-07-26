@@ -1,0 +1,6 @@
+{
+    "parent": "block/bed_inventory",
+    "textures": {
+        "layer0": "items/bed"
+    }
+}
