@@ -56,7 +56,7 @@ function do_zip() {
 	# as the most recent mod time on any of the files. This lets the
 	# zip file's mod time stand for the most recent change in the entire
 	# zipped directory.
-	zip -rDqo $packs/$1.zip *
+	zip -rDqoy $packs/$1.zip *
     )
 }
 
