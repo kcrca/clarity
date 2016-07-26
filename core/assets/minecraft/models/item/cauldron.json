@@ -1,0 +1,6 @@
+{
+    "parent": "block/cauldron_empty",
+    "textures": {
+        "layer0": "items/cauldron"
+    }
+}
