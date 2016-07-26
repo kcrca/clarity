@@ -1,2 +1,6 @@
-# stuff
-item/cake	block/cake_uneaten
+block/cake_uneaten	block/block
+block/cauldron_empty	block/block
+block/comparator_unlit	block/flat
+block/fern		block/fern_cross
+block/hopper_down	block/block
+block/repeater_1tick	block/flat
