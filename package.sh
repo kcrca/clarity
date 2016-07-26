@@ -20,7 +20,7 @@ fi
 declare -a dirs
 dirs=("$@")
 if [ -z "$dirs" ]; then
-    dirs=(clarity connectivity continuity beguile bimodel)
+    dirs=(clarity connectivity continuity guild remodel)
 fi
 
 if [ $do_clean -gt 0 ]; then
@@ -82,10 +82,10 @@ for f in "${dirs[@]}"; do
     if [ ! -f $zip -o $zip -ot packs/core.zip -o $zip -ot repack/repack.py -o $zip -ot $f.repack/repack.cfg ] \
 	|| ( [ -f $zip ] &&  find $f.repack -newer $zip | grep -q . ); then
         case "$f" in
-	  "beguile")
+	  "guild")
 	    do_create $f assets/minecraft/textures/gui assets/minecraft/textures/font
 	    ;;
-	  "bimodel")
+	  "remodel")
 	    do_create $f assets/minecraft/models
 	    ;;
 	  *)
