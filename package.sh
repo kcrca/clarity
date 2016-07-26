@@ -20,7 +20,7 @@ fi
 declare -a dirs
 dirs=("$@")
 if [ -z "$dirs" ]; then
-    dirs=(clarity connectivity continuity beguile)
+    dirs=(clarity connectivity continuity beguile bimodel)
 fi
 
 if [ $do_clean -gt 0 ]; then
@@ -61,6 +61,17 @@ function do_zip() {
     )
 }
 
+# Creates special subparts of the texture pack set
+function do_create() {
+    name=$1
+    shift
+    echo Creating $name
+    mkdir -p $name
+    tar c -C clarity "$@" | tar xf - -C $name
+    tar c -C $name.repack/override . | tar xf - -C $name
+    find $name -name '*.pxm' | xargs rm
+}
+
 # Build core.zip
 do_zip core
 
@@ -70,15 +81,14 @@ for f in "${dirs[@]}"; do
     zip=packs/$f.zip
     if [ ! -f $zip -o $zip -ot packs/core.zip -o $zip -ot repack/repack.py -o $zip -ot $f.repack/repack.cfg ] \
 	|| ( [ -f $zip ] &&  find $f.repack -newer $zip | grep -q . ); then
-	if [ "$f" = "beguile" ]; then
-	    # This isn't technically a "repack", but we use the "repack" directory for overrides
-	    # because inventing a new kind of suffix seems weird
-	    echo Creating $f
-	    mkdir -p $f
-	    tar c -C clarity assets/minecraft/textures/gui assets/minecraft/textures/font | tar xf - -C $f
-	    tar c -C $f.repack/override . | tar xf - -C $f
-	    rm $f/*.pxm
-	else
+        case "$f" in
+	  "beguile")
+	    do_create $f assets/minecraft/textures/gui assets/minecraft/textures/font
+	    ;;
+	  "bimodel")
+	    do_create $f assets/minecraft/models
+	    ;;
+	  *)
 	    echo Repacking $f
 	    out=packs/$f.repack.out
 	    rm -f $out
@@ -88,7 +98,8 @@ for f in "${dirs[@]}"; do
 		cat $out 
 		exit 1
 	    fi
-	fi
+	    ;;
+        esac
 	do_zip $f
 	(
 	    cd home/resourcepacks
