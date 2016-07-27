@@ -13,6 +13,7 @@ i=0
 while [ "${files[$i]}" != "" ]; do
     file=${files[$i]}.json
     parent=${parents[$i]}
+    echo $file
     rm -f $file
     (if grep -s '"parent"' $orig/$file >/dev/null; then
 	sed -e '\+"parent"+s+: *".*"+: "'$parent'"+'
