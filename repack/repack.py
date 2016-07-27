@@ -17,7 +17,7 @@ block_id_pat = re.compile(r'(\d+):?(\d*)')
 target_opt_pat = re.compile(r'([^:]*):(.*)')
 tile_spec_pat = re.compile(r'(\d+)x(\d+)(?:@(\d+),(\d+))?')
 ctm_opt_pat = re.compile(r'([a-z_]*):?(.*)')
-not_in_pack_pat = re.compile(r'^\.|\.(pxm|tiff)$')
+skip_dirs_pat = re.compile(r'^\.|^[a-z]$')
 do_not_copy_pat = re.compile(r'\.(py|cfg|sh|pxm|config|tiff)|/(.|\.DS_Store)$')
 
 warnings = []
@@ -350,15 +350,15 @@ class MaskChange(SimpleChange):
         return 'Mask %s' % self.mask_name
 
     def simple_change(self, src_img, dst_img):
-	mask_img = self.img
-	if mask_img.size != src_img.size:
-	    # Tile the mask into a larger mask
-	    mask_img = Image.new('RGBA', src_img.size)
-	    sw, sh = src_img.size
-	    mw, mh = self.img.size
-	    for x in range(0, sw, mw):
-		for y in range(0, sh, mh):
-		    mask_img.paste(self.img, (x, y))
+        mask_img = self.img
+        if mask_img.size != src_img.size:
+            # Tile the mask into a larger mask
+            mask_img = Image.new('RGBA', src_img.size)
+            sw, sh = src_img.size
+            mw, mh = self.img.size
+            for x in range(0, sw, mw):
+                for y in range(0, sh, mh):
+                    mask_img.paste(self.img, (x, y))
         dst_img.paste(src_img, mask_img)
 
 
@@ -536,7 +536,7 @@ class Pass(object):
                 existing = self.change_for[path]
                 print 'Duplicate change for %s: %s and %s' % (
                     target, change.name(), existing.name())
-		os.sys.exit(1)
+                os.sys.exit(1)
             else:
                 self.change_for[path] = change
 
@@ -750,7 +750,7 @@ def subpath_for(dst):
 
 
 def only_pack_files(directory, files):
-    return [f for f in files if f[0] == '.']
+    return [f for f in files if skip_dirs_pat.match(f)]
 
 
 def only_png(directory, files):
