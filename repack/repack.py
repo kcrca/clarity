@@ -12,13 +12,13 @@ import Image
 
 __author__ = 'arnold'
 
-re_pat = re.compile(r'[][?*()\\+|]')
-block_id_pat = re.compile(r'(\d+):?(\d*)')
-target_opt_pat = re.compile(r'([^:]*):(.*)')
-tile_spec_pat = re.compile(r'(\d+)x(\d+)(?:@(\d+),(\d+))?')
-ctm_opt_pat = re.compile(r'([a-z_]*):?(.*)')
-skip_dirs_pat = re.compile(r'^\.|^[a-z]$')
-do_not_copy_pat = re.compile(r'\.(py|cfg|sh|pxm|config|tiff)|/(.|\.DS_Store)$')
+re_re = re.compile(r'[][?*()\\+|]')
+block_id_re = re.compile(r'(\d+):?(\d*)')
+target_opt_re = re.compile(r'([^:]*):(.*)')
+tile_spec_re = re.compile(r'(\d+)x(\d+)(?:@(\d+),(\d+))?')
+ctm_opt_re = re.compile(r'([a-z_]*):?(.*)')
+skip_dirs_re = re.compile(r'^\.|^[a-z]$')
+do_not_copy_re = re.compile(r'\.(py|cfg|sh|pxm|config|tiff)|/(.|\.DS_Store)$')
 
 warnings = []
 
@@ -325,7 +325,7 @@ class Change(object):
 
 class CopyChange(Change):
     def apply(self, src, dst, subpath):
-        if not do_not_copy_pat.search(dst):
+        if not do_not_copy_re.search(dst):
             shutil.copy2(src, dst)
 
 
@@ -413,7 +413,7 @@ class TileOverEdge(SimpleChange):
         self.tile_size = None
 
     def set_options(self, opt_str):
-        m = tile_spec_pat.match(opt_str)
+        m = tile_spec_re.match(opt_str)
         groups = m.groups()
         self.tile_size = tuple(int(s) for s in groups[0:2])
         self.tile_pos = (0, 0)
@@ -468,7 +468,7 @@ class ConnectedTextureChange(Change):
 
     def set_options(self, opt_str):
         if len(opt_str):
-            m = ctm_opt_pat.match(opt_str)
+            m = ctm_opt_re.match(opt_str)
             ch, ch_opt = m.groups()
             if ch:
                 self.edgeless_change = change_by_name[ch]
@@ -482,7 +482,7 @@ class ConnectedTextureChange(Change):
 
         base = os.path.basename(dst)[:-4]
         block_id_str = ids[base]
-        block_id, block_dmg = block_id_pat.match(block_id_str).groups()
+        block_id, block_dmg = block_id_re.match(block_id_str).groups()
         ctm_dir = os.path.join(ctm_top_dir, base)
 
         edgeless_img = Image.new('RGBA', src_img.size)
@@ -523,7 +523,7 @@ class Pass(object):
         self.default_change = None
 
     def set_change(self, target, change):
-        m = target_opt_pat.match(target)
+        m = target_opt_re.match(target)
         if m:
             target, opt_str = m.groups()
             change = change.modified(opt_str)
@@ -605,7 +605,7 @@ class Pass(object):
         change.apply(src, dst, subpath)
 
     def _target_re(self, target):
-        if re_pat.search(target):
+        if re_re.search(target):
             return re.compile(target + '.png')
         return None
 
@@ -750,7 +750,7 @@ def subpath_for(dst):
 
 
 def only_pack_files(directory, files):
-    return [f for f in files if skip_dirs_pat.match(f)]
+    return [f for f in files if skip_dirs_re.match(f)]
 
 
 def only_png(directory, files):
