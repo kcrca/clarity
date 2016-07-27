@@ -15,6 +15,17 @@ blocks/wool_colored_magenta.png
 blocks/wool_colored_silver.png
 blocks/wool_colored_red.png
 blocks/wool_colored_lime.png
+items/dye_powder_gray.png
+items/dye_powder_magenta.png
+items/dye_powder_purple.png
+items/dye_powder_yellow.png
+items/dye_powder_light_blue.png
+items/dye_powder_green.png
+items/dye_powder_orange.png
+items/dye_powder_cyan.png
+items/dye_powder_silver.png
+items/dye_powder_red.png
+items/dye_powder_lime.png
 blocks/glass_pink.png
 blocks/glass_gray.png
 blocks/glass_brown.png
