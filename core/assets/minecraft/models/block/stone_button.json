@@ -1,6 +1,6 @@
 {
     "parent": "block/button",
     "textures": {
-        "texture": "blocks/piston_side"
+        "texture": "blocks/stone_button"
     }
 }
