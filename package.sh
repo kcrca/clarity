@@ -65,7 +65,7 @@ function do_zip() {
 function do_create() {
     name=$1
     shift
-    echo Creating $name
+    echo ... Creating $name
     mkdir -p $name
     tar c -C clarity "$@" | tar xf - -C $name
     tar c -C $name.repack/override . | tar xf - -C $name
@@ -89,7 +89,7 @@ for f in "${dirs[@]}"; do
 	    do_create $f assets/minecraft/models
 	    ;;
 	  *)
-	    echo Repacking $f
+	    echo ... Repacking $f
 	    out=packs/$f.repack.out
 	    rm -f $out
 	    if python repack/repack.py core $f > $out; then
