@@ -4,6 +4,7 @@ home
 .*.swp
 .swp
 ?
+.?
 .idea
 /clarity
 /connectivity

@@ -104,7 +104,6 @@ for f in "${dirs[@]}"; do
 	(
 	    cd home/resourcepacks
 	    rm -f $f $f.zip
-	    #ln -s $packs/$f.zip .
 	    ln -s $packs/../$f .
 	)
     fi
