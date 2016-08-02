@@ -13,7 +13,7 @@ import Image
 __author__ = 'arnold'
 
 re_re = re.compile(r'[][?*()\\+|]')
-block_id_re = re.compile(r'(\d+):?(\d*)')
+block_id_re = re.compile(r'(\d+)([ \d]*):?([\d ]*)')
 target_opt_re = re.compile(r'([^:]*):(.*)')
 tile_spec_re = re.compile(r'(\d+)x(\d+)(?:@(\d+),(\d+))?')
 ctm_opt_re = re.compile(r'([a-z_]*):?(.*)')
@@ -25,7 +25,7 @@ warnings = []
 #Copyright_©_2010-2016_Graham_Edgecombe._All_Rights_Reserved.
 ids = {
     "air": "0",
-    "stone": "1",
+    "stone": "1:0",
     "stone_granite": "1:1",
     "stone_granite_smooth": "1:2",
     "stone_diorite": "1:3",
@@ -74,7 +74,7 @@ ids = {
     "acacia_leaves": "18:4",
     "big_oak_leaves": "18:5",
     "sponge": "19",
-    "glass": "20",
+    "glass": "20 102",
     "lapis_ore": "21",
     "lapis_block": "22",
     "dispenser": "23",
@@ -125,7 +125,7 @@ ids = {
     "double_nether_brick_slab": "43:6",
     "double_quartz_slab": "43:7",
     "stone_slab": "44:0",
-    "sandstone_slab": "44:1",
+    "sandstone_slab": "44:1 9",
     "wooden_slab": "44:2",
     "cobblestone_slab": "44:3",
     "brick_slab": "44:4",
@@ -183,7 +183,7 @@ ids = {
     "redstone_repeater_block_off": "93",
     "redstone_repeater_block_on": "94",
     "glass_white": "95:0",
-    "glass_orange": "95:1",
+    "glass_orange": "95 160:1",
     "glass_magenta": "95:2",
     "glass_light_blue": "95:3",
     "glass_yellow": "95:4",
@@ -209,7 +209,6 @@ ids = {
     "red_mushroom_cap": "99",
     "brown_mushroom_cap": "100",
     "iron_bars": "101",
-    "glass_pane": "102",
     "glass_pane_top": "102",
     "melon_block": "103",
     "pumpkin_stem": "104",
@@ -301,22 +300,22 @@ ids = {
     "hardened_clay_stained_green": "159:13",
     "hardened_clay_stained_red": "159:14",
     "hardened_clay_stained_black": "159:15",
-    "glass_pane_white": "160:0",
-    "glass_pane_orange": "160:1",
-    "glass_pane_magenta": "160:2",
-    "glass_pane_light_blue": "160:3",
-    "glass_pane_yellow": "160:4",
-    "glass_pane_lime": "160:5",
-    "glass_pane_pink": "160:6",
-    "glass_pane_gray": "160:7",
-    "glass_pane_silver": "160:8",
-    "glass_pane_cyan": "160:9",
-    "glass_pane_purple": "160:10",
-    "glass_pane_blue": "160:11",
-    "glass_pane_brown": "160:12",
-    "glass_pane_green": "160:13",
-    "glass_pane_red": "160:14",
-    "glass_pane_black": "160:15",
+    "glass_pane_top_white": "160:0",
+    "glass_pane_top_orange": "160:1",
+    "glass_pane_top_magenta": "160:2",
+    "glass_pane_top_light_blue": "160:3",
+    "glass_pane_top_yellow": "160:4",
+    "glass_pane_top_lime": "160:5",
+    "glass_pane_top_pink": "160:6",
+    "glass_pane_top_gray": "160:7",
+    "glass_pane_top_silver": "160:8",
+    "glass_pane_top_cyan": "160:9",
+    "glass_pane_top_purple": "160:10",
+    "glass_pane_top_blue": "160:11",
+    "glass_pane_top_brown": "160:12",
+    "glass_pane_top_green": "160:13",
+    "glass_pane_top_red": "160:14",
+    "glass_pane_top_black": "160:15",
     "hay_bale": "170",
     "white_carpet": "171:0",
     "orange_carpet": "171:1",
@@ -346,7 +345,10 @@ ids = {
     "grass_path": "208",
     "grass_path_top": "208",
     "grass_path_side": "208",
-    "frosted_ice": "212",
+    "frosted_ice_0": "212:0",
+    "frosted_ice_1": "212:1",
+    "frosted_ice_2": "212:2",
+    "frosted_ice_3": "212:3",
 }
 
 
@@ -533,7 +535,7 @@ class ConnectedTextureChange(Change):
 
         base = os.path.basename(dst)[:-4]
         block_id_str = ids[base]
-        block_id, block_dmg = block_id_re.match(block_id_str).groups()
+        block_id, other_block_ids, block_dmg = block_id_re.match(block_id_str).groups()
         ctm_dir = os.path.join(ctm_top_dir, base)
 
         edgeless_img = Image.new('RGBA', src_img.size)
@@ -551,12 +553,10 @@ class ConnectedTextureChange(Change):
         template_props = os.path.join(self.template_dir, 'block.properties')
         with open(template_props) as t:
             with open(prop_file, mode='w') as o:
-                o.writelines(t)
+                o.write('blockIDs=%s%s\n' % (block_id, other_block_ids))
                 if len(block_dmg):
                     o.write('metadata=%s\n' % block_dmg)
-                else:
-                    o.write('metadata=0\n')
-
+                o.writelines(t)
 
     def _mask_block(self, src, dst, block_img, edgeless_img):
         # block_img.show()
@@ -769,6 +769,8 @@ def copytree(src, dst, symlinks=False, ignore=None, copy_function=shutil.copy2,
             continue
         srcname = os.path.join(src, name)
         dstname = os.path.join(dst, name)
+        if 'glass' in name:
+            print 'copytree %s -> %s' % (srcname, dstname)
         try:
             if symlinks and os.path.islink(srcname):
                 linkto = os.readlink(srcname)
