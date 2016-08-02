@@ -18,14 +18,20 @@ target_opt_re = re.compile(r'([^:]*):(.*)')
 tile_spec_re = re.compile(r'(\d+)x(\d+)(?:@(\d+),(\d+))?')
 ctm_opt_re = re.compile(r'([a-z_]*):?(.*)')
 skip_dirs_re = re.compile(r'^\.|^\.?[a-z]$')
-do_not_copy_re = re.compile(r'\.(py|cfg|sh|pxm|config|tiff)|/(.|\.DS_Store|\.d)$')
+do_not_copy_re = re.compile(r'\.(py|cfg|sh|pxm|config|tiff)$|/(.|\.DS_Store|\.d)$')
 
 warnings = []
 
-#Copyright_©_2010-2013_Graham_Edgecombe._All_Rights_Reserved.
+#Copyright_©_2010-2016_Graham_Edgecombe._All_Rights_Reserved.
 ids = {
     "air": "0",
     "stone": "1",
+    "stone_granite": "1:1",
+    "stone_granite_smooth": "1:2",
+    "stone_diorite": "1:3",
+    "stone_diorite_smooth": "1:4",
+    "stone_andesite": "1:5",
+    "stone_andesite_smooth": "1:6",
     "grass": "2",
     "grass_top": "2",
     "grass_side": "2",
@@ -49,7 +55,8 @@ ids = {
     "stationary_water": "9",
     "lava": "10",
     "stationary_lava": "11",
-    "sand": "12",
+    "sand": "12:0",
+    "red_sand": "12:1",
     "gravel": "13",
     "gold_ore": "14",
     "iron_ore": "15",
@@ -72,6 +79,7 @@ ids = {
     "lapis_block": "22",
     "dispenser": "23",
     "sandstone_top": "24",
+    "sandstone_bottom": "24",
     "sandstone_normal": "24:0",
     "sandstone_carved": "24:1",
     "sandstone_smooth": "24:2",
@@ -174,7 +182,22 @@ ids = {
     "cake_block": "92",
     "redstone_repeater_block_off": "93",
     "redstone_repeater_block_on": "94",
-    "locked_chest": "95",
+    "glass_white": "95:0",
+    "glass_orange": "95:1",
+    "glass_magenta": "95:2",
+    "glass_light_blue": "95:3",
+    "glass_yellow": "95:4",
+    "glass_lime": "95:5",
+    "glass_pink": "95:6",
+    "glass_gray": "95:7",
+    "glass_silver": "95:8",
+    "glass_cyan": "95:9",
+    "glass_purple": "95:10",
+    "glass_blue": "95:11",
+    "glass_brown": "95:12",
+    "glass_green": "95:13",
+    "glass_red": "95:14",
+    "glass_black": "95:15",
     "trapdoor": "96",
     "stone_silverfish": "97:0",
     "cobblestone_silverfish": "97:1",
@@ -187,6 +210,7 @@ ids = {
     "brown_mushroom_cap": "100",
     "iron_bars": "101",
     "glass_pane": "102",
+    "glass_pane_top": "102",
     "melon_block": "103",
     "pumpkin_stem": "104",
     "melon_stem": "105",
@@ -221,8 +245,8 @@ ids = {
     "spruce_wood_slab": "126:1",
     "birch_wood_slab": "126:2",
     "jungle_wood_slab": "126:3",
-    "acacia_wood_slab": "126:3",
-    "big_oak_wood_slab": "126:3",
+    "acacia_wood_slab": "126:4",
+    "big_oak_wood_slab": "126:5",
     "cocoa_plant": "127",
     "sandstone_stairs": "128",
     "emerald_ore": "129",
@@ -277,6 +301,22 @@ ids = {
     "hardened_clay_stained_green": "159:13",
     "hardened_clay_stained_red": "159:14",
     "hardened_clay_stained_black": "159:15",
+    "glass_pane_white": "160:0",
+    "glass_pane_orange": "160:1",
+    "glass_pane_magenta": "160:2",
+    "glass_pane_light_blue": "160:3",
+    "glass_pane_yellow": "160:4",
+    "glass_pane_lime": "160:5",
+    "glass_pane_pink": "160:6",
+    "glass_pane_gray": "160:7",
+    "glass_pane_silver": "160:8",
+    "glass_pane_cyan": "160:9",
+    "glass_pane_purple": "160:10",
+    "glass_pane_blue": "160:11",
+    "glass_pane_brown": "160:12",
+    "glass_pane_green": "160:13",
+    "glass_pane_red": "160:14",
+    "glass_pane_black": "160:15",
     "hay_bale": "170",
     "white_carpet": "171:0",
     "orange_carpet": "171:1",
@@ -296,6 +336,17 @@ ids = {
     "black_carpet": "171:15",
     "hardened_clay": "172",
     "coal_block": "173",
+    "ice_packed": "174",
+    "red_sandstone_top": "179",
+    "red_sandstone_bottom": "179",
+    "red_sandstone_normal": "179:0",
+    "red_sandstone_carved": "179:1",
+    "red_sandstone_smooth": "179:2",
+    "end_bricks": "206",
+    "grass_path": "208",
+    "grass_path_top": "208",
+    "grass_path_side": "208",
+    "frosted_ice": "212",
 }
 
 
@@ -503,6 +554,8 @@ class ConnectedTextureChange(Change):
                 o.writelines(t)
                 if len(block_dmg):
                     o.write('metadata=%s\n' % block_dmg)
+                else:
+                    o.write('metadata=0\n')
 
 
     def _mask_block(self, src, dst, block_img, edgeless_img):
@@ -510,6 +563,8 @@ class ConnectedTextureChange(Change):
         mask_img = Image.open(src).convert('RGBA')
         # mask_img.show()
         dst_img = edgeless_img.copy()
+        if mask_img.size != dst_img.size:
+            mask_img = mask_img.resize(dst_img.size)
         dst_img.paste(block_img, mask_img)
         dst_img.save(dst)
         # dst_img.show()
@@ -750,7 +805,7 @@ def subpath_for(dst):
 
 
 def only_pack_files(directory, files):
-    return [f for f in files if skip_dirs_re.match(f)]
+    return [f for f in files if skip_dirs_re.match(f) or do_not_copy_re.search(f)]
 
 
 def only_png(directory, files):

@@ -92,7 +92,8 @@ for f in "${dirs[@]}"; do
 	    echo ... Repacking $f
 	    out=packs/$f.repack.out
 	    rm -f $out
-	    if python repack/repack.py core $f > $out; then
+	    echo python repack/repack.py core $f > $out
+	    if python repack/repack.py core $f >> $out; then
 		:
 	    else
 		cat $out 
