@@ -1,0 +1,19 @@
+ctm needs to know the top of the repacked (finished) continuity, as a source of edgeless images.
+
+The list of ctm'ed blocks should be the same (unless overridden somehow?) as continuity,
+so it needs continuity's repack.cfg
+
+Each ctm change needs
+    png file name (from which to get edged and edgeless images, and resolution)
+    edge width (default 1)
+    ctm template name
+    blockID/damages
+
+So
+
+[ctm]
+<ctm_template_name>: <name[:width]>
+means to use templates/ctm_template_name.width'x'resolution
+
+Each template has a block.properties file which will be filled in
+The directory also has a set of masks

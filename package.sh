@@ -20,7 +20,7 @@ fi
 declare -a dirs
 dirs=("$@")
 if [ -z "$dirs" ]; then
-    dirs=(clarity connectivity continuity guild remodel)
+    dirs=(clarity connectivity guild remodel)
 fi
 
 if [ $do_clean -gt 0 ]; then
