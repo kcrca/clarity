@@ -201,7 +201,8 @@ class ConnectedTextureChange(Change):
         base = os.path.basename(dst)[:-4]
         ctm_dir = os.path.join(ctm_top_dir, base)
 
-        edgeless_img = Image.open(os.path.join(self.ctm_pass.edgeless_block_dir, base + '.png')).convert('RGBA')
+        edgeless = os.path.join(self.ctm_pass.edgeless_block_dir, base + '.png')
+        edgeless_img = Image.open(edgeless).convert('RGBA')
         copytree(self.template_dir, ctm_dir, ignore=only_png, overlay=True,
                  copy_function=lambda src_path, dst_path: _mask_block(src_path, dst_path, src_img, edgeless_img))
 
@@ -327,19 +328,14 @@ class Pass(object):
             src_dir = dir_name
             dst_dir = dir_name.replace(self.src_top, self.dst_top)
             safe_mkdirs(dst_dir)
-            for f in file_list + subdir_list:
-                is_dir = f in subdir_list
+            for f in file_list:
                 src = os.path.join(src_dir, f)
                 dst = os.path.join(dst_dir, f)
-                override = os.path.join(self.override_top, f)
+                override = src.replace(self.src_top, self.override_top)
                 if os.path.exists(override):
-                    if is_dir:
-                        copytree(override, dst, ignore=only_pack_files)
-                        subdir_list.remove(f)
-                    else:
-                        if len(only_pack_files(src_dir, [dst, ])) == 0:
-                            shutil.copy(override, dst)
-                elif not is_dir:
+                    if len(only_pack_files(src_dir, [dst, ])) == 0:
+                        shutil.copy(override, dst)
+                else:
                     self.change(src, dst)
         if len(self.unused_changes):
             global warnings
@@ -386,7 +382,7 @@ class ContinuityPass(Pass):
 class ConnectivityPass(Pass):
     def __init__(self):
         super(ConnectivityPass, self).__init__(core, connectivity)
-        self.edgeless_top = normpath(continuity)
+        self.edgeless_top = normpath('continuity') # use the generated edgless images
         self.edgeless_block_dir = self.src_blocks_dir.replace(core, continuity)
         self.block_subpath = self.dst_blocks_dir[len(self.dst_top) + 1:]
 
