@@ -29,10 +29,6 @@ def normpath(path):
 core = normpath('core')
 continuity = normpath('continuity')
 connectivity = normpath('connectivity')
-conn_repack_dir = continuity + '.repack'
-cont_repack_dir = connectivity + '.repack'
-conn_override = os.path.join(conn_repack_dir, 'override')
-cont_override = os.path.join(cont_repack_dir, 'override')
 
 
 class Change(object):
@@ -167,6 +163,19 @@ change_by_name = {
     'tile_over_edge': TileOverEdge()}
 
 
+def _mask_block(src, dst, block_img, edgeless_img):
+    # block_img.show()
+    mask_img = Image.open(src).convert('RGBA')
+    # mask_img.show()
+    dst_img = edgeless_img.copy()
+    if mask_img.size != dst_img.size:
+        mask_img = mask_img.resize(dst_img.size)
+    dst_img.paste(block_img, mask_img)
+    dst_img.save(dst)
+    # dst_img.show()
+    return
+
+
 class ConnectedTextureChange(Change):
     def __init__(self, template_name, ctm_pass):
         super(Change, self).__init__()
@@ -193,9 +202,8 @@ class ConnectedTextureChange(Change):
         ctm_dir = os.path.join(ctm_top_dir, base)
 
         edgeless_img = Image.open(os.path.join(self.ctm_pass.edgeless_block_dir, base + '.png')).convert('RGBA')
-        mask_sides = lambda src, dst: self._mask_block(src, dst, src_img, edgeless_img)
-        copytree(self.template_dir, ctm_dir, ignore=only_png,
-                 copy_function=mask_sides, overlay=True)
+        copytree(self.template_dir, ctm_dir, ignore=only_png, overlay=True,
+                 copy_function=lambda src_path, dst_path: _mask_block(src_path, dst_path, src_img, edgeless_img))
 
         for id_spec in self.id_specs:
             block_id, block_dmg = block_id_re.match(id_spec).groups()
@@ -208,18 +216,6 @@ class ConnectedTextureChange(Change):
                     if len(block_dmg):
                         o.write('metadata=%s\n' % block_dmg)
                     o.writelines(t)
-
-    def _mask_block(self, src, dst, block_img, edgeless_img):
-        # block_img.show()
-        mask_img = Image.open(src).convert('RGBA')
-        # mask_img.show()
-        dst_img = edgeless_img.copy()
-        if mask_img.size != dst_img.size:
-            mask_img = mask_img.resize(dst_img.size)
-        dst_img.paste(block_img, mask_img)
-        dst_img.save(dst)
-        # dst_img.show()
-        return
 
     def modified(self, label, opt_str):
         # Must remove ctm_pass before deep copy or we copy too much -- it is the one thing we don't want to deep copy
@@ -238,6 +234,12 @@ def safe_mkdirs(dst_dir):
     except os.error, e:
         if e.errno != errno.EEXIST:
             raise
+
+
+def _target_re(target):
+    if re_re.search(target):
+        return re.compile(target + '.png')
+    return None
 
 
 class Pass(object):
@@ -273,7 +275,7 @@ class Pass(object):
         if m:
             target, opt_str = m.groups()
             change = change.modified(target, opt_str)
-        regexp = self._target_re(target)
+        regexp = _target_re(target)
         if regexp:
             self.re_changes.append((regexp, change))
         else:
@@ -319,11 +321,11 @@ class Pass(object):
         return None
 
     def run(self):
-        for dirname, subdir_list, file_list in os.walk(self.src_top):
+        for dir_name, subdir_list, file_list in os.walk(self.src_top):
             file_list = [f for f in file_list if not do_not_copy_re.match(f)]
             subdir_list = [f for f in subdir_list if not do_not_copy_re.match(f)]
-            src_dir = dirname
-            dst_dir = dirname.replace(self.src_top, self.dst_top)
+            src_dir = dir_name
+            dst_dir = dir_name.replace(self.src_top, self.dst_top)
             safe_mkdirs(dst_dir)
             for f in file_list + subdir_list:
                 is_dir = f in subdir_list
@@ -365,16 +367,11 @@ class Pass(object):
         self.record_change(subpath)
         change.apply(src, dst, subpath)
 
-    def _target_re(self, target):
-        if re_re.search(target):
-            return re.compile(target + '.png')
-        return None
-
 
 class ContinuityPass(Pass):
-    def __init__(self, connectivity_pass):
+    def __init__(self, ctm_pass):
         super(ContinuityPass, self).__init__(core, continuity)
-        self.connectivity_pass = connectivity_pass
+        self.connectivity_pass = ctm_pass
 
     def parse_config(self, config):
         for change_name, targets in config.items('changes'):
@@ -389,12 +386,12 @@ class ContinuityPass(Pass):
 class ConnectivityPass(Pass):
     def __init__(self):
         super(ConnectivityPass, self).__init__(core, connectivity)
-        self.known = {}
         self.edgeless_top = normpath(continuity)
         self.edgeless_block_dir = self.src_blocks_dir.replace(core, continuity)
         self.block_subpath = self.dst_blocks_dir[len(self.dst_top) + 1:]
 
     def parse_config(self, config):
+        # noinspection PyAttributeOutsideInit
         self.template_top = os.path.join(self.repack_dir, 'ctm_templates')
         for template_name, targets in config.items('ctm'):
             change = ConnectedTextureChange(template_name, self)
@@ -424,6 +421,7 @@ passes[0].default_change = CopyChange()
 
 # Also added option to overlay on target instead of removing it
 
+# noinspection SpellCheckingInspection
 def copytree(src, dst, symlinks=False, ignore=None, copy_function=shutil.copy2,
              overlay=False):
     """Recursively copy a directory tree using copy2().
@@ -500,10 +498,12 @@ def copytree(src, dst, symlinks=False, ignore=None, copy_function=shutil.copy2,
         raise shutil.Error, errors
 
 
+# noinspection PyUnusedLocal
 def only_pack_files(directory, files):
     return [f for f in files if skip_dirs_re.match(f) or do_not_copy_re.search(f)]
 
 
+# noinspection PyUnusedLocal
 def only_png(directory, files):
     return [f for f in files if f[-4:] != '.png']
 
