@@ -1,0 +1,11 @@
+{
+    "parent": "item/minecart_block_inventory",
+    "textures": {
+        "block_bottom": "blocks/tnt_bottom",
+        "block_top": "blocks/tnt_top",
+        "block_front": "blocks/tnt_side",
+        "block_back": "blocks/tnt_side",
+        "block_left": "blocks/tnt_side",
+        "block_right": "blocks/tnt_side"
+    }
+}
