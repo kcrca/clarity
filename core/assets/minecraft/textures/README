@@ -92,5 +92,25 @@ blocks/repeating_command_block_side.png
 blocks/chain_command_block_side.png
 blocks/repeating_command_block_conditional.png
 blocks/chain_command_block_conditional.png
+items/wood_axe.png
+items/stone_axe.png
+items/diamond_axe.png
+items/gold_axe.png
+items/wood_pickaxe.png
+items/stone_pickaxe.png
+items/diamond_pickaxe.png
+items/gold_pickaxe.png
+items/wood_shovel.png
+items/stone_shovel.png
+items/diamond_shovel.png
+items/gold_shovel.png
+items/wood_sword.png
+items/stone_sword.png
+items/diamond_sword.png
+items/gold_sword.png
+items/wood_hoe.png
+items/stone_hoe.png
+items/diamond_hoe.png
+items/gold_hoe.png
 
 (The files are in git to help the script know which files should exist)
