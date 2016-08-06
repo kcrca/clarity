@@ -20,7 +20,7 @@ fi
 declare -a dirs
 dirs=("$@")
 if [ -z "$dirs" ]; then
-    dirs=(clarity connectivity guild remodel)
+    dirs=(clarity connectivity beguie remodel)
 fi
 
 if [ $do_clean -gt 0 ]; then
@@ -82,7 +82,7 @@ for f in "${dirs[@]}"; do
     if [ ! -f $zip -o $zip -ot packs/core.zip -o $zip -ot repack/repack.py -o $zip -ot $f.repack/repack.cfg ] \
 	|| ( [ -f $zip ] &&  find $f.repack -newer $zip | grep -q . ); then
         case "$f" in
-	  "guild")
+	  "beguie")
 	    do_create $f assets/minecraft/textures/gui assets/minecraft/textures/font
 	    ;;
 	  "remodel")
