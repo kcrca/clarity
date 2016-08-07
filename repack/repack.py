@@ -9,6 +9,8 @@ import copy
 import Image
 import errno
 
+import ImageDraw
+
 __author__ = 'arnold'
 
 re_re = re.compile(r'[][?*()\\+|]')
@@ -169,11 +171,30 @@ def _mask_block(src, dst, block_img, edgeless_img):
     # mask_img.show()
     dst_img = edgeless_img.copy()
     if mask_img.size != dst_img.size:
-        mask_img = mask_img.resize(dst_img.size)
+        mask_img = rescale_mask(mask_img, dst_img.size)
     dst_img.paste(block_img, mask_img)
     dst_img.save(dst)
     # dst_img.show()
     return
+
+
+def rescale_mask(o_mask, img_size):
+    n_mask = o_mask.resize(img_size)
+    o_size = o_mask.size[0]
+    n_size = img_size[0]
+    scale = n_size / o_size
+    draw = ImageDraw.Draw(n_mask)
+    draw.rectangle((1, 1, n_size - 2, n_size - 2), fill=(0, 0, 0, 0))
+    del draw
+
+    bar = n_mask.crop((scale, 0, 2 * scale - 1, n_size))
+    n_mask.paste(bar, (1, 0))
+    n_mask.paste(bar, (n_size - scale, 0))
+    bar = n_mask.crop((0, scale, n_size, 2 * scale - 1))
+    n_mask.paste(bar, (0, 1))
+    n_mask.paste(bar, (0, n_size - scale))
+
+    return n_mask
 
 
 class ConnectedTextureChange(Change):
@@ -382,7 +403,7 @@ class ContinuityPass(Pass):
 class ConnectivityPass(Pass):
     def __init__(self):
         super(ConnectivityPass, self).__init__(core, connectivity)
-        self.edgeless_top = normpath('continuity') # use the generated edgless images
+        self.edgeless_top = normpath('continuity')  # use the generated edgless images
         self.edgeless_block_dir = self.src_blocks_dir.replace(core, continuity)
         self.block_subpath = self.dst_blocks_dir[len(self.dst_top) + 1:]
 
