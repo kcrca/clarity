@@ -164,14 +164,28 @@ change_by_name = {
     'erase_edge': EraseEdgeChange(),
     'tile_over_edge': TileOverEdge()}
 
+mask_cache = {}
 
-def _mask_block(src, dst, block_img, edgeless_img):
+
+def mask_key(mask, size):
+    return '%s@%d' % (mask, size)
+
+
+def _mask_block(mask, dst, block_img, edgeless_img):
+    assert block_img.size == edgeless_img.size
+
     # block_img.show()
-    mask_img = Image.open(src).convert('RGBA')
-    # mask_img.show()
+    key = mask_key(mask, block_img.size[0])
+    try:
+        mask_img = mask_cache[key]
+    except KeyError:
+        mask_img = Image.open(mask).convert('RGBA')
+        # mask_img.show()
+        if mask_img.size != block_img.size:
+            mask_img = rescale_mask(mask_img, block_img.size)
+        mask_cache[key] = mask_img
+
     dst_img = edgeless_img.copy()
-    if mask_img.size != dst_img.size:
-        mask_img = rescale_mask(mask_img, dst_img.size)
     dst_img.paste(block_img, mask_img)
     dst_img.save(dst)
     # dst_img.show()
@@ -179,10 +193,13 @@ def _mask_block(src, dst, block_img, edgeless_img):
 
 
 def rescale_mask(o_mask, img_size):
+    assert o_mask.size[0] == o_mask.size[1]
+    assert img_size[0] == img_size[1]
     n_mask = o_mask.resize(img_size)
     o_size = o_mask.size[0]
     n_size = img_size[0]
     scale = n_size / o_size
+    assert scale > 1
     draw = ImageDraw.Draw(n_mask)
     draw.rectangle((1, 1, n_size - 2, n_size - 2), fill=(0, 0, 0, 0))
     del draw
