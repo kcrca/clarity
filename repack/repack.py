@@ -19,7 +19,7 @@ target_opt_re = re.compile(r'([^:]*):(.*)')
 tile_spec_re = re.compile(r'(\d+)x(\d+)(?:@(\d+),(\d+))?')
 ctm_opt_re = re.compile(r'(\d+):?([\d&]+)?')
 skip_dirs_re = re.compile(r'^\.|^\.?[a-z]$')
-do_not_copy_re = re.compile(r'\.(py|cfg|sh|pxm|config|tiff)$|/(.|\.DS_Store|\.d)$')
+do_not_copy_re = re.compile(r'\.(py|cfg|sh|pxm|config|tiff)$|/(.|\.DS_Store|\..|\.gitignore)$')
 
 warnings = []
 
@@ -285,7 +285,7 @@ class Pass(object):
     def __init__(self, src_name, dst_name):
         self.change_for = {}
         self.re_changes = []
-        self.default_change = None
+        self.default_change = CopyChange()
         self.src_top = normpath(src_name)
         self.dst_top = normpath(dst_name)
         self.repack_dir = self.dst_top + '.repack'
@@ -399,6 +399,15 @@ class Pass(object):
         if not change:
             return
         self.record_change(subpath)
+        override = os.path.join(self.override_top, subpath)
+        if os.path.isfile(override):
+            if change.use_override:
+                print '%s: using overridden file: %s' % (
+                    change.name(), override)
+                src = override
+            else:
+                print '%s ignored: %s (overridden)' % (change.name(), subpath)
+                return
         change.apply(src, dst, subpath)
 
 
