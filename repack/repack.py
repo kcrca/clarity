@@ -167,15 +167,11 @@ change_by_name = {
 mask_cache = {}
 
 
-def mask_key(mask, size):
-    return '%s@%d' % (mask, size)
-
-
 def _mask_block(mask, dst, block_img, edgeless_img):
     assert block_img.size == edgeless_img.size
 
     # block_img.show()
-    key = mask_key(mask, block_img.size[0])
+    key = (mask, block_img.size[0])
     try:
         mask_img = mask_cache[key]
     except KeyError:
@@ -231,6 +227,10 @@ class ConnectedTextureChange(Change):
             self.id_specs = opt_str.split(',')
         else:
             raise SyntaxError('No data specified for %s' % label)
+
+    def apply(self, src, dst, subpath):
+        CopyChange().apply(src, dst, subpath)
+        super(ConnectedTextureChange, self).apply(src, dst, subpath)
 
     def do_change(self, dst, src_img):
         ctm_top_dir = os.path.join(self.ctm_pass.dst_assets_dir, 'mcpatcher', 'ctm')
