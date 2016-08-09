@@ -20,6 +20,7 @@ tile_spec_re = re.compile(r'(\d+)x(\d+)(?:@(\d+),(\d+))?')
 ctm_opt_re = re.compile(r'(\d+):?([\d&]+)?')
 skip_dirs_re = re.compile(r'^\.|^\.?[a-z]$')
 do_not_copy_re = re.compile(r'\.(py|cfg|sh|pxm|config|tiff)$|/(.|\.DS_Store|\..|\.gitignore)$')
+solid_prop_re = re.compile(r'\nsolid=(\d+)\n')
 
 warnings = []
 
@@ -244,17 +245,26 @@ class ConnectedTextureChange(Change):
         copytree(self.template_dir, ctm_dir, ignore=only_png, overlay=True,
                  copy_function=lambda src_path, dst_path: _mask_block(src_path, dst_path, src_img, edgeless_img))
 
+        template_prop_file = os.path.join(self.template_dir, 'block.properties')
+        with open(template_prop_file) as t:
+            props = t.read()
+
+        # For these blocks, the right default block is the one with solid borders, which matters for getting the item
+        # right
+        solid_spec = solid_prop_re.search(props)
+        if solid_spec:
+            solid_src = os.path.join(ctm_dir, '%s.png' % solid_spec.group(1))
+            shutil.copy(solid_src, dst)
+
         for id_spec in self.id_specs:
             block_id, block_dmg = block_id_re.match(id_spec).groups()
             if not block_id:
                 raise SyntaxError('%s: Invalid block ID spec: "%s"' % (base, id_spec))
             prop_file = os.path.join(ctm_dir, 'block%s.properties' % block_id)
-            template_props = os.path.join(self.template_dir, 'block.properties')
-            with open(template_props) as t:
-                with open(prop_file, mode='w') as o:
-                    if len(block_dmg):
-                        o.write('metadata=%s\n' % block_dmg)
-                    o.writelines(t)
+            with open(prop_file, mode='w') as o:
+                if len(block_dmg):
+                    o.write('metadata=%s\n' % block_dmg)
+                o.write(props)
 
     def modified(self, label, opt_str):
         # Must remove ctm_pass before deep copy or we copy too much -- it is the one thing we don't want to deep copy
