@@ -14,10 +14,10 @@ import ImageDraw
 __author__ = 'arnold'
 
 re_re = re.compile(r'[][?*()\\+|]')
-block_id_re = re.compile(r'(\d+):?([\d]*)')
 target_opt_re = re.compile(r'([^:]*):(.*)')
 tile_spec_re = re.compile(r'(\d+)x(\d+)(?:@(\d+),(\d+))?')
-ctm_opt_re = re.compile(r'(\d+):?([\d&]+)?')
+block_id_re = re.compile(r'(\d+):?([\d&-]*)')
+ctm_opt_re = re.compile(r'([A-Z]*):?([\d:&,-]+)')
 skip_dirs_re = re.compile(r'^\.|^\.?[a-z]$')
 do_not_copy_re = re.compile(r'\.(py|cfg|sh|pxm|config|tiff)$|/(.|\.DS_Store|\..|\.gitignore)$')
 solid_prop_re = re.compile(r'\nsolid=(\d+)\n')
@@ -224,8 +224,10 @@ class ConnectedTextureChange(Change):
         return 'CTM(%s)' % self.template_name
 
     def set_options(self, label, opt_str):
-        if len(opt_str):
-            self.id_specs = opt_str.split(',')
+        opts, id_specs = ctm_opt_re.match(opt_str).groups()
+        if len(id_specs):
+            self.id_specs = id_specs.split(',')
+            self.do_tile_source = 'T' in opts
         else:
             raise SyntaxError('No data specified for %s' % label)
 
@@ -240,8 +242,7 @@ class ConnectedTextureChange(Change):
         base = os.path.basename(dst)[:-4]
         ctm_dir = os.path.join(ctm_top_dir, base)
 
-        edgeless = os.path.join(self.ctm_pass.edgeless_block_dir, base + '.png')
-        edgeless_img = Image.open(edgeless).convert('RGBA')
+        edgeless_img = self.edgeless_image(base)
         copytree(self.template_dir, ctm_dir, ignore=only_png, overlay=True,
                  copy_function=lambda src_path, dst_path: _mask_block(src_path, dst_path, src_img, edgeless_img))
 
@@ -263,8 +264,23 @@ class ConnectedTextureChange(Change):
             prop_file = os.path.join(ctm_dir, 'block%s.properties' % block_id)
             with open(prop_file, mode='w') as o:
                 if len(block_dmg):
-                    o.write('metadata=%s\n' % block_dmg)
+                    o.write('metadata=%s\n' % block_dmg.replace('&', ' '))
                 o.write(props)
+
+    def edgeless_image(self, base):
+        if self.do_tile_source:
+            # This is pretty hard-coded, but then this is the only case I've seen, so I'll wait to generalize it until
+            # I see some other case.
+            edged = os.path.join(self.ctm_pass.src_blocks_dir, base + '.png')
+            img = Image.open(edged).convert('RGBA')
+            tile_size = img.size[0] / 2
+            tile_img = img.crop((1, 1, 1 + tile_size, 1 + tile_size))
+            for x in range(1 - tile_size, img.size[0], tile_size):
+                for y in range(1 - tile_size, img.size[0], tile_size):
+                    img.paste(tile_img, (x, y))
+            return img
+        edgeless = os.path.join(self.ctm_pass.edgeless_block_dir, base + '.png')
+        return Image.open(edgeless).convert('RGBA')
 
     def modified(self, label, opt_str):
         # Must remove ctm_pass before deep copy or we copy too much -- it is the one thing we don't want to deep copy
