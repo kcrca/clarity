@@ -295,7 +295,7 @@ class ConnectedTextureChange(Change):
 
 def safe_mkdirs(dst_dir):
     try:
-        os.mkdir(dst_dir)
+        os.makedirs(dst_dir)
     except os.error, e:
         if e.errno != errno.EEXIST:
             raise
