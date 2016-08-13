@@ -154,11 +154,6 @@ class TileOverEdge(SimpleChange):
                     use_tile = tile
                 box = (x, y)
                 dst_img.paste(use_tile, box)
-                # dst_img.paste(tile, (0, 0))
-                # tile = src_img.crop((3, 1, 5, b))
-                # dst_img.paste(tile, (e - 1, 0))
-                # tile = dst_img.crop((0, 2, w, 4))
-                # dst_img.paste(tile, (0, b - 1))
 
 
 change_by_name = {
@@ -166,49 +161,6 @@ change_by_name = {
     'tile_over_edge': TileOverEdge()}
 
 mask_cache = {}
-
-
-def _mask_block(mask, dst, block_img, edgeless_img):
-    assert block_img.size == edgeless_img.size
-
-    # block_img.show()
-    key = (mask, block_img.size[0])
-    try:
-        mask_img = mask_cache[key]
-    except KeyError:
-        mask_img = Image.open(mask).convert('RGBA')
-        # mask_img.show()
-        if mask_img.size != block_img.size:
-            mask_img = rescale_mask(mask_img, block_img.size)
-        mask_cache[key] = mask_img
-
-    dst_img = edgeless_img.copy()
-    dst_img.paste(block_img, mask_img)
-    dst_img.save(dst)
-    # dst_img.show()
-    return
-
-
-def rescale_mask(o_mask, img_size):
-    assert o_mask.size[0] == o_mask.size[1]
-    assert img_size[0] == img_size[1]
-    n_mask = o_mask.resize(img_size)
-    o_size = o_mask.size[0]
-    n_size = img_size[0]
-    scale = n_size / o_size
-    assert scale > 1
-    draw = ImageDraw.Draw(n_mask)
-    draw.rectangle((1, 1, n_size - 2, n_size - 2), fill=(0, 0, 0, 0))
-    del draw
-
-    bar = n_mask.crop((scale, 0, 2 * scale - 1, n_size))
-    n_mask.paste(bar, (1, 0))
-    n_mask.paste(bar, (n_size - scale, 0))
-    bar = n_mask.crop((0, scale, n_size, 2 * scale - 1))
-    n_mask.paste(bar, (0, 1))
-    n_mask.paste(bar, (0, n_size - scale))
-
-    return n_mask
 
 
 class ConnectedTextureChange(Change):
@@ -242,9 +194,11 @@ class ConnectedTextureChange(Change):
         base = os.path.basename(dst)[:-4]
         ctm_dir = os.path.join(ctm_top_dir, base)
 
+        def connected_images(src_path, dst_path):
+            self._mask_block(src_path, dst_path, src_img, edgeless_img)
+
         edgeless_img = self.edgeless_image(base)
-        copytree(self.template_dir, ctm_dir, ignore=only_png, overlay=True,
-                 copy_function=lambda src_path, dst_path: _mask_block(src_path, dst_path, src_img, edgeless_img))
+        copytree(self.template_dir, ctm_dir, ignore=only_png, overlay=True, copy_function=connected_images)
 
         template_prop_file = os.path.join(self.template_dir, 'block.properties')
         with open(template_prop_file) as t:
@@ -291,6 +245,47 @@ class ConnectedTextureChange(Change):
         self.ctm_pass = ctm_pass
         m.ctm_pass = ctm_pass
         return m
+
+    def _mask_block(self, mask, dst, block_img, edgeless_img):
+        assert block_img.size == edgeless_img.size
+
+        # block_img.show()
+        key = (mask, block_img.size[0])
+        try:
+            mask_img = mask_cache[key]
+        except KeyError:
+            mask_img = Image.open(mask).convert('RGBA')
+            # mask_img.show()
+            if mask_img.size != block_img.size:
+                mask_img = self.rescale_mask(mask_img, block_img.size)
+            mask_cache[key] = mask_img
+
+        dst_img = edgeless_img.copy()
+        dst_img.paste(block_img, mask_img)
+        dst_img.save(dst)
+        # dst_img.show()
+        return
+
+    def rescale_mask(self, o_mask, img_size):
+        assert o_mask.size[0] == o_mask.size[1]
+        assert img_size[0] == img_size[1]
+        n_mask = o_mask.resize(img_size)
+        o_size = o_mask.size[0]
+        n_size = img_size[0]
+        scale = n_size / o_size
+        assert scale > 1
+        draw = ImageDraw.Draw(n_mask)
+        draw.rectangle((1, 1, n_size - 2, n_size - 2), fill=(0, 0, 0, 0))
+        del draw
+
+        bar = n_mask.crop((scale, 0, 2 * scale - 1, n_size))
+        n_mask.paste(bar, (1, 0))
+        n_mask.paste(bar, (n_size - scale, 0))
+        bar = n_mask.crop((0, scale, n_size, 2 * scale - 1))
+        n_mask.paste(bar, (0, 1))
+        n_mask.paste(bar, (0, n_size - scale))
+
+        return n_mask
 
 
 def safe_mkdirs(dst_dir):
@@ -432,7 +427,8 @@ class Pass(object):
                     change.name(), override)
                 src = override
             else:
-                print '%s ignored: %s (overridden)' % (change.name(), subpath)
+                shutil.copy(override, dst)
+                print '%s: %s overridden' % (change.name(), subpath)
                 return
         change.apply(src, dst, subpath)
 
