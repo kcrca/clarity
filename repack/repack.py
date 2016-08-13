@@ -162,8 +162,6 @@ change_by_name = {
 
 mask_cache = {}
 
-is_46 = False
-
 
 def to_box(coords):
     if coords[0] > coords[2]:
@@ -264,8 +262,6 @@ class ConnectedTextureChange(Change):
         assert block_img.size == edgeless_img.size
 
         # block_img.show()
-        global is_46
-        is_46 = '/1.png' in mask
         key = (mask, block_img.size[0], self.edge_width)
         try:
             mask_img, edger = mask_cache[key]
@@ -301,7 +297,7 @@ class ConnectedTextureChange(Change):
             n_mask.paste(bar, (0, 1))
             n_mask.paste(bar, (0, n_size - scale))
 
-        edger = lambda edged_img, block_img: block_img
+        edger = lambda edged_img, block_img: None
         if self.edge_width > 1:
             edger = lambda edged_img, block_img: self.extend_edges(scale, o_mask, edged_img, block_img)
 
@@ -313,24 +309,55 @@ class ConnectedTextureChange(Change):
             self.corner_edge(corner, scale, o_mask, edged_img, block_img)
 
     def corner_edge(self, corner, scale, mask, edged_img, block_img):
+        """
+        Given a mask, figure out how to handle the edge in the given corner. When the edge width is one, this is trival
+        and so this code is not used (although it should work).
+
+        There are the following possible cases:
+
+        (*) The corner is "on" in the mask and connected along both x and y axes. In this case, the edge on the image is
+            already correct, so do nothing.
+        (*) The corner is not "on" in the mask. This also means that no line runs to the corner. In this case, fill the
+            corner of the image with the nearst color from the center.
+        (*) The corner is "on" in the mask, and is connected to along one axis. In this case, smear the end of the edge
+            closest along that axis through the corner, extending the edge along that axis out to the edge of the image.
+        (*) The corner is "on" in the mask, but no line runs to it. In this case, the corner will be attached to edges
+            from adjacent blocks, and the corner "turns the corner" with that edge.
+
+        :param corner: The (x,y) coords of the corner
+        :param scale: Scale of the image compared to the mask
+        :param mask: The mask
+        :param edged_img: The image that contains the edge
+        :param block_img: The final image, which at this stage has been de-edged
+        :return: The incoming image
+        """
+
         w = self.edge_width
+        # The corner pixel in question (in the edged and block images)
         cx, cy = corner
+        # Mask x,y that contains the corner pixel
         mx, my = cx / scale, cy / scale
 
-        x_dir = 1 if cx == 0 else -1
-        y_dir = 1 if cy == 0 else -1
-        x_step = x_dir * w
-        y_step = y_dir * w
+        # The direction away from the pixel towards the middle
+        x_dir, y_dir = 1 if cx == 0 else -1, 1 if cy == 0 else -1
 
+        # Offset towards the middle for a full edge_width-sized step
+        x_step, y_step = x_dir * w, y_dir * w
+
+        # Is this corner "on" in the mask?
         on = test_is_on(mask, mx, my)
+        # Is the pixel next door (on the X axis) "on"?
         on_x = test_is_on(mask, mx + x_dir, my)
+        # Is the pixel next door (on the Y axis) "on"?
         on_y = test_is_on(mask, mx, my + y_dir)
 
         if on_x and on_y:
-            # Solid corner
-            return block_img
+            # Solid corner, nothing to do
+            return
         else:
             b_size = block_img.size[0]
+
+            # In areas with missing lines, smear out the nearest interior bar of the image to the edge
             if not on_x:
                 bar = block_img.crop(to_box([w, cy + y_step, b_size - w, cy + y_step + y_dir]))
                 for y in range(0, w * y_dir, y_dir):
@@ -339,16 +366,18 @@ class ConnectedTextureChange(Change):
                 bar = block_img.crop(to_box([cx + x_step, w, cx + x_step + x_dir, b_size - w]))
                 for x in range(0, w * x_dir, x_dir):
                     block_img.paste(bar, (cx + x, w))
+                # !on implies !on_y and !on_x, so those fills have already happened, now set the corner itself to the
+                # center fill color and return.
                 if not on:
-                    # !on implies !on_y and !on_x, so those fills have alreay happend, now set the corner itself to the
-                    # center fill color and return.
+                    assert not on_x
                     draw = ImageDraw.Draw(block_img)
                     c = bar.getpixel((0, 0))
                     draw.rectangle(to_box([cx, cy, cx + x_step, cy + y_step]), fill=c)
-                    return block_img
+                    return
 
             if not on_x and not on_y:
                 # Just the corner (an outside turn)
+                assert on
                 x_src = [edged_img.getpixel((cx + x, cy + y_step)) for x in range(0, w * x_dir, x_dir)]
                 y_src = [edged_img.getpixel((cx + x_step, cy + y)) for y in range(0, w * y_dir, y_dir)]
                 for x in range(0, w):
@@ -372,8 +401,6 @@ class ConnectedTextureChange(Change):
                 bar = block_img.crop(box)
                 for y in range(0, w * y_dir, y_dir):
                     block_img.paste(bar, (box[0], cy + y))
-
-        return block_img
 
 
 def test_is_on(mask, mx, my):
@@ -417,7 +444,7 @@ class Pass(object):
             self.change_for.keys() + [c[0].pattern for c in self.re_changes])
 
     def parse_config(self, config):
-        pass
+        raise NotImplementedError
 
     def record_change(self, subpath):
         pass
@@ -474,11 +501,13 @@ class Pass(object):
 
     def run(self):
         for dir_name, subdir_list, file_list in os.walk(self.src_top):
-            file_list = [f for f in file_list if not do_not_copy_re.match(f)]
-            subdir_list = [f for f in subdir_list if not do_not_copy_re.match(f)]
+            for f in subdir_list:
+                if do_not_copy_re.match(f):
+                    subdir_list.remove(f)
             src_dir = dir_name
             dst_dir = dir_name.replace(self.src_top, self.dst_top)
             safe_mkdirs(dst_dir)
+            file_list = [f for f in file_list if not do_not_copy_re.match(f)]
             for f in file_list:
                 src = os.path.join(src_dir, f)
                 dst = os.path.join(dst_dir, f)
