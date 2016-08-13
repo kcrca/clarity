@@ -17,7 +17,7 @@ re_re = re.compile(r'[][?*()\\+|]')
 target_opt_re = re.compile(r'([^:]*):(.*)')
 tile_spec_re = re.compile(r'(\d+)x(\d+)(?:@(\d+),(\d+))?')
 block_id_re = re.compile(r'(\d+):?([\d&-]*)')
-ctm_opt_re = re.compile(r'([A-Z]*):?([\d:&,-]+)')
+ctm_opt_re = re.compile(r'([A-Z]*):?([\d:&,-]+)@?([\d]*)')
 skip_dirs_re = re.compile(r'^\.|^\.?[a-z]$')
 do_not_copy_re = re.compile(r'\.(py|cfg|sh|pxm|config|tiff)$|/(.|\.DS_Store|\..|\.gitignore)$')
 solid_prop_re = re.compile(r'\nsolid=(\d+)\n')
@@ -162,6 +162,16 @@ change_by_name = {
 
 mask_cache = {}
 
+is_46 = False
+
+
+def to_box(coords):
+    if coords[0] > coords[2]:
+        coords[0], coords[2] = coords[2], coords[0]
+    if coords[1] > coords[3]:
+        coords[1], coords[3] = coords[3], coords[1]
+    return coords
+
 
 class ConnectedTextureChange(Change):
     def __init__(self, template_name, ctm_pass):
@@ -171,17 +181,21 @@ class ConnectedTextureChange(Change):
         self.template_dir = os.path.join(ctm_pass.template_top, template_name)
         self.use_override = True
         self.id_specs = ()
+        self.do_tile_source = False
+        self.edge_width = 1
 
     def name(self):
         return 'CTM(%s)' % self.template_name
 
     def set_options(self, label, opt_str):
-        opts, id_specs = ctm_opt_re.match(opt_str).groups()
+        opts, id_specs, edge_width_spec = ctm_opt_re.match(opt_str).groups()
         if len(id_specs):
             self.id_specs = id_specs.split(',')
-            self.do_tile_source = 'T' in opts
         else:
             raise SyntaxError('No data specified for %s' % label)
+        self.do_tile_source = 'T' in opts
+        if edge_width_spec:
+            self.edge_width = int(edge_width_spec)
 
     def apply(self, src, dst, subpath):
         CopyChange().apply(src, dst, subpath)
@@ -250,18 +264,20 @@ class ConnectedTextureChange(Change):
         assert block_img.size == edgeless_img.size
 
         # block_img.show()
-        key = (mask, block_img.size[0])
+        global is_46
+        is_46 = '/1.png' in mask
+        key = (mask, block_img.size[0], self.edge_width)
         try:
-            mask_img = mask_cache[key]
+            mask_img, edger = mask_cache[key]
         except KeyError:
             mask_img = Image.open(mask).convert('RGBA')
             # mask_img.show()
-            if mask_img.size != block_img.size:
-                mask_img = self.rescale_mask(mask_img, block_img.size)
-            mask_cache[key] = mask_img
+            mask_img, edger = self.rescale_mask(mask_img, block_img.size)
+            mask_cache[key] = (mask_img, edger)
 
         dst_img = edgeless_img.copy()
         dst_img.paste(block_img, mask_img)
+        edger(block_img, dst_img)
         dst_img.save(dst)
         # dst_img.show()
         return
@@ -273,19 +289,95 @@ class ConnectedTextureChange(Change):
         o_size = o_mask.size[0]
         n_size = img_size[0]
         scale = n_size / o_size
-        assert scale > 1
+
         draw = ImageDraw.Draw(n_mask)
-        draw.rectangle((1, 1, n_size - 2, n_size - 2), fill=(0, 0, 0, 0))
-        del draw
 
-        bar = n_mask.crop((scale, 0, 2 * scale - 1, n_size))
-        n_mask.paste(bar, (1, 0))
-        n_mask.paste(bar, (n_size - scale, 0))
-        bar = n_mask.crop((0, scale, n_size, 2 * scale - 1))
-        n_mask.paste(bar, (0, 1))
-        n_mask.paste(bar, (0, n_size - scale))
+        if scale > 1:
+            draw.rectangle((1, 1, n_size - 2, n_size - 2), fill=(0, 0, 0, 0))
+            bar = n_mask.crop((scale, 0, 2 * scale - 1, n_size))
+            n_mask.paste(bar, (1, 0))
+            n_mask.paste(bar, (n_size - scale, 0))
+            bar = n_mask.crop((0, scale, n_size, 2 * scale - 1))
+            n_mask.paste(bar, (0, 1))
+            n_mask.paste(bar, (0, n_size - scale))
 
-        return n_mask
+        edger = lambda edged_img, block_img: block_img
+        if self.edge_width > 1:
+            edger = lambda edged_img, block_img: self.extend_edges(scale, o_mask, edged_img, block_img)
+
+        return n_mask, edger
+
+    def extend_edges(self, scale, o_mask, edged_img, block_img):
+        o_size = o_mask.size[0]
+        for corner in ((0, 0), (0, o_size - 1), (o_size - 1, o_size - 1), (o_size - 1, 0)):
+            self.corner_edge(corner, scale, o_mask, edged_img, block_img)
+
+    def corner_edge(self, corner, scale, mask, edged_img, block_img):
+        w = self.edge_width
+        cx, cy = corner
+        mx, my = cx / scale, cy / scale
+
+        x_dir = 1 if cx == 0 else -1
+        y_dir = 1 if cy == 0 else -1
+        x_step = x_dir * w
+        y_step = y_dir * w
+
+        on = test_is_on(mask, mx, my)
+        on_x = test_is_on(mask, mx + x_dir, my)
+        on_y = test_is_on(mask, mx, my + y_dir)
+
+        if on_x and on_y:
+            # Solid corner
+            return block_img
+        else:
+            b_size = block_img.size[0]
+            if not on_x:
+                bar = block_img.crop(to_box([w, cy + y_step, b_size - w, cy + y_step + y_dir]))
+                for y in range(0, w * y_dir, y_dir):
+                    block_img.paste(bar, (w, cy + y))
+            if not on_y:
+                bar = block_img.crop(to_box([cx + x_step, w, cx + x_step + x_dir, b_size - w]))
+                for x in range(0, w * x_dir, x_dir):
+                    block_img.paste(bar, (cx + x, w))
+                if not on:
+                    # !on implies !on_y and !on_x, so those fills have alreay happend, now set the corner itself to the
+                    # center fill color and return.
+                    draw = ImageDraw.Draw(block_img)
+                    c = bar.getpixel((0, 0))
+                    draw.rectangle(to_box([cx, cy, cx + x_step, cy + y_step]), fill=c)
+                    return block_img
+
+            if not on_x and not on_y:
+                # Just the corner (an outside turn)
+                x_src = [edged_img.getpixel((cx + x, cy + y_step)) for x in range(0, w * x_dir, x_dir)]
+                y_src = [edged_img.getpixel((cx + x_step, cy + y)) for y in range(0, w * y_dir, y_dir)]
+                for x in range(0, w):
+                    c = x_src[x]
+                    for y in range(w - x - 1, w):
+                        block_img.putpixel((cx + x * x_dir, cy + y * y_dir), c)
+                for y in range(0, w):
+                    c = y_src[y]
+                    for x in range(0, y + 1):
+                        block_img.putpixel((cx + x * x_dir, cy + y * y_dir), c)
+            elif on_x:
+                # continuous along X, so stretch a Y-oriented bar along X
+                box = to_box([cx + x_step, cy, cx + x_step + x_dir, cy + y_step])
+                bar = block_img.crop(box)
+                for x in range(0, w * x_dir, x_dir):
+                    block_img.paste(bar, (cx + x, box[1]))
+            else:
+                # continuous along Y, so stretch a X-oriented bar along Y
+                assert on_y
+                box = to_box([cx, cy + y_step, cx + x_step, cy + y_step + y_dir])
+                bar = block_img.crop(box)
+                for y in range(0, w * y_dir, y_dir):
+                    block_img.paste(bar, (box[0], cy + y))
+
+        return block_img
+
+
+def test_is_on(mask, mx, my):
+    return mask.getpixel((mx, my)) != (0, 0, 0, 0)
 
 
 def safe_mkdirs(dst_dir):
