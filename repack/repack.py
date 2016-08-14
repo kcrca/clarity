@@ -308,12 +308,12 @@ class ConnectedTextureChange(Change):
 
         return n_mask, edger
 
-    def extend_edges(self, scale, o_mask, edged_img, block_img):
+    def extend_edges(self, scale, o_mask, edged_img, dst_img):
         o_size = o_mask.size[0]
         for corner in ((0, 0), (0, o_size - 1), (o_size - 1, o_size - 1), (o_size - 1, 0)):
-            self.corner_edge(corner, scale, o_mask, edged_img, block_img)
+            self.corner_edge(corner, scale, o_mask, edged_img, dst_img)
 
-    def corner_edge(self, corner, scale, mask, edged_img, block_img):
+    def corner_edge(self, corner, scale, mask, edged_img, dst_img):
         """
         Given a mask, figure out how to handle the edge in the given corner. When the edge width is one, this is trival
         and so this code is not used (although it should work).
