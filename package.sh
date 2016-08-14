@@ -20,7 +20,7 @@ fi
 declare -a dirs
 dirs=("$@")
 if [ -z "$dirs" ]; then
-    dirs=(clarity connectivity beguile remodel)
+    dirs=(clarity connectivity beguile)
 fi
 
 if [ $do_clean -gt 0 ]; then
@@ -84,9 +84,6 @@ for f in "${dirs[@]}"; do
         case "$f" in
 	  "beguile")
 	    do_create $f assets/minecraft/textures/gui assets/minecraft/textures/font
-	    ;;
-	  "remodel")
-	    do_create $f assets/minecraft/models
 	    ;;
 	  *)
 	    echo ... Repacking $f
