@@ -309,8 +309,7 @@ class ConnectedTextureChange(Change):
         return n_mask, edger
 
     def extend_edges(self, scale, o_mask, edged_img, dst_img):
-        o_size = o_mask.size[0]
-        last = o_size - 1
+        last = o_mask.size[0] - 1
         for corner in ((0, 0), (0, last), (last, last), (last, 0)):
             self.corner_edge(corner, scale, o_mask, edged_img, dst_img)
 
@@ -360,53 +359,53 @@ class ConnectedTextureChange(Change):
         if on_x and on_y:
             # Solid corner, nothing to do
             return
+
+        b_size = dst_img.size[0]
+
+        # In areas with missing lines, smear out the nearest interior bar of the image to the edge
+        if not on_x:
+            bar = dst_img.crop(to_box([w, cy + y_step, b_size - w, cy + y_step + y_dir]))
+            for y in range(0, w * y_dir, y_dir):
+                dst_img.paste(bar, (w, cy + y))
+        if not on_y:
+            bar = dst_img.crop(to_box([cx + x_step, w, cx + x_step + x_dir, b_size - w]))
+            for x in range(0, w * x_dir, x_dir):
+                dst_img.paste(bar, (cx + x, w))
+            # !on implies !on_y and !on_x, so those fills have already happened, now set the corner itself to the
+            # center fill color and return.
+            if not on:
+                assert not on_x
+                draw = ImageDraw.Draw(dst_img)
+                c = bar.getpixel((0, 0))
+                draw.rectangle(to_box([cx, cy, cx + x_step, cy + y_step]), fill=c)
+                return
+
+        if not on_x and not on_y:
+            # Just the corner (an outside turn)
+            assert on
+            x_src = [edged_img.getpixel((cx + x, cy + y_step)) for x in range(0, w * x_dir, x_dir)]
+            y_src = [edged_img.getpixel((cx + x_step, cy + y)) for y in range(0, w * y_dir, y_dir)]
+            for x in range(0, w):
+                c = x_src[x]
+                for y in range(w - x - 1, w):
+                    dst_img.putpixel((cx + x * x_dir, cy + y * y_dir), c)
+            for y in range(0, w):
+                c = y_src[y]
+                for x in range(0, y + 1):
+                    dst_img.putpixel((cx + x * x_dir, cy + y * y_dir), c)
+        elif on_x:
+            # continuous along X, so stretch a Y-oriented bar along X
+            box = to_box([cx + x_step, cy, cx + x_step + x_dir, cy + y_step])
+            bar = dst_img.crop(box)
+            for x in range(0, w * x_dir, x_dir):
+                dst_img.paste(bar, (cx + x, box[1]))
         else:
-            b_size = dst_img.size[0]
-
-            # In areas with missing lines, smear out the nearest interior bar of the image to the edge
-            if not on_x:
-                bar = dst_img.crop(to_box([w, cy + y_step, b_size - w, cy + y_step + y_dir]))
-                for y in range(0, w * y_dir, y_dir):
-                    dst_img.paste(bar, (w, cy + y))
-            if not on_y:
-                bar = dst_img.crop(to_box([cx + x_step, w, cx + x_step + x_dir, b_size - w]))
-                for x in range(0, w * x_dir, x_dir):
-                    dst_img.paste(bar, (cx + x, w))
-                # !on implies !on_y and !on_x, so those fills have already happened, now set the corner itself to the
-                # center fill color and return.
-                if not on:
-                    assert not on_x
-                    draw = ImageDraw.Draw(dst_img)
-                    c = bar.getpixel((0, 0))
-                    draw.rectangle(to_box([cx, cy, cx + x_step, cy + y_step]), fill=c)
-                    return
-
-            if not on_x and not on_y:
-                # Just the corner (an outside turn)
-                assert on
-                x_src = [edged_img.getpixel((cx + x, cy + y_step)) for x in range(0, w * x_dir, x_dir)]
-                y_src = [edged_img.getpixel((cx + x_step, cy + y)) for y in range(0, w * y_dir, y_dir)]
-                for x in range(0, w):
-                    c = x_src[x]
-                    for y in range(w - x - 1, w):
-                        dst_img.putpixel((cx + x * x_dir, cy + y * y_dir), c)
-                for y in range(0, w):
-                    c = y_src[y]
-                    for x in range(0, y + 1):
-                        dst_img.putpixel((cx + x * x_dir, cy + y * y_dir), c)
-            elif on_x:
-                # continuous along X, so stretch a Y-oriented bar along X
-                box = to_box([cx + x_step, cy, cx + x_step + x_dir, cy + y_step])
-                bar = dst_img.crop(box)
-                for x in range(0, w * x_dir, x_dir):
-                    dst_img.paste(bar, (cx + x, box[1]))
-            else:
-                # continuous along Y, so stretch a X-oriented bar along Y
-                assert on_y
-                box = to_box([cx, cy + y_step, cx + x_step, cy + y_step + y_dir])
-                bar = dst_img.crop(box)
-                for y in range(0, w * y_dir, y_dir):
-                    dst_img.paste(bar, (box[0], cy + y))
+            # continuous along Y, so stretch a X-oriented bar along Y
+            assert on_y
+            box = to_box([cx, cy + y_step, cx + x_step, cy + y_step + y_dir])
+            bar = dst_img.crop(box)
+            for y in range(0, w * y_dir, y_dir):
+                dst_img.paste(bar, (box[0], cy + y))
 
 
 def test_is_on(mask, mx, my):
