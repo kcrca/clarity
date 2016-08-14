@@ -18,8 +18,8 @@ target_opt_re = re.compile(r'([^:]*):(.*)')
 tile_spec_re = re.compile(r'(\d+)x(\d+)(?:@(\d+),(\d+))?')
 block_id_re = re.compile(r'(\d+):?([\d&-]*)')
 ctm_opt_re = re.compile(r'([A-Z]*):?([\d:&,-]+)@?([\d]*)')
-skip_dirs_re = re.compile(r'^\.|^\.?[a-z]$')
-do_not_copy_re = re.compile(r'\.(py|cfg|sh|pxm|config|tiff)$|/(.|\.DS_Store|\..|\.gitignore)$')
+skip_dirs_re = re.compile(r'^\.')
+do_not_copy_re = re.compile(r'\.(py.*|cfg|sh|pxm|config|tiff)$|/(.$|\.)')
 solid_prop_re = re.compile(r'\nsolid=(\d+)\n')
 
 warnings = []
@@ -205,6 +205,11 @@ class ConnectedTextureChange(Change):
 
         base = os.path.basename(dst)[:-4]
         ctm_dir = os.path.join(ctm_top_dir, base)
+
+        override_path = ctm_dir.replace(self.ctm_pass.dst_top, self.ctm_pass.override_top)
+        if os.path.exists(override_path):
+            shutil.copytree(override_path, ctm_dir)
+            return
 
         def connected_images(src_path, dst_path):
             self._mask_block(src_path, dst_path, src_img, edgeless_img)
@@ -501,22 +506,17 @@ class Pass(object):
 
     def run(self):
         for dir_name, subdir_list, file_list in os.walk(self.src_top):
-            for f in subdir_list:
-                if do_not_copy_re.match(f):
-                    subdir_list.remove(f)
             src_dir = dir_name
             dst_dir = dir_name.replace(self.src_top, self.dst_top)
+            for f in subdir_list:
+                if skip_dirs_re.match(f):
+                    subdir_list.remove(f)
             safe_mkdirs(dst_dir)
             file_list = [f for f in file_list if not do_not_copy_re.match(f)]
             for f in file_list:
                 src = os.path.join(src_dir, f)
                 dst = os.path.join(dst_dir, f)
-                override = src.replace(self.src_top, self.override_top)
-                if os.path.exists(override):
-                    if len(only_pack_files(src_dir, [dst, ])) == 0:
-                        shutil.copy(override, dst)
-                else:
-                    self.change(src, dst)
+                self.change(src, dst)
         if len(self.unused_changes):
             global warnings
             warnings += (self.__class__.__name__ + 'Changes not done: Files not found: %s' % ', '.join(
