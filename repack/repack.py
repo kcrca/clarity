@@ -371,9 +371,9 @@ class ConnectedTextureChange(Change):
             bar = dst_img.crop(to_box([cx + x_step, w, cx + x_step + x_dir, b_size - w]))
             for x in range(0, w * x_dir, x_dir):
                 dst_img.paste(bar, (cx + x, w))
-            # !on implies !on_y and !on_x, so those fills have already happened, now set the corner itself to the
-            # center fill color and return.
             if not on:
+                # !on implies !on_y and !on_x, so those fills have already happened, now set the corner itself to the
+                # center fill color and return.
                 assert not on_x
                 draw = ImageDraw.Draw(dst_img)
                 c = bar.getpixel((0, 0))
