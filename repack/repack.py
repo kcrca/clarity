@@ -310,7 +310,8 @@ class ConnectedTextureChange(Change):
 
     def extend_edges(self, scale, o_mask, edged_img, dst_img):
         o_size = o_mask.size[0]
-        for corner in ((0, 0), (0, o_size - 1), (o_size - 1, o_size - 1), (o_size - 1, 0)):
+        last = o_size - 1
+        for corner in ((0, 0), (0, last), (last, last), (last, 0)):
             self.corner_edge(corner, scale, o_mask, edged_img, dst_img)
 
     def corner_edge(self, corner, scale, mask, edged_img, dst_img):
