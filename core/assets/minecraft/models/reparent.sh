@@ -4,22 +4,25 @@ dir=$(dirname $0)
 cd $dir
 orig=${PWD/core/default_resourcepack}
 
-typeset -a files
+typeset -a patterns
 typeset -a parents
-files=(`awk '/^#/{next} {print $1}' reparent.txt`)
+patterns=(`awk '/^#/{next} {print $1}' reparent.txt`)
 parents=(`awk '/^#/{next} {print $2}' reparent.txt`)
 
 i=0
-while [ "${files[$i]}" != "" ]; do
-    file=${files[$i]}.json
+while [ "${patterns[$i]}" != "" ]; do
+    typeset -a files
+    files=$(cd $orig ; echo ${patterns[$i]}.json)
     parent=${parents[$i]}
-    echo $file
-    rm -f $file
-    (if grep -s '"parent"' $orig/$file >/dev/null; then
-	sed -e '\+"parent"+s+: *".*"+: "'$parent'"+'
-    else
-	sed -e '1a\
+    echo $files
+    rm -f $files
+    for f in $files; do
+	(if grep -s '"parent"' $orig/$f >/dev/null; then
+	    sed -e '\+"parent"+s+: *".*"+: "'$parent'"+'
+	else
+	    sed -e '1a\
 \    "parent": "'$parent'",'
-    fi) < $orig/$file > $file
+	fi) < $orig/$f > $f
+    done
     ((i++))
 done
