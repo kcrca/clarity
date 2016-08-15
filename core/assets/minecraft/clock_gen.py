@@ -7,6 +7,8 @@ import glob
 import os
 import math
 
+# Someday I should let the user specify an input config file on the command line... For now it's all hardcoded in here.
+
 
 def to_color(color_spec):
     if color_spec[0] == '#':
@@ -21,22 +23,11 @@ def clock_colors(config, section):
         to_color(config.get(section, 'off_color')),
     )
 
-
-in_sec = 'clock_in'
-in_defaults = {
-    'digits_path': 'textures/items/clock_font.png',
-    'digit_start': '0 0',
-    'digit_size': '7 11',
-    'colon_width': '2',
-    'face_color': '#ffffff',
-    'on_color': '#ff0000',
-    'off_color': '#777777',
-}
-config = ConfigParser.SafeConfigParser(in_defaults)
+config = ConfigParser.SafeConfigParser()
 config.read('clock_gen.cfg')
 
-if not config.has_section(in_sec):
-    config.add_section(in_sec)
+# The 'clock_in' describes the input image that defines the clock font, etc.
+in_sec = 'clock_in'
 digits_path = config.get(in_sec, 'digits_path')
 digit_start = map(int, config.get(in_sec, 'digit_start').split())
 assert len(digit_start) == 2
@@ -45,20 +36,11 @@ assert len(digit_size) == 2
 colon_width = config.getint(in_sec, 'colon_width')
 in_colors = clock_colors(config, in_sec)
 
+# The clock_out section is how the generated clock will look
 out_sec = 'clock_out'
-out_defaults = {
-    'ticks': '1440',
-    'face_color': '#000000',
-    'on_color': '#00ff00',
-    'off_color': '#003300',
-}
-# We cannot change the defaults for the parser, so we have to create a new parser
-config = ConfigParser.SafeConfigParser(out_defaults)
-config.read('clock_gen.cfg')
-if not config.has_section(out_sec):
-    config.add_section(out_sec)
 ticks = config.getint(out_sec, 'ticks')
 out_colors = clock_colors(config, out_sec)
+out_parent = config.get(out_sec, 'parent')
 
 face_dim = int(round(math.pow(2, math.ceil(math.log(4 * digit_size[0] + colon_width, 2)))))
 
@@ -137,7 +119,7 @@ for i in range(0, ticks):
     tick_img.save('textures/%s' % png_path)
     with open('models/%s' % json_path, 'w') as f:
         json.dump({
-            "parent": "item/generated",
+            "parent": out_parent,
             "textures": {
                 "layer0": texture
             }
@@ -145,7 +127,7 @@ for i in range(0, ticks):
 
 with open('models/item/clock.json', 'w') as f:
     json.dump({
-        "parent": "item/generated",
+        "parent": out_parent,
         "textures": {
             "layer0": "items/clock_%0*d" % (tick_digit_cnt, 0)
         },
