@@ -1,0 +1,392 @@
+{
+    "overrides": [
+        {
+            "model": "item/clock_0000", 
+            "predicate": {
+                "time": 0.0
+            }
+        }, 
+        {
+            "model": "item/clock_0001", 
+            "predicate": {
+                "time": 0.015625
+            }
+        }, 
+        {
+            "model": "item/clock_0002", 
+            "predicate": {
+                "time": 0.03125
+            }
+        }, 
+        {
+            "model": "item/clock_0003", 
+            "predicate": {
+                "time": 0.046875
+            }
+        }, 
+        {
+            "model": "item/clock_0004", 
+            "predicate": {
+                "time": 0.0625
+            }
+        }, 
+        {
+            "model": "item/clock_0005", 
+            "predicate": {
+                "time": 0.078125
+            }
+        }, 
+        {
+            "model": "item/clock_0006", 
+            "predicate": {
+                "time": 0.09375
+            }
+        }, 
+        {
+            "model": "item/clock_0007", 
+            "predicate": {
+                "time": 0.109375
+            }
+        }, 
+        {
+            "model": "item/clock_0008", 
+            "predicate": {
+                "time": 0.125
+            }
+        }, 
+        {
+            "model": "item/clock_0009", 
+            "predicate": {
+                "time": 0.140625
+            }
+        }, 
+        {
+            "model": "item/clock_0010", 
+            "predicate": {
+                "time": 0.15625
+            }
+        }, 
+        {
+            "model": "item/clock_0011", 
+            "predicate": {
+                "time": 0.171875
+            }
+        }, 
+        {
+            "model": "item/clock_0012", 
+            "predicate": {
+                "time": 0.1875
+            }
+        }, 
+        {
+            "model": "item/clock_0013", 
+            "predicate": {
+                "time": 0.203125
+            }
+        }, 
+        {
+            "model": "item/clock_0014", 
+            "predicate": {
+                "time": 0.21875
+            }
+        }, 
+        {
+            "model": "item/clock_0015", 
+            "predicate": {
+                "time": 0.234375
+            }
+        }, 
+        {
+            "model": "item/clock_0016", 
+            "predicate": {
+                "time": 0.25
+            }
+        }, 
+        {
+            "model": "item/clock_0017", 
+            "predicate": {
+                "time": 0.265625
+            }
+        }, 
+        {
+            "model": "item/clock_0018", 
+            "predicate": {
+                "time": 0.28125
+            }
+        }, 
+        {
+            "model": "item/clock_0019", 
+            "predicate": {
+                "time": 0.296875
+            }
+        }, 
+        {
+            "model": "item/clock_0020", 
+            "predicate": {
+                "time": 0.3125
+            }
+        }, 
+        {
+            "model": "item/clock_0021", 
+            "predicate": {
+                "time": 0.328125
+            }
+        }, 
+        {
+            "model": "item/clock_0022", 
+            "predicate": {
+                "time": 0.34375
+            }
+        }, 
+        {
+            "model": "item/clock_0023", 
+            "predicate": {
+                "time": 0.359375
+            }
+        }, 
+        {
+            "model": "item/clock_0024", 
+            "predicate": {
+                "time": 0.375
+            }
+        }, 
+        {
+            "model": "item/clock_0025", 
+            "predicate": {
+                "time": 0.390625
+            }
+        }, 
+        {
+            "model": "item/clock_0026", 
+            "predicate": {
+                "time": 0.40625
+            }
+        }, 
+        {
+            "model": "item/clock_0027", 
+            "predicate": {
+                "time": 0.421875
+            }
+        }, 
+        {
+            "model": "item/clock_0028", 
+            "predicate": {
+                "time": 0.4375
+            }
+        }, 
+        {
+            "model": "item/clock_0029", 
+            "predicate": {
+                "time": 0.453125
+            }
+        }, 
+        {
+            "model": "item/clock_0030", 
+            "predicate": {
+                "time": 0.46875
+            }
+        }, 
+        {
+            "model": "item/clock_0031", 
+            "predicate": {
+                "time": 0.484375
+            }
+        }, 
+        {
+            "model": "item/clock_0032", 
+            "predicate": {
+                "time": 0.5
+            }
+        }, 
+        {
+            "model": "item/clock_0033", 
+            "predicate": {
+                "time": 0.515625
+            }
+        }, 
+        {
+            "model": "item/clock_0034", 
+            "predicate": {
+                "time": 0.53125
+            }
+        }, 
+        {
+            "model": "item/clock_0035", 
+            "predicate": {
+                "time": 0.546875
+            }
+        }, 
+        {
+            "model": "item/clock_0036", 
+            "predicate": {
+                "time": 0.5625
+            }
+        }, 
+        {
+            "model": "item/clock_0037", 
+            "predicate": {
+                "time": 0.578125
+            }
+        }, 
+        {
+            "model": "item/clock_0038", 
+            "predicate": {
+                "time": 0.59375
+            }
+        }, 
+        {
+            "model": "item/clock_0039", 
+            "predicate": {
+                "time": 0.609375
+            }
+        }, 
+        {
+            "model": "item/clock_0040", 
+            "predicate": {
+                "time": 0.625
+            }
+        }, 
+        {
+            "model": "item/clock_0041", 
+            "predicate": {
+                "time": 0.640625
+            }
+        }, 
+        {
+            "model": "item/clock_0042", 
+            "predicate": {
+                "time": 0.65625
+            }
+        }, 
+        {
+            "model": "item/clock_0043", 
+            "predicate": {
+                "time": 0.671875
+            }
+        }, 
+        {
+            "model": "item/clock_0044", 
+            "predicate": {
+                "time": 0.6875
+            }
+        }, 
+        {
+            "model": "item/clock_0045", 
+            "predicate": {
+                "time": 0.703125
+            }
+        }, 
+        {
+            "model": "item/clock_0046", 
+            "predicate": {
+                "time": 0.71875
+            }
+        }, 
+        {
+            "model": "item/clock_0047", 
+            "predicate": {
+                "time": 0.734375
+            }
+        }, 
+        {
+            "model": "item/clock_0048", 
+            "predicate": {
+                "time": 0.75
+            }
+        }, 
+        {
+            "model": "item/clock_0049", 
+            "predicate": {
+                "time": 0.765625
+            }
+        }, 
+        {
+            "model": "item/clock_0050", 
+            "predicate": {
+                "time": 0.78125
+            }
+        }, 
+        {
+            "model": "item/clock_0051", 
+            "predicate": {
+                "time": 0.796875
+            }
+        }, 
+        {
+            "model": "item/clock_0052", 
+            "predicate": {
+                "time": 0.8125
+            }
+        }, 
+        {
+            "model": "item/clock_0053", 
+            "predicate": {
+                "time": 0.828125
+            }
+        }, 
+        {
+            "model": "item/clock_0054", 
+            "predicate": {
+                "time": 0.84375
+            }
+        }, 
+        {
+            "model": "item/clock_0055", 
+            "predicate": {
+                "time": 0.859375
+            }
+        }, 
+        {
+            "model": "item/clock_0056", 
+            "predicate": {
+                "time": 0.875
+            }
+        }, 
+        {
+            "model": "item/clock_0057", 
+            "predicate": {
+                "time": 0.890625
+            }
+        }, 
+        {
+            "model": "item/clock_0058", 
+            "predicate": {
+                "time": 0.90625
+            }
+        }, 
+        {
+            "model": "item/clock_0059", 
+            "predicate": {
+                "time": 0.921875
+            }
+        }, 
+        {
+            "model": "item/clock_0060", 
+            "predicate": {
+                "time": 0.9375
+            }
+        }, 
+        {
+            "model": "item/clock_0061", 
+            "predicate": {
+                "time": 0.953125
+            }
+        }, 
+        {
+            "model": "item/clock_0062", 
+            "predicate": {
+                "time": 0.96875
+            }
+        }, 
+        {
+            "model": "item/clock_0063", 
+            "predicate": {
+                "time": 0.984375
+            }
+        }
+    ], 
+    "parent": "item/generated", 
+    "textures": {
+        "layer0": "items/clock_0000"
+    }
+}
