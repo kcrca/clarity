@@ -2,6 +2,8 @@
 
 import ConfigParser
 import json
+import shutil
+
 import Image
 import glob
 import os
@@ -67,11 +69,16 @@ for i in range(0, 10):
         x += digit_size[0]
         colon_img = digits_img.crop((x, y, x + colon_width, y + digit_size[1]))
 
-pass
-for f in glob.glob('textures/items/clock_[0-9]*.png'):
-    os.remove(f)
-for f in glob.glob('models/item/clock_[0-9]*.json'):
-    os.remove(f)
+
+def clear_out_tree(dir_name):
+    if os.path.exists(dir_name):
+        shutil.rmtree(dir_name)
+    os.makedirs(dir_name)
+    return dir_name
+
+
+texture_dir = clear_out_tree('textures/items/clock')
+model_dir = clear_out_tree('models/item/clock')
 
 overrides = []
 
@@ -111,10 +118,10 @@ for i in range(0, ticks):
     write_digits(tick_img, mins, digit_pos[2], True)
 
     name = 'clock_%0*d' % (tick_digit_cnt, i)
-    texture = 'items/%s' % name
+    texture = 'items/clock/%s' % name
     png_path = texture + '.png'
-    model = 'item/%s' % name
-    json_path = 'item/%s.json' % name
+    model = 'item/clock/%s' % name
+    json_path = model + '.json'
     overrides.append({"predicate": {"time": day_frac}, "model": model})
     tick_img.save('textures/%s' % png_path)
     with open('models/%s' % json_path, 'w') as f:
@@ -129,7 +136,7 @@ with open('models/item/clock.json', 'w') as f:
     json.dump({
         "parent": out_parent,
         "textures": {
-            "layer0": "items/clock_%0*d" % (tick_digit_cnt, 0)
+            "layer0": "items/clock/clock_%0*d" % (tick_digit_cnt, 0)
         },
         "overrides": overrides
     }, f, indent=4, sort_keys=True)
