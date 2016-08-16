@@ -1,6 +1,6 @@
 {
     "parent": "item/fortyfive",
     "textures": {
-        "layer0": "items/fish_salmon_cooked"
+        "layer0": "items/fish_clownfish_raw"
     }
 }
