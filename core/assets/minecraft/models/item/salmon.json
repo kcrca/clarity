@@ -1,5 +1,5 @@
 {
-    "parent": "item/generated",
+    "parent": "item/fortyfive",
     "textures": {
         "layer0": "items/fish_salmon_raw"
     }
