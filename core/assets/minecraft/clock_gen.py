@@ -5,9 +5,9 @@ import json
 import shutil
 
 import Image
-import glob
 import os
 import math
+
 
 # Someday I should let the user specify an input config file on the command line... For now it's all hardcoded in here.
 
@@ -24,6 +24,7 @@ def clock_colors(config, section):
         to_color(config.get(section, 'on_color')),
         to_color(config.get(section, 'off_color')),
     )
+
 
 config = ConfigParser.SafeConfigParser()
 config.read('clock_gen.cfg')
@@ -110,19 +111,20 @@ def write_digits(tick_img, num, at, draw_init_zero):
 
 for i in range(0, ticks):
     day_frac = i * tick_fraction
-    total_minutes = minutes_per_day * day_frac
-    hrs = (int(total_minutes / 60) + 6) % 24
+    total_minutes = round(minutes_per_day * day_frac)
+    hrs = (int(total_minutes / 60) + 11) % 24
     mins = total_minutes % 60
     tick_img = blank_img.copy()
     write_digits(tick_img, hrs, digit_pos[0], False)
     write_digits(tick_img, mins, digit_pos[2], True)
+    print "%d: %2d:%02d %f" % (i, hrs, mins, day_frac)
 
     name = 'clock_%0*d' % (tick_digit_cnt, i)
     texture = 'items/clock/%s' % name
     png_path = texture + '.png'
     model = 'item/clock/%s' % name
     json_path = model + '.json'
-    overrides.append({"predicate": {"time": day_frac}, "model": model})
+    overrides.append({"predicate": {"time": day_frac + tick_fraction / 2}, "model": model})
     tick_img.save('textures/%s' % png_path)
     with open('models/%s' % json_path, 'w') as f:
         json.dump({
