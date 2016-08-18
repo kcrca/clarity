@@ -81,8 +81,6 @@ def clear_out_tree(dir_name):
 texture_dir = clear_out_tree('textures/items/clock')
 model_dir = clear_out_tree('models/item/clock')
 
-overrides = []
-
 clock_width = 4 * digit_size[0] + colon_width
 
 digit_pos = {}
@@ -108,6 +106,8 @@ def write_digits(tick_img, num, at, draw_init_zero):
         tick_img.paste(digit_imgs[num_str[0]], at)
     tick_img.paste(digit_imgs[num_str[1]], (at[0] + digit_size[0], at[1]))
 
+
+overrides = []
 
 for i in range(0, ticks):
     day_frac = i * tick_fraction
