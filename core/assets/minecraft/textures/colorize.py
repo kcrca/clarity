@@ -11,21 +11,24 @@ import Image
 __author__ = 'arnold'
 
 config = ConfigParser.SafeConfigParser()
-config.read('colorize.cfg')
+script_dir = os.path.dirname(os.path.abspath(__file__))
+config.read(os.path.join(script_dir, 'colorize.cfg'))
 
 color_re = re.compile(r'\(?\s*(\d+),\s*(\d+),\s*(\d+),?\s*(\d+)?\s*\)?')
 file_opt_re = re.compile(r'\?$')
 
 aliases = {}
 
+
 def configure_aliases():
     spec = config.items('aliases')
     for one, others in spec:
-	names = others.split() + [one]
-	for n in names:
-	    aliases[n] = names
+        names = others.split() + [one]
+        for n in names:
+            aliases[n] = names
 
-def decode_color(color_nums, has_alpha):
+
+def decode_color(color_nums, has_alpha=None):
     if has_alpha and color_nums[3] is '':
         color_nums = (color_nums[0], color_nums[1], color_nums[2], '255')
     elif not has_alpha and len(color_nums) > 3:
@@ -49,7 +52,7 @@ def map_for(map_name, key_color, has_alpha):
             continue
         l = color_list(colors_config, has_alpha)
         if len(l) != num_colors:
-            print("Mismatch: %s: %s: expected %d colors, found %d" % (
+            print('Mismatch: %s: %s: expected %d colors, found %d' % (
                 map_name, color_name, num_colors, len(l)))
         else:
             m = {}
@@ -70,35 +73,34 @@ def decode_coloring(coloring):
 
 
 def list_colors(color_name, file_name, exclude_colors):
-    img = Image.open(file_name).convert("RGB")
+    img = Image.open(file_name).convert('RGB')
     data = img.load()
     colors = set()
     for x in xrange(img.size[0]):
         for y in xrange(img.size[1]):
             r, g, b = data[x, y]
             colors.add((r, g, b))
-    sys.stdout.write("%-13s" % (color_name + ':'))
+    sys.stdout.write('%-13s' % (color_name + ':'))
     for c in sorted(colors, cmp=lambda x, y: sum(x) - sum(y), reverse=True):
         if not c in exclude_colors:
             # noinspection PyStringFormat
-            sys.stdout.write(" %-13s" % ("(%d,%d,%d)" % c[:]))
-    print ""
+            sys.stdout.write(' %-13s' % ('(%d,%d,%d)' % c[:]))
+    print ''
 
 
 def file_from_color(file_pat, color_name):
-    others = []
     try:
-	others = aliases[color_name];
+        others = aliases[color_name]
     except KeyError:
-	others = [color_name]
+        others = [color_name]
 
     orig_pat = file_pat
     file_pat = file_opt_re.sub('', file_pat)
     required = file_pat == orig_pat
     for n in others:
-	cpath = file_pat.replace('COLOR', n)
-	if os.path.isfile(cpath):
-	    return cpath
+        cpath = file_pat.replace('COLOR', n)
+        if os.path.isfile(cpath):
+            return cpath
 
     # Handle the case where one color is the canonical one. For example, as of 1.9,
     # there is "sandstone.png" and "red_standstone.png". The first is a yellow sandstone,
@@ -107,10 +109,10 @@ def file_from_color(file_pat, color_name):
     # "COLOR_" part of the file name, but only if it actually exists.
     cpath = file_pat.replace('COLOR_', '')
     if os.path.isfile(cpath):
-	return cpath
+        return cpath
 
     if required:
-	raise Exception("No path found for %s in %s" % (file_pat, others))
+        raise Exception('No path found for %s in %s' % (file_pat, others))
 
     return ''
 
@@ -118,10 +120,10 @@ def file_from_color(file_pat, color_name):
 def list_coloring(coloring, exclude_colors):
     map_name, key_color, file_pat = decode_coloring(coloring)
     # For listing, nothing is required, so remove the options
-    file_pat =  re.sub(file_opt_re, file_pat, '')
+    file_pat = re.sub(file_opt_re, file_pat, '')
     key_file = file_from_color(re.sub(file_opt_re, file_pat, ''), key_color)
-    print "[%s]" % coloring
-    print ""
+    print '[%s]' % coloring
+    print ''
     list_colors(key_color, key_file, exclude_colors)
     file_re = re.compile(file_from_color(os.path.basename(file_pat), r'(.*)'))
     file_dir = os.path.dirname(file_pat)
@@ -140,9 +142,9 @@ def list_image_colors(files):
         for x in xrange(src_img.size[0]):
             for y in xrange(src_img.size[1]):
                 colors.add(src_data[x, y])
-        print "%s:" % f
+        print '%s:' % f
         for c in sorted(colors):
-            print "  %s" % str(c)
+            print '  %s' % str(c)
 
 
 def main(argv=None):
@@ -150,31 +152,29 @@ def main(argv=None):
         argv = sys.argv
     try:
         try:
-            opts, args = getopt.getopt(argv[1:], "hl:x:d",
-                                       ["help", "list", "exclude", "dump"])
+            opts, args = getopt.getopt(argv[1:], 'hl:x:d',
+                                       ['help', 'list', 'exclude', 'dump'])
         except getopt.error, msg:
             raise Usage(msg)
             # more code, unchanged
     except Usage, err:
         print >> sys.stderr, err.msg
-        print >> sys.stderr, "for help use --help"
+        print >> sys.stderr, 'for help use --help'
         return 2
-
-    aliases = {}
 
     list_colorings = []
     exclude_colors = set()
     # process options
     for o, a in opts:
-        if o in ("-h", "--help"):
+        if o in ('-h', '--help'):
             print __doc__
             return 0
-        if o in ("-d", "--dump"):
+        if o in ('-d', '--dump'):
             list_image_colors(args)
             return 0
-        if o in ("-l", "--list"):
+        if o in ('-l', '--list'):
             list_colorings.append(a)
-        elif o in ("-x", "--exclude"):
+        elif o in ('-x', '--exclude'):
             color = decode_color(a)
             exclude_colors.add(color)
 
@@ -186,12 +186,12 @@ def main(argv=None):
     configure_aliases()
     colorings = config.items('colorings')
     warnf = open('README', 'w+')
-    warnf.write('WARNING: The following files are generated by colorize.py:\n\n');
+    warnf.write('WARNING: The following files are generated by colorize.py:\n\n')
     for coloring, coloring_config in colorings:
         map_name, key_color, file_pat = decode_coloring(coloring)
-	# The key file is always required, so remove any options
+        # The key file is always required, so remove any options
         key_file = file_from_color(file_opt_re.sub('', file_pat), key_color)
-        print "%s: reading %s" % (coloring, key_file)
+        print '%s: reading %s' % (coloring, key_file)
         src_img = Image.open(key_file)
         src_data = src_img.load()
         num_channels = len(src_data[0, 0])
@@ -200,9 +200,9 @@ def main(argv=None):
         color_maps = map_for(map_name, key_color, has_alpha)
         for color_name, color_map in color_maps.iteritems():
             dst_file = file_from_color(file_pat, color_name)
-	    if dst_file == '':
-		continue
-            print ("    %s" % dst_file)
+            if dst_file == '':
+                continue
+            print ('    %s' % dst_file)
             mode = 'RGB'
             if has_alpha:
                 mode = 'RGBA'
@@ -216,11 +216,11 @@ def main(argv=None):
                     except KeyError:
                         pass
                     dst_data[x, y] = data
-            dst_img.save(dst_file, "png")
-	    warnf.write('%s\n' % dst_file);
-    warnf.write('\n');
-    warnf.write('(The files are in git to help the script know which files should exist)\n');
-    warnf.close();
+            dst_img.save(dst_file, 'png')
+            warnf.write('%s\n' % dst_file)
+    warnf.write('\n')
+    warnf.write('(The files are in git to help the script know which files should exist)\n')
+    warnf.close()
 
     tweaks = config.items('tweaks')
     for _, tweak in tweaks:
@@ -233,6 +233,5 @@ def main(argv=None):
             os.remove(path)
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     sys.exit(main())
-
