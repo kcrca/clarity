@@ -112,5 +112,7 @@ items/wood_hoe.png
 items/stone_hoe.png
 items/diamond_hoe.png
 items/gold_hoe.png
+items/diamond_horse_armor.png
+items/gold_horse_armor.png
 
 (The files are in git to help the script know which files should exist)
