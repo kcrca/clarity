@@ -56,7 +56,7 @@ color_map = {}
 for i in range(0, len(in_colors)):
     color_map[in_colors[i]] = out_colors[i]
 
-digits_img = Image.open(digits_path).convert('RGB')
+digits_img = Image.open(digits_path).convert('RGBA')
 digit_pixels = digits_img.load()
 for x in range(0, digits_img.size[0]):
     for y in range(0, digits_img.size[1]):
@@ -97,7 +97,7 @@ digit_pos[2] = (x, y)
 x += digit_size[0]
 digit_pos[3] = (x, y)
 
-blank_img = Image.new('RGB', (face_dim, face_dim), color=out_colors[0])
+blank_img = Image.new('RGBA', (face_dim, face_dim), color=out_colors[0])
 blank_img.paste(colon_img, colon_pos)
 
 
