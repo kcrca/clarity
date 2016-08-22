@@ -48,6 +48,7 @@ out_parent = config.get(out_sec, 'parent')
 face_dim = int(round(math.pow(2, math.ceil(math.log(4 * digit_size[0] + colon_width, 2)))))
 
 tick_fraction = 1.0 / ticks
+half_tick_fraction = tick_fraction / 2
 minutes_per_day = 60 * 24
 tick_digit_cnt = int(math.ceil(math.log(ticks, 10)))
 
@@ -109,23 +110,29 @@ def write_digits(tick_img, num, at, draw_init_zero):
 
 overrides = []
 
-for i in range(0, ticks):
+for i in range(0, ticks + 1):
     day_frac = i * tick_fraction
     total_minutes = round(minutes_per_day * day_frac)
     hrs = (int(total_minutes / 60) + 11) % 24
     mins = total_minutes % 60
-    tick_img = blank_img.copy()
-    write_digits(tick_img, hrs, digit_pos[0], False)
-    write_digits(tick_img, mins, digit_pos[2], True)
     print "%d: %2d:%02d %f" % (i, hrs, mins, day_frac)
 
-    name = 'clock_%0*d' % (tick_digit_cnt, i)
+    name = 'clock_%0*d' % (tick_digit_cnt, i % ticks)
     texture = 'items/clock/%s' % name
     png_path = texture + '.png'
     model = 'item/clock/%s' % name
     json_path = model + '.json'
-    overrides.append({"predicate": {"time": day_frac + tick_fraction / 2}, "model": model})
-    tick_img.save('textures/%s' % png_path)
+    at_time_frace = day_frac
+    if i > 0:
+        at_time_frace -= half_tick_fraction
+    overrides.append({"predicate": {"time": at_time_frace}, "model": model})
+    if i < ticks:
+        # no need to write the image when i >= ticks since we already have
+        tick_img = blank_img.copy()
+        write_digits(tick_img, hrs, digit_pos[0], False)
+        write_digits(tick_img, mins, digit_pos[2], True)
+        tick_img.save('textures/%s' % png_path)
+
     with open('models/%s' % json_path, 'w') as f:
         json.dump({
             "parent": out_parent,
