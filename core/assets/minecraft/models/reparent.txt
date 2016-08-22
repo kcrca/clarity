@@ -5,3 +5,4 @@ block/fern		block/fern_cross
 block/flower_pot	block/thin_block
 block/repeater_1tick	block/thin_block
 item/*_sword            item/sword
+item/quartz		item/fortyfive
