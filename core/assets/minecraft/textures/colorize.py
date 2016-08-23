@@ -12,7 +12,7 @@ __author__ = 'arnold'
 
 config = ConfigParser.SafeConfigParser()
 script_dir = os.path.dirname(os.path.abspath(__file__))
-config.read(os.path.join(script_dir, 'colorize.cfg'))
+config.read('colorize.cfg')
 
 color_re = re.compile(r'\(?\s*(\d+),\s*(\d+),\s*(\d+),?\s*(\d+)?\s*\)?')
 file_opt_re = re.compile(r'\?$')
@@ -21,11 +21,14 @@ aliases = {}
 
 
 def configure_aliases():
-    spec = config.items('aliases')
-    for one, others in spec:
-        names = others.split() + [one]
-        for n in names:
-            aliases[n] = names
+    try:
+        spec = config.items('aliases')
+        for one, others in spec:
+            names = others.split() + [one]
+            for n in names:
+                aliases[n] = names
+    except ConfigParser.NoSectionError:
+        pass
 
 
 def decode_color(color_nums, has_alpha=None):
@@ -222,15 +225,18 @@ def main(argv=None):
     warnf.write('(The files are in git to help the script know which files should exist)\n')
     warnf.close()
 
-    tweaks = config.items('tweaks')
-    for _, tweak in tweaks:
-        params = tweak.split()
-        action = params[0]
-        path = params[1]
-        for target in params[2:]:
-            shutil.copy2(path, target)
-        if action == 'move':
-            os.remove(path)
+    try:
+        tweaks = config.items('tweaks')
+        for _, tweak in tweaks:
+            params = tweak.split()
+            action = params[0]
+            path = params[1]
+            for target in params[2:]:
+                shutil.copy2(path, target)
+            if action == 'move':
+                os.remove(path)
+    except ConfigParser.NoSectionError:
+        pass
 
 
 if __name__ == '__main__':
