@@ -1,0 +1,15 @@
+{
+    "parent": "block/item_frame",
+    "display": {
+        "thirdperson_righthand": {
+            "rotation": [ 0, 0, 0 ],
+            "translation": [ 0, 2, -3 ],
+            "scale": [ 0.55, 0.55, 0.55 ]
+        },
+        "firstperson_righthand": {
+            "rotation": [ 0, 0, 10 ],
+            "translation": [ 3, 0, -8 ],
+            "scale": [ 0.68, 0.68, 0.68 ]
+        }
+    }
+}
