@@ -6,3 +6,7 @@ block/flower_pot	block/thin_block
 block/repeater_1tick	block/thin_block
 item/*_sword            item/sword
 item/quartz		item/fortyfive
+item/redstone		item/fortyfive
+item/glowstone_dust	item/fortyfive
+item/sugar		item/fortyfive
+item/gunpowder		item/fortyfive
