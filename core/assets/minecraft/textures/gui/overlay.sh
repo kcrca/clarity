@@ -1,7 +1,7 @@
 #!/bin/sh
 
 interact=0
-if [ x "$1" = x"-i" ]; then
+if [ x"$1" = x"-i" ]; then
     interact=1
     shift
 fi
@@ -14,7 +14,7 @@ fi
 find $dirs -name '*_[on][no].png' | xargs rm
 
 for new in `find $dirs -name '*.png'`; do
-    new="$(cd"`dirname$new`";pwd)/$(basename$new)"
+    new="$(cd "`dirname $new`" ; pwd)/$(basename $new)"
     old="${new/core/default_resourcepack}"
     if [ -f $old ]; then
         echo $new
@@ -35,7 +35,7 @@ for new in `find $dirs -name '*.png'`; do
                         stop=1
                     ;;
                     *)
-                        rm ${base}_[no][on].png
+                        rm -f ${base}_[no][on].png
                     ;;
                 esac
             fi
