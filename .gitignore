@@ -1,8 +1,8 @@
 out
 .DS_Store
 home
-.*.swp
-.swp
+.*.sw[op]
+.sw[op]
 ?
 .?
 .idea
