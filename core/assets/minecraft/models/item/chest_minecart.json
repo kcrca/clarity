@@ -1,0 +1,11 @@
+{
+    "parent": "item/minecart_block_inventory",
+    "textures": {
+        "block_bottom": "items/minecart_chest",
+        "block_top": "items/minecart_chest",
+        "block_front": "items/minecart_chest_front",
+        "block_back": "items/minecart_chest_side",
+        "block_left": "items/minecart_chest_side",
+        "block_right": "items/minecart_chest_side"
+    }
+}

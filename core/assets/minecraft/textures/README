@@ -70,6 +70,9 @@ blocks/stone_andesite.png
 blocks/stone_diorite_smooth.png
 blocks/stone_andesite_smooth.png
 blocks/red_sand.png
+items/glowstone_dust.png
+items/gunpowder.png
+items/sugar.png
 blocks/red_sandstone_bottom.png
 blocks/red_sandstone_normal.png
 blocks/red_sandstone_smooth.png
@@ -112,5 +115,7 @@ items/wood_hoe.png
 items/stone_hoe.png
 items/diamond_hoe.png
 items/gold_hoe.png
+items/diamond_horse_armor.png
+items/gold_horse_armor.png
 
 (The files are in git to help the script know which files should exist)
