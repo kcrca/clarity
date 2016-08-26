@@ -2,7 +2,7 @@
     "parent": "item/generated",
     "display": {
         "gui": {
-            "rotation": [ 30, 45, 0 ],
+            "rotation": [ 45, 45, 0 ],
             "translation": [ 0, 0, 0],
             "scale":[ 1, 1, 1 ]
         }
