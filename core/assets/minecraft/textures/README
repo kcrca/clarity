@@ -17,6 +17,7 @@ blocks/wool_colored_red.png
 blocks/wool_colored_lime.png
 items/dye_powder_gray.png
 items/dye_powder_magenta.png
+items/dye_powder_brown.png
 items/dye_powder_purple.png
 items/dye_powder_yellow.png
 items/dye_powder_black.png
@@ -117,5 +118,13 @@ items/diamond_hoe.png
 items/gold_hoe.png
 items/diamond_horse_armor.png
 items/gold_horse_armor.png
+items/iron_boots.png
+items/gold_boots.png
+items/iron_chestplate.png
+items/gold_chestplate.png
+items/iron_helmet.png
+items/gold_helmet.png
+items/iron_leggings.png
+items/gold_leggings.png
 
 (The files are in git to help the script know which files should exist)
