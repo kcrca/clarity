@@ -1,0 +1,6 @@
+{
+    "parent": "item/brick",
+    "textures": {
+        "sides": "items/iron_ingot"
+    }
+}

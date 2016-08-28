@@ -1,0 +1,33 @@
+{
+    "parent": "block/thin_block",
+    "display": {
+        "gui": {
+            "rotation": [ 30, 225, 0 ],
+            "translation": [ 0, 3, 0],
+            "scale":[ 0.8, 0.8, 0.8 ]
+        },
+        "ground": {
+            "rotation": [ 0, 0, 0 ],
+            "translation": [ 0, 3, 0],
+            "scale":[ 0.3, 0.3, 0.3 ]
+        },
+        "fixed": {
+            "rotation": [ 0, 90, 0 ],
+            "translation": [ 0, 2.75, 0],
+            "scale":[ 0.5, 0.5, 0.5 ]
+        }
+    },
+    "elements": [
+        {   "from": [ 4, 0, 0 ],
+            "to": [ 12, 5, 16 ],
+            "faces": {
+                "down":  { "texture": "#sides" },
+                "up":    { "texture": "#sides" },
+                "north": { "texture": "#sides" },
+                "south": { "texture": "#sides" },
+                "west":  { "texture": "#sides" },
+                "east":  { "texture": "#sides" }
+	    }
+        }
+    ]
+}
