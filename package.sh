@@ -41,7 +41,9 @@ fi
 # be more specific by checking only relevant files.
 if [ ! -f packs/core.zip -o ! -z "`find core -newer packs/core.zip`" ]; then
     echo Regenerating derived files in core
+    (cd core/assets/minecraft ; python clock_gen.py)
     (cd core/assets/minecraft/textures ; python colorize.py)
+    (cd core/assets/minecraft/textures ; python paintings.py)
     (cd core/assets/minecraft/textures/gui/container ; python panels.py)
     (cd core/assets/minecraft/models ; sh reparent.sh)
 fi

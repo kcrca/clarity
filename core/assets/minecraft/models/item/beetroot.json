@@ -1,5 +1,5 @@
 {
-    "parent": "item/sheet",
+    "parent": "item/fortyfive",
     "textures": {
         "layer0": "items/beetroot"
     }

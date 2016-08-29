@@ -1,13 +1,6 @@
 {
-    "parent": "item/generated",
+    "parent": "block/thin_block",
     "textures": {
         "layer0": "blocks/waterlily"
-    },
-    "display": {
-        "gui": {
-            "rotation": [ -60, 0, 45 ],
-            "translation": [ 0, 0, 0],
-            "scale":[ 0.725, 0.725, 0.725 ]
-        }
     }
 }

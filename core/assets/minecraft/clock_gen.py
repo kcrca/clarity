@@ -115,7 +115,7 @@ for i in range(0, ticks + 1):
     total_minutes = round(minutes_per_day * day_frac)
     hrs = (int(total_minutes / 60) + 12) % 24
     mins = total_minutes % 60
-    print "%d: %2d:%02d %f (%d)" % (i, hrs, mins, day_frac, round(day_frac * 24000))
+    # print "%d: %2d:%02d %f (%d)" % (i, hrs, mins, day_frac, round(day_frac * 24000))
 
     name = 'clock_%0*d' % (tick_digit_cnt, i % ticks)
     texture = 'items/clock/%s' % name

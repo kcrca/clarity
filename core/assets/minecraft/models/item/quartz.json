@@ -1,5 +1,5 @@
 {
-    "parent": "item/gem",
+    "parent": "item/fortyfive",
     "textures": {
         "layer0": "items/quartz"
     }
