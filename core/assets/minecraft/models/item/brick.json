@@ -15,6 +15,11 @@
             "rotation": [ 0, 90, 0 ],
             "translation": [ 0, 2.75, 0],
             "scale":[ 0.5, 0.5, 0.5 ]
+        },
+        "firstperson_righthand": {
+            "rotation": [ 30, -255, 0 ],
+            "translation": [ 3, 3.5, -2 ],
+            "scale": [ 0.40, 0.60, 0.60 ]
         }
     },
     "elements": [
