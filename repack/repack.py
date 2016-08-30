@@ -30,6 +30,7 @@ def normpath(path):
 
 
 core = normpath('core')
+clarity = normpath('clarity')
 continuity = normpath('continuity')
 connectivity = normpath('connectivity')
 
@@ -449,7 +450,13 @@ class Pass(object):
             self.change_for.keys() + [c[0].pattern for c in self.re_changes])
 
     def parse_config(self, config):
-        raise NotImplementedError
+        try:
+            for change_name, targets in config.items('changes'):
+                change = change_by_name[change_name]
+                for target in targets.split():
+                    self.set_change(os.path.join('assets', 'minecraft', 'textures', 'blocks', target), change)
+        except ConfigParser.NoSectionError:
+            pass
 
     def record_change(self, subpath):
         pass
@@ -559,11 +566,6 @@ class ContinuityPass(Pass):
         super(ContinuityPass, self).__init__(core, continuity)
         self.connectivity_pass = ctm_pass
 
-    def parse_config(self, config):
-        for change_name, targets in config.items('changes'):
-            change = change_by_name[change_name]
-            for target in targets.split():
-                self.set_change(os.path.join('assets', 'minecraft', 'textures', 'blocks', target), change)
 
     def record_change(self, subpath):
         self.connectivity_pass.add_known(subpath)
@@ -596,8 +598,10 @@ for output_dir in (continuity, connectivity):
     if os.path.isdir(output_dir):
         shutil.rmtree(output_dir)
 
+clarity_pass = Pass(core, clarity)
 connectivity_pass = ConnectivityPass()
-passes = (ContinuityPass(connectivity_pass), connectivity_pass)
+continuity_pass = ContinuityPass(connectivity_pass)
+passes = (clarity_pass, continuity_pass, connectivity_pass)
 
 passes[0].default_change = CopyChange()
 
