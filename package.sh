@@ -44,7 +44,6 @@ function do_zip() {
     (
 	name=$1
 	ucname=`to_title $name`
-	echo $name - $ucname
 	cd $name
 	rm -f $packs/$ucname.zip
 
@@ -62,7 +61,6 @@ function do_create() {
     name=$1
     ucname=`to_title $name`
     shift
-    echo ... Creating $ucname
     mkdir -p $ucname
     tar c -C clarity "$@" | tar xf - -C $ucname
     # Trivial implementation of repack for this case
