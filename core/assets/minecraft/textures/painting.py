@@ -43,13 +43,16 @@ for x in range(0, 3):
     images.append((x * 4, 12, 4, 4))
 for y in range(0, 2):
     images.append((12, 4 + y * 3, 4, 3))
+# Set the seed to prevent the png changing each time this is run. Otherwise we end up checking a new png file each time
+# we run the script.
+random.seed(13)
 random.shuffle(images)
 
 assert len(images) == 26
 
 item_img = Image.new('RGBA', (max_size, max_size * len(images)), (0, 0, 0, 0))
 
-frames=[]
+frames = []
 for i in range(0, len(images)):
     art_desc = images[i]
     x, y, w, h = [v * pixel_scale for v in art_desc]

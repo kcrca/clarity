@@ -4,49 +4,37 @@
 #
 # It makes many conservative assumptions so it can avoid rebuilding
 # things if not needed.
-#
-# The file core.zip is built for date testing purposes only.
-#
 
-# If any dirs are specified on the command line, build only those
+set -e
+
 cd `dirname $0`
 
-do_clean=0
-if [ x"$1" = x"--clean" ]; then
-    do_clean=1
-    shift
-fi
-
-declare -a dirs
-dirs=("$@")
-if [ -z "$dirs" ]; then
-    dirs=(clarity connectivity beguile)
-fi
-
-if [ $do_clean -gt 0 ]; then
-    rm -rf packs $dirs
-fi
+dirs=(clarity continuity connectivity beguile)
+rm -rf packs $dirs
 
 # Create the packs dir
 test -d packs || mkdir packs
 packs=$PWD/packs
+out=$packs/repack.out
+rm -f $out
+touch $out
 
-# If this script is newer than core.zip, start from scratch
-if [ packs/core.zip -ot $0 ]; then
-    echo Build script is new, starting from scratch
-    rm packs/core.zip
-fi
-
-# If any file in core is newer than core.zip, generate things. This could
-# be more specific by checking only relevant files.
-if [ ! -f packs/core.zip -o ! -z "`find core -newer packs/core.zip`" ]; then
-    echo Regenerating derived files in core
-    (cd core/assets/minecraft ; python clock_gen.py)
-    (cd core/assets/minecraft/textures ; python colorize.py)
-    (cd core/assets/minecraft/textures ; python paintings.py)
-    (cd core/assets/minecraft/textures/gui/container ; python panels.py)
-    (cd core/assets/minecraft/models ; sh reparent.sh)
-fi
+echo Regenerating derived files in core
+for f in `find . -name '*.py'`; do
+    dir=`dirname $f`
+    script=`basename $f`
+    case $script in
+	report.py|repack.py)
+	    ;;
+	*)
+	    (
+		echo ... python $f 2>&1 | tee -a $out
+		cd $dir
+		python $script >> $out
+	    )
+	    ;;
+    esac
+done
 
 # This function will build a single zip file
 function do_zip() {
@@ -70,41 +58,28 @@ function do_create() {
     echo ... Creating $name
     mkdir -p $name
     tar c -C clarity "$@" | tar xf - -C $name
+    # Trivial implementation of repack for this case
     tar c -C $name.repack/override . | tar xf - -C $name
     find $name -name '*.pxm' | xargs rm
 }
 
-# Build core.zip
-do_zip core
+echo ... Repacking
+python repack/repack.py $f >> $out || ( cat $out ; exit 1)
 
 rm -f home
 ln -s $HOME/Library/Application\ Support/minecraft home
 for f in "${dirs[@]}"; do
-    zip=packs/$f.zip
-    if [ ! -f $zip -o $zip -ot packs/core.zip -o $zip -ot repack/repack.py -o $zip -ot $f.repack/repack.cfg ] \
-	|| ( [ -f $zip ] &&  find $f.repack -newer $zip | grep -q . ); then
-        case "$f" in
-	  "beguile")
-	    do_create $f assets/minecraft/textures/gui assets/minecraft/textures/font
-	    ;;
-	  *)
-	    echo ... Repacking $f
-	    out=packs/$f.repack.out
-	    rm -f $out
-	    echo python repack/repack.py core $f > $out
-	    if python repack/repack.py core $f >> $out; then
-		:
-	    else
-		cat $out 
-		exit 1
-	    fi
-	    ;;
-        esac
-	do_zip $f
-	(
-	    cd home/resourcepacks
-	    rm -f $f $f.zip
-	    ln -s $packs/../$f .
-	)
-    fi
+    case "$f" in
+      "beguile")
+	do_create $f assets/minecraft/textures/gui assets/minecraft/textures/font
+	;;
+      *)
+	;;
+    esac
+    do_zip $f
+    (
+	cd home/resourcepacks
+	rm -f $f $f.zip
+	ln -s $packs/../$f .
+    )
 done

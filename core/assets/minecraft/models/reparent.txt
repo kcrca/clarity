@@ -12,4 +12,3 @@ item/glowstone_dust	item/fortyfive
 item/sugar		item/fortyfive
 item/gunpowder		item/fortyfive
 item/beetroot		item/fortyfive
-item/waterlily		block/thin_block

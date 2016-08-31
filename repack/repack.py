@@ -512,6 +512,7 @@ class Pass(object):
         return None
 
     def run(self):
+        print "=== %s" % self.src_top
         for dir_name, subdir_list, file_list in os.walk(self.src_top):
             src_dir = dir_name
             dst_dir = dir_name.replace(self.src_top, self.dst_top)
