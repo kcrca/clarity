@@ -3,7 +3,8 @@
 # Relies on ImageMagick "convert" commmand
 
 convert \
-    -pointsize 110 \
-    -background 'rgb(237,231,184)' -virtual-pixel HorizontalTile -distort Arc '360 90 255' \
-    label:' Continuity ' \
+    -font Verdana -pointsize 110 \
+    -define distort:viewport=512x512-256-256 \
+    -background 'rgb(237,231,184)' -virtual-pixel HorizontalTile -distort Arc '415 90 280' \
+    label:' continuity ' \
     override/pack.png
