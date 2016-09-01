@@ -35,7 +35,7 @@ class FileStatus(object):
                     path = groups[0] + '/' + groups[1]
                 else:
                     path = groups[1]
-            if path and not any(pat.match(path) for pat in self.ignore):
+            if path and not any(pat.search(path) for pat in self.ignore):
                 self.files.add(path)
         return m
 
