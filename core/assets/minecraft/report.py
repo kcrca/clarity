@@ -54,10 +54,10 @@ config.read(config_file)
 other = config.get('basic', 'top')
 other_esc = other.replace('.', '\\.')
 
-always_added = ('.gitignore', 'report.sh', 'font/alternate.properties',
+always_added = ('.gitignore', 'font/alternate.properties',
                 'font/default.properties', 'textures/gui/container/parts',
-                r'report_.*\.config', r'_colored\.png$', r'\.pxm$', r'\.py$',
-                r'\.cfg$', r'/.$')
+                r'_colored\.png$', r'\.pxm$', r'\.py$', r'.sh$', r'\.tiff$',
+                r'\.cfg$', r'(^|/).$', r'(^|/)\..$')
 
 statuses = [
     FileStatus('Ignored', r'\.swp|\~|\/.$|\.DS_Store'),
