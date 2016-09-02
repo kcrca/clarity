@@ -172,6 +172,13 @@ def to_box(coords):
     return coords
 
 
+def deanimate(img):
+    if img.size[0] < img.size[1]:
+        print '    Taking first frame of animation'
+        return img.crop((0, 0, img.size[0], img.size[0]))
+    return img
+
+
 class ConnectedTextureChange(Change):
     def __init__(self, template_name, ctm_pass):
         super(Change, self).__init__()
@@ -216,6 +223,11 @@ class ConnectedTextureChange(Change):
             self._mask_block(src_path, dst_path, src_img, edgeless_img)
 
         edgeless_img = self.edgeless_image(base)
+
+        # Someday handle animations in this area
+        src_img = deanimate(src_img)
+        edgeless_img = deanimate(edgeless_img)
+
         copytree(self.template_dir, ctm_dir, ignore=only_png, overlay=True, copy_function=connected_images)
 
         template_prop_file = os.path.join(self.template_dir, 'block.properties')
@@ -567,7 +579,6 @@ class ContinuityPass(Pass):
         super(ContinuityPass, self).__init__(core, continuity)
         self.connectivity_pass = ctm_pass
 
-
     def record_change(self, subpath):
         self.connectivity_pass.add_known(subpath)
 
@@ -575,7 +586,7 @@ class ContinuityPass(Pass):
 class ConnectivityPass(Pass):
     def __init__(self):
         super(ConnectivityPass, self).__init__(core, connectivity)
-        self.edgeless_top = normpath('continuity')  # use the generated edgless images
+        self.edgeless_top = normpath('continuity')  # use the generated edgeless images
         self.edgeless_block_dir = self.src_blocks_dir.replace(core, continuity)
         self.block_subpath = self.dst_blocks_dir[len(self.dst_top) + 1:]
 
