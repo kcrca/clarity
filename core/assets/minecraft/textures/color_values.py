@@ -7,24 +7,23 @@ from collections import OrderedDict
 
 __author__ = 'arnold'
 
-color_re = re.compile(r'srgba?\(((\d+),(\d+),(\d+),?(\d+)?)\)')
+color_re = re.compile(r'#([\dA-Za-z]{6,8})')
 
 
 def file_char(file_num):
     return chr(file_num + ord('a'))
 
-def rgb_as_num(rgb_str):
-    m = color_re.search(rgb_str)
-    rstr, gstr, bstr, astr = m.groups()[2:6]
-    if astr == '':
-        astr = '0'
-    r, g, b, a = map(int, (rstr, gstr, bstr, astr))
-    return ((((r * 256 + g) * 256) + b) * 256) + a
+
+def to_rgba(m):
+    rgba = m.group(1).lower()
+    if len(rgba) == 6:
+        return rgba +"ff"
+    return rgba
 
 
-def sort_rgb(v1, v2):
-    return rgb_as_num(v1) < rgb_as_num(v2)
-
+def quad(rgba):
+    r, g, b, a = tuple(map(ord, rgba.decode('hex')))
+    return '(%d,%d,%d,%d)' % (r, g, b, a)
 
 
 def analyze(color):
@@ -38,9 +37,7 @@ def analyze(color):
         for line in subprocess.check_output('convert %s -unique-colors txt:-' % f, shell=True).splitlines():
             m = color_re.search(line)
             if m:
-                rgba = m.group(1)
-                if not m.group(5):
-                    rgba += ',1'
+                rgba = to_rgba(m)
                 try:
                     rgbas[rgba].append(i)
                 except KeyError:
@@ -52,7 +49,7 @@ def analyze(color):
         indices = rgbas[rgba]
         for i in range(0, len(pngs)):
             filestr += file_char(i) if i in indices else ' '
-        print '%-20s %s' % (rgba, filestr)
+        print '#%s %-20s %s' % (rgba, quad(rgba), filestr)
     print ''
     for i in range(0, len(pngs)):
         print '%c: %s' % (file_char(i), pngs[i])
