@@ -11,23 +11,24 @@ color_re = re.compile(r'#([\dA-Za-z]{6,8})')
 
 
 def file_char(file_num):
-    return chr(file_num + ord('a'))
+    return chr(file_num + ord('a')) if file_num < 26 else chr(file_num - 26 + ord('A'))
 
 
 def to_rgba(m):
     rgba = m.group(1).lower()
     if len(rgba) == 6:
-        return rgba +"ff"
+        return rgba + "ff"
     return rgba
 
 
 def quad(rgba):
     r, g, b, a = tuple(map(ord, rgba.decode('hex')))
-    return '(%d,%d,%d,%d)' % (r, g, b, a)
+    return '(%3d,%3d,%3d,%3d)' % (r, g, b, a)
 
 
 def analyze(color):
-    pngs = [line[2:] for line in subprocess.check_output('find . -iname "*%s*.png"' % color, shell=True).splitlines()]
+    cmd = 'find . \( -name "rail*" -type d \) -prune -o \( -iname "*%s*.png" -print \)' % color
+    pngs = [line[2:] for line in subprocess.check_output(cmd, shell=True).splitlines()]
     if len(pngs) == 0:
         print "No matches for %s" % color
         return
