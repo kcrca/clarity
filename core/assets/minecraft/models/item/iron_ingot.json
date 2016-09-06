@@ -1,6 +1,6 @@
 {
     "parent": "item/a_brick",
     "textures": {
-        "sides": "items/iron_ingot"
+        "sides": "blocks/iron_block"
     }
 }
