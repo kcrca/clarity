@@ -69,7 +69,7 @@ class SimpleChange(Change):
     def do_change(self, dst, src_img):
         dst_img = Image.new('RGBA', src_img.size)
         self.simple_change(src_img, dst_img)
-        dst_img.save(dst)
+        save(dst_img, dst)
 
     def simple_change(self, src_img, dst_img):
         pass
@@ -177,6 +177,14 @@ def deanimate(img):
         print '    Taking first frame of animation'
         return img.crop((0, 0, img.size[0], img.size[0]))
     return img
+
+
+def save(dst_img, dst):
+    if 'A' in dst_img.getbands():
+        color_counts = dst_img.getcolors()
+        if all(c[3] == 255 for _, c in color_counts):
+            dst_img = dst_img.convert('RGB')
+    dst_img.save(dst)
 
 
 class ConnectedTextureChange(Change):
@@ -292,7 +300,7 @@ class ConnectedTextureChange(Change):
         dst_img = edgeless_img.copy()
         dst_img.paste(block_img, mask_img)
         edger(block_img, dst_img)
-        dst_img.save(dst)
+        save(dst_img, dst)
         # dst_img.show()
         return
 
