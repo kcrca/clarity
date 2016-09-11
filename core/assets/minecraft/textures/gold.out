@@ -1,0 +1,58 @@
+#c49800ff (196,152,  0,255)    ab  e       m       
+#f0bf21ff (240,191, 33,255)    a                   
+#f6ca2cff (246,202, 44,255)    a                   
+#f7d237ff (247,210, 55,255)    a      h   l   pqr  
+#fadd48ff (250,221, 72,255)    a       ijk  no   st
+#fbeb5aff (251,235, 90,255)    ab    g             
+#fdf66cff (253,246,108,255)    ab  e   ijk m o   st
+#fffc76ff (255,252,118,255)    a      h   l   pqr  
+#5c5c5cff ( 92, 92, 92,255)     b                  
+#7e7e7eff (126,126,126,255)     b                  
+#ffffffff (255,255,255,255)     b      ijk   o     
+#5f0704ff ( 95,  7,  4,255)      c                 
+#686868ff (104,104,104,255)      cd                
+#00000000 (  0,  0,  0,  0)      cdefghijklm opqrst
+#e72116ff (231, 33, 22,255)       d                
+#000000ff (  0,  0,  0,255)        e               
+#0a0a0aff ( 10, 10, 10,255)        e               
+#151515ff ( 21, 21, 21,255)        e               
+#450505ff ( 69,  5,  5,255)        e               
+#606060ff ( 96, 96, 96,255)        e               
+#f7ca2cff (247,202, 44,255)        e               
+#808080ff (128,128,128,255)        e               
+#744628ff (116, 70, 40,255)         f              
+#85502dff (133, 80, 45,255)         f              
+#faebaeff (250,235,174,255)         f              
+#fff8d3ff (255,248,211,255)         f              
+#f1cee7ff (241,206,231,255)         f              
+#11791aff ( 17,121, 26,255)          g             
+#ac706eff (172,112,110,255)          g             
+#ffb12bff (255,177, 43,255)          g             
+#2a200dff ( 42, 32, 13,255)           h   l   pqr  
+#4b3817ff ( 75, 56, 23,255)           h   l   p r  
+#695020ff (105, 80, 32,255)           h   l   pqr  
+#212121ff ( 33, 33, 33,255)            ijk   o     
+#a98300ff (169,131,  0,255)                     r  
+#969696ff (150,150,150,255)                     r  
+#fafafaff (250,250,250,255)                      st
+
+a: blocks/gold_block.png
+b: blocks/gold_ore.png
+c: blocks/rail_golden.png
+d: blocks/rail_golden_powered.png
+e: entity/horse/armor/horse_armor_gold.png
+f: entity/rabbit/gold.png
+g: items/carrot_golden.png
+h: items/gold_axe.png
+i: items/gold_boots.png
+j: items/gold_chestplate.png
+k: items/gold_helmet.png
+l: items/gold_hoe.png
+m: items/gold_horse_armor.png
+n: items/gold_ingot.png
+o: items/gold_leggings.png
+p: items/gold_pickaxe.png
+q: items/gold_shovel.png
+r: items/gold_sword.png
+s: models/armor/gold_layer_1.png
+t: models/armor/gold_layer_2.png
