@@ -16,9 +16,15 @@ slot_width = slot_height = 18
 config = ConfigParser.SafeConfigParser()
 config.read('panels.cfg')
 
-bg = config.get('basic', 'background')
+
+def config_color(cname):
+    return ImageColor.getcolor(config.get('basic', cname), 'RGBA')
+
+
+bg_in = config_color('background_in')
+bg = config_color('background')
+font_color = config_color('font_color')
 font_size = config.getint('basic', 'font_size')
-font_color = ImageColor.getrgb(config.get('basic', 'font_color'))
 basic = dict(config.items('basic'))
 
 panels = config.items('panels')
@@ -37,7 +43,7 @@ def alpha_composite(output, image, pos):
 
 digits = {}
 chars = Image.open('parts/digits.png').convert('RGBA')
-raw_font_size = chars.size[0] / 16 # font glyphs are stored 16 to a row
+raw_font_size = chars.size[0] / 16  # font glyphs are stored 16 to a row
 digit_row_top = 3 * raw_font_size
 for i in range(0, 10):
     x1 = i * raw_font_size
@@ -52,17 +58,29 @@ for i in range(0, 10):
 used_part_files = []
 
 for panel, part_str in panels:
-    output = Image.new('RGBA', (256, 256), (0, 0, 0, 0))
+    output_path = '%s.png' % panel
+    blank = os.path.join('parts', output_path)
+    input = Image.open(blank)
+    used_part_files.append(output_path)
+
+    # Set the background
+    if bg_in != bg:
+        pixels = input.load()
+        for x in range(0, input.size[0]):
+            for y in range(0, input.size[1]):
+                if pixels[x, y] == bg_in:
+                    pixels[x, y] = bg
+        input.save(blank)
+
+    output = input.copy()
     draw = ImageDraw.Draw(output)
+    x_size, y_size = output.size
 
     parts = part_str.split()
-    size = parts[0]
-    x_size, y_size = map(int, size.split('x'))
-    output.paste(bg, (0, 0, int(x_size), int(y_size)))
 
     print "Generating %s" % panel
 
-    for desc in parts[1:]:
+    for desc in parts:
         m = desc_re.match(desc)
         if not m:
             print '%s: cannot parse desc: %s' % (panel, desc)
@@ -75,6 +93,7 @@ for panel, part_str in panels:
                 x_pos, y_pos = 0, y_size
             else:
                 x_pos, y_pos = int(x_pos_str), int(y_pos_str)
+
 
             def handle_part(part):
                 while part in basic:
@@ -111,9 +130,10 @@ for panel, part_str in panels:
                     alpha_composite(output, part_img, (x_pos, y_pos))
                     used_part_files.append(part)
 
+
             handle_part(part)
 
-    output.save('%s.png' % panel, 'PNG')
+    output.save(output_path, 'PNG')
 
 parts_files = filter(lambda x: x[-4:] == '.png', os.listdir('parts'))
 unused = set(parts_files) - set(used_part_files) - set('slot.png')
