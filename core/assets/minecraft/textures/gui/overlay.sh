@@ -1,13 +1,11 @@
 #!/bin/sh
 
-cd `$(dirname $0)`
-
 dirs=( "$@" )
 if [ ${#dirs} -eq 0 ]; then
     dirs=( . )
 fi
 
-find $dirs -name '*_diff.png' | xargs rm
+find $dirs -name '*_diff.png' -print0 | xargs -0 rm
 
 for new in `find $dirs -name '*.png'`; do
     new="$(cd "`dirname $new`" ; pwd)/$(basename $new)"
