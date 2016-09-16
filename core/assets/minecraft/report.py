@@ -24,7 +24,7 @@ def whole_match(groups):
 
 def first_group(groups):
     assert len(groups) == 2
-    return groups[1]
+    return groups[0]
 
 
 def path_from_only(groups):
@@ -46,8 +46,7 @@ class FileStatus(object):
         self.path_from_groups = path_from_groups
         try:
             to_ignore = config.get('ignore', prefix.lower())
-            all_ignored = ignore_pats + tuple(to_ignore.split())
-            self.ignore = [re.compile(pat) for pat in all_ignored]
+            self.ignore = [re.compile(pat) for pat in to_ignore.split()]
         except ConfigParser.NoOptionError:
             pass
         status_by_name[self.prefix] = self
@@ -57,8 +56,7 @@ class FileStatus(object):
         if m:
             groups = m.groups()
             path = self.path_from_groups(groups) if len(groups) else None
-            if path and not any(pat.search(path) for pat in self.ignore):
-                self.add_path(groups, path)
+            self.add_path(groups, path)
         return m
 
     def dump(self):
@@ -66,7 +64,8 @@ class FileStatus(object):
             print '%s: %s' % (self.prefix, f)
 
     def add_path(self, groups, path):
-        self.files.add(path)
+        if path and not any(pat.search(path) for pat in self.ignore):
+            self.files.add(path)
 
 
 # This does an extra check for changed PNG files to see if they are really different
@@ -84,7 +83,7 @@ class ChangedFileStatus(FileStatus):
                                                                 img2.convert('RGBA')).getbbox() is None:
                 self.same_file_status.add_path(groups, path)
                 return
-        self.files.add(path)
+        super(ChangedFileStatus, self).add_path(groups, path)
 
 
 config_file = 'report_default.cfg'
@@ -97,26 +96,24 @@ config.read(config_file)
 other = config.get('basic', 'top')
 other_esc = other.replace('.', '\\.')
 
-always_added = ('.gitignore', 'font/alternate.properties',
-                'font/default.properties', 'textures/gui/container/parts',
-                r'_colored\.png$', r'\.pxm$', r'\.py$', r'.sh$', r'\.tiff$',
-                r'\.cfg$', r'(^|/).$', r'(^|/)\..$')
-
-same_checker = FileStatus('Same', r'^Files (?:\./)?(.*) and ', path_from_groups=no_path)
+same_checker = FileStatus('Same', r'^Files (?:\./)?(.*) and .* identical', path_from_groups=no_path)
 statuses = (
     FileStatus('Ignored', r'\.swp|\~|\/.$|\.DS_Store', path_from_groups=whole_match),
     same_checker,
-    ChangedFileStatus('Changed', r'^Binary files (?:\./)?(.*) and ([^\s]*)', same_checker),
+    ChangedFileStatus('Changed', r'^Files (?:\./)?(.*) and ([^\s]*) differ', same_checker),
     FileStatus('Missing', r'^Only in ' + other_esc + '/?(.*): (.*)', path_from_groups=path_from_only),
-    FileStatus('Added', r'^Only in \./?(.*): (.*)', always_added, path_from_groups=path_from_only)
+    FileStatus('Added', r'^Only in \./?(.*): (.*)', path_from_groups=path_from_only)
 )
 
-diff = subprocess.Popen(['diff', '-rs', '.', other], stdout=subprocess.PIPE)
+diff = subprocess.Popen(['diff', '-rsq', '.', other], stdout=subprocess.PIPE)
+
+irrelevant_re = re.compile(r'^[0-9<>-]')
 
 for line in diff.stdout:
-    for status in statuses:
-        if status.status_match(line):
-            break
+    if not irrelevant_re.search(line):
+        for status in statuses:
+            if status.status_match(line):
+                break
 
 print_order = ['Missing', 'Added', 'Same', 'Changed']
 
