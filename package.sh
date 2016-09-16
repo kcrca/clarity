@@ -78,7 +78,7 @@ for name in "${dirs[@]}"; do
     ucname=`to_title $name`
     case "$name" in
       "beguile")
-	do_create $name assets/minecraft/textures/gui assets/minecraft/textures/font
+	do_create $name assets/minecraft/textures/gui
 	;;
       *)
 	;;
