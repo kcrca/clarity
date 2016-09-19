@@ -125,6 +125,15 @@ for panel, part_str in panels:
                         y = y_pos + slot_height - 1
                         draw.bitmap((x, y), digits[i], fill=font_color)
                     used_part_files.append('digits.png')
+                elif part.startswith("items/"):
+                    part_img = Image.open('../../%s.png' % part).convert("RGBA")
+                    pixels = part_img.load()
+                    for x in range(0, part_img.size[0]):
+                        for y in range(0, part_img.size[1]):
+                            c = pixels[x,y]
+                            if c[3] != 0:
+                                pixels[x,y] = (c[0], c[1], c[2], int(round(c[3] * 0.2)))
+                    alpha_composite(output, part_img, (x_pos, y_pos))
                 else:
                     part_img = Image.open('parts/%s' % part).convert("RGBA")
                     alpha_composite(output, part_img, (x_pos, y_pos))
