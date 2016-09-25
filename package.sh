@@ -71,22 +71,25 @@ function do_create() {
 echo ... Repacking
 python repack/repack.py $f >> $out || ( cat $out ; exit 1)
 
+echo ... Adding connected blocks
+for f in clarity continuity; do
+    cp -r connectivity/assets/minecraft/mcpatcher $f/assets/minecraft/mcpatcher
+done
+
 rm -f home
 # Works for a mac, should check for other configurations
 ln -s $HOME/Library/Application\ Support/minecraft home
 for name in "${dirs[@]}"; do
     ucname=`to_title $name`
-    case "$name" in
-      "beguile")
+    if [ "$name" == "beguile" ]; then
 	do_create $name assets/minecraft/textures/gui
-	;;
-      *)
-	;;
-    esac
-    do_zip $name
-    (
-	cd home/resourcepacks
-	rm -f $ucname $ucname.zip $name $name.zip
-	ln -s $packs/../$ucname .
-    )
+    fi
+    if [ "$name" != "connectivity" ]; then
+	do_zip $name
+	(
+	    cd home/resourcepacks
+	    rm -f $ucname $ucname.zip $name $name.zip
+	    ln -s $packs/../$ucname .
+	)
+    fi
 done
