@@ -8,14 +8,16 @@
 set -e
 
 cd `dirname $0`
+top=$PWD
+packs=$top/site/packs
 
 dirs=(clarity continuity connectivity beguile)
-rm -rf packs $dirs
+rm -rf $packs $dirs
 
 # Create the packs dir
-test -d packs || mkdir packs
-packs=$PWD/packs
-out=$packs/repack.out
+test -d $packs || mkdir -p $packs
+out=$top/repack.out
+rm -rf $out
 cp /dev/null $out
 
 echo Regenerating derived files in core
@@ -96,12 +98,12 @@ for name in "${dirs[@]}"; do
     (
 	cd home/resourcepacks
 	rm -f $ucname $ucname.zip $name $name.zip
-	ln -s $packs/../$ucname .
+	ln -s $top/$name $ucname
     )
 done
 
-echo Building all.zip
+echo Building All.zip
 (
-    cd packs
+    cd $packs
     zip -q All.zip *.zip
 )

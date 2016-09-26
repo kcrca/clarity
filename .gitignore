@@ -1,4 +1,3 @@
-out
 .DS_Store
 home
 .*.sw[op]
@@ -12,8 +11,9 @@ home
 /beguile
 /home
 /logs
-/packs
-/remodel
+/site/packs
+/repack.out
+/ocd
 *.zip
 core/assets/minecraft/report_default
 *_diff.gif

@@ -1,0 +1,76 @@
+html, body {
+  width: 100%;
+  height: 100%;
+  margin: 0.5em;
+}
+body {
+  background-color: rgb(255, 254, 243);
+  font-family: sans-serif;
+  margin: auto;
+}
+h1, h2, h3 {
+    text-align: center;
+}
+.outer {
+    width: 50em;
+    margin: auto;
+}
+img {
+    margin: 1ex;
+}
+.example {
+    width: auto;
+    margin: 4ex 0 0 0;
+}
+.example img {
+    margin: 1ex 0;
+}
+
+figcaption {
+    background-color: rgb(41,41,41);
+    color: white;
+    padding: 0.5ex 1em;
+}
+
+.heading {
+    text-align: center;
+    background-color: rgb(122, 131, 187);
+    color: white;
+    margin: 2ex 0;
+    padding: 0.5ex 3em;
+}
+
+.menu table {
+    width: 100%;
+    table-layout: fixed;
+}
+
+.menu td {
+    padding: 1.5ex;
+    background-color: rgb(107, 107, 107);
+    text-align: center;
+    vertical-align: middle;
+    font-style: italic;
+    font-weight: bold;
+}
+
+.menu a:link, .menu a:visited {
+    text-decoration: none;
+    color: white;
+}
+
+.menu td:hover, .menu td:active {
+    background-color: rgb(122, 131, 187);
+}
+
+.tabcontent {
+    display: none;
+}
+
+.downloads td {
+    text-align: left;
+}
+
+.downloads img {
+    vertical-align:middle;
+}

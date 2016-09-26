@@ -8,4 +8,4 @@ for c in clarity connectivity continuity; do
 	-fill white -font Verdana -pointsize 24 -gravity SouthWest -annotate +84+6 ${c} \
 	${c}_frame.gif
 done
-convert -delay 100 *.gif -loop 0 comparision.gif
+convert -delay 100 *.gif -loop 0 anim.gif
