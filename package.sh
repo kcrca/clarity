@@ -102,10 +102,10 @@ for name in "${dirs[@]}"; do
     )
 done
 
-echo Building All.zip
+echo Building ClarityFamily.zip
 (
     cd $packs
-    zip -q All.zip *.zip
+    zip -q ClarityFamily.zip *.zip
 )
 
 echo Building site
