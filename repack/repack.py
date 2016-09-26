@@ -540,7 +540,7 @@ class Pass(object):
                 if skip_dirs_re.match(f):
                     subdir_list.remove(f)
             safe_mkdirs(dst_dir)
-            file_list = [f for f in file_list if not do_not_copy_re.match(f)]
+            file_list = [f for f in file_list if not do_not_copy_re.search(f)]
             for f in file_list:
                 src = os.path.join(src_dir, f)
                 dst = os.path.join(dst_dir, f)
