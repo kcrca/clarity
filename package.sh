@@ -71,25 +71,37 @@ function do_create() {
 echo ... Repacking
 python repack/repack.py $f >> $out || ( cat $out ; exit 1)
 
-echo ... Adding connected blocks
-for f in clarity continuity; do
-    cp -r connectivity/assets/minecraft/mcpatcher $f/assets/minecraft/mcpatcher
-done
-
 rm -f home
 # Works for a mac, should check for other configurations
 ln -s $HOME/Library/Application\ Support/minecraft home
 for name in "${dirs[@]}"; do
     ucname=`to_title $name`
-    if [ "$name" == "beguile" ]; then
+    case "$name" in
+    "beguile")
 	do_create $name assets/minecraft/textures/gui
-    fi
-    if [ "$name" != "connectivity" ]; then
-	do_zip $name
-	(
-	    cd home/resourcepacks
-	    rm -f $ucname $ucname.zip $name $name.zip
-	    ln -s $packs/../$ucname .
-	)
-    fi
+	;;
+    "connectivity")
+	# Strip out everything but the continuity info and pack stuff
+	# First remove files we don't need.
+	for f in $(find connectivity \( -name mcpatcher -o -name 'pack*' \) -prune -o -print); do
+	    test -f $f && rm $f
+	done
+	# Now delete all the empty dirs
+	find -d connectivity -type d -empty -exec rmdir '{}' \;
+	;;
+    *)
+	;;
+    esac
+    do_zip $name
+    (
+	cd home/resourcepacks
+	rm -f $ucname $ucname.zip $name $name.zip
+	ln -s $packs/../$ucname .
+    )
 done
+
+echo Building all.zip
+(
+    cd packs
+    zip -q All.zip *.zip
+)
