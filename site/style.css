@@ -74,3 +74,9 @@ figcaption {
 .downloads img {
     vertical-align:middle;
 }
+
+.timestamp {
+    text-align: right;
+    font-style: italic;
+    font-size: small;
+}
