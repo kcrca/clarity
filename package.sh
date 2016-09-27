@@ -10,6 +10,7 @@ set -e
 cd `dirname $0`
 top=$PWD
 packs=$top/site/packs
+version=`cat core/pack_version.txt`
 
 dirs=(clarity continuity connectivity beguile)
 rm -rf $packs $dirs
@@ -46,27 +47,26 @@ function do_zip() {
     (
 	name=$1
 	ucname=`to_title $name`
+	zipname="$ucname $version.zip"
 	cd $name
-	rm -f $packs/$ucname.zip
 
-	echo Building $ucname.zip
+	echo Building $zipname
 	# The "-o" flag says to make the mod time on the zip file the same
 	# as the most recent mod time on any of the files. This lets the
 	# zip file's mod time stand for the most recent change in the entire
 	# zipped directory.
-	zip -rDqoy $packs/$ucname.zip *
+	zip -rDqoy "$packs/$zipname" *
     )
 }
 
 # Creates special subparts of the texture pack set
 function do_create() {
     name=$1
-    ucname=`to_title $name`
     shift
-    mkdir -p $ucname
-    tar c -C clarity "$@" | tar xf - -C $ucname
+    mkdir -p $name
+    tar c -C clarity "$@" | tar xf - -C $name
     # Trivial implementation of repack for this case
-    tar c -C $name.repack/override . | tar xf - -C $ucname
+    tar c -C $name.repack/override . | tar xf - -C $name
     find $name -name '*.pxm' -print0 | xargs -0 rm
 }
 
@@ -78,6 +78,7 @@ rm -f home
 ln -s $HOME/Library/Application\ Support/minecraft home
 for name in "${dirs[@]}"; do
     ucname=`to_title $name`
+    zipname="$ucname $version"
     case "$name" in
     "beguile")
 	do_create $name assets/minecraft/textures/gui
@@ -88,7 +89,7 @@ for name in "${dirs[@]}"; do
 	for f in $(find connectivity \( -name mcpatcher -o -name 'pack*' \) -prune -o -print); do
 	    test -f $f && rm $f
 	done
-	# Now delete all the empty dirs
+	# Now delete all the empty dirs we left behind
 	find -d connectivity -type d -empty -exec rmdir '{}' \;
 	;;
     *)
@@ -97,15 +98,15 @@ for name in "${dirs[@]}"; do
     do_zip $name
     (
 	cd home/resourcepacks
-	rm -f $ucname $ucname.zip $name $name.zip
-	ln -s $top/$name $ucname
+	rm -f ${ucname}* ${name}*
+	ln -s $top/$name "$(basename "$zipname" .zip)"
     )
 done
 
-echo Building ClarityFamily.zip
+echo Building "ClarityFamily $version.zip"
 (
     cd $packs
-    zip -q ClarityFamily.zip *.zip
+    zip -q "ClarityFamily $version.zip" *.zip
 )
 
 echo Building site
@@ -120,3 +121,4 @@ for f in `find site -name build.sh`; do
 	build.sh
     )
 done
+site/update_version.sh $version
