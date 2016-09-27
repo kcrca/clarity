@@ -140,26 +140,33 @@
         <div class="menu">
             <table class="downloads">
                 <tr>
-                    <td><a href="packs/Clarity.zip"><img src="clarity_thumb.png"/> Download Clarity</a></td>
+                    <td><a class="download_pack" href="packs/Clarity.zip"><img src="clarity_thumb.png"/> Download Clarity</a></td>
                 </tr>
                 <tr>
-                    <td><a href="packs/Continuity.zip"><img src="continuity_thumb.png"/> Download Continuity</a></td>
+                    <td><a class="download_pack" href="packs/Continuity.zip"><img src="continuity_thumb.png"/> Download Continuity</a></td>
                 </tr>
                 <tr>
-                    <td><a href="packs/Connectivity.zip"><img src="connectivity_thumb.png"/> Download Connectivity</a>
+                    <td><a class="download_pack" href="packs/Connectivity.zip"><img src="connectivity_thumb.png"/> Download Connectivity</a>
                     </td>
                 </tr>
                 <tr>
-                    <td><a href="packs/Beguile.zip"><img src="beguile_thumb.png"/> Download Beguile</a></td>
+                    <td><a class="download_pack" href="packs/Beguile.zip"><img src="beguile_thumb.png"/> Download Beguile</a></td>
                 </tr>
                 <tr>
+                    <td><a href="#" onClick="downloadAll(event)">
+                        <img src="clarity_thumb.png"/>
+                        <img src="continuity_thumb.png"/>
+                        <img src="connectivity_thumb.png"/>
+                        <img src="beguile_thumb.png"/>
+			Download All</a>
+		    </td>
+                </tr>
                     <td><a href="packs/ClarityFamily.zip">
                         <img src="clarity_thumb.png"/>
                         <img src="continuity_thumb.png"/>
                         <img src="connectivity_thumb.png"/>
                         <img src="beguile_thumb.png"/>
-                        Download All</a></td>
-                </tr>
+			Download All as a single zip file</a></td>
             </table>
         </div>
     </div>
@@ -236,6 +243,18 @@ function openTab(evt, tabName) {
     }
     document.getElementById(tabName).style.display = "block";
     evt.currentTarget.className += " active";
+}
+
+function downloadAll(evt) {
+    dlinks = document.getElementsByClassName("download_pack");
+    function downloadNext(i) {
+	if (i >= dlinks.length) {
+	    return;
+	}
+        dlinks[i].click();
+	setTimeout(function() { downloadNext(i + 1); }, 500);
+    }
+    setTimeout(function() { downloadNext(0); }, 500);
 }
 
 openTab(null, "Overview");
