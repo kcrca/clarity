@@ -122,3 +122,4 @@ for f in `find site -name build.sh`; do
     )
 done
 site/update_version.sh $version
+site/split_paintings.sh $top/clarity/assets/minecraft/textures/painting/paintings_kristoffer_zetterstrand.png

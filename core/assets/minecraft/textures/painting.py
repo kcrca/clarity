@@ -20,6 +20,7 @@ painting_dir = os.path.join(texture_dir, 'painting')
 paintings = os.path.join(painting_dir, 'paintings_kristoffer_zetterstrand.png')
 texture = os.path.join(texture_dir, 'items', 'painting.png')
 animation = os.path.join(texture_dir, 'items', 'painting.png.mcmeta')
+breakout_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(texture_dir)))), 'site', 'paintings')
 
 paintings_img = Image.open(paintings).convert('RGBA')
 assert paintings_img.size[0] == paintings_img.size[1]
@@ -51,12 +52,15 @@ random.shuffle(images)
 assert len(images) == 26
 
 item_img = Image.new('RGBA', (max_size, max_size * len(images)), (0, 0, 0, 0))
+thumb_scale = 4
 
 frames = []
 for i in range(0, len(images)):
     art_desc = images[i]
     x, y, w, h = [v * pixel_scale for v in art_desc]
     art_img = paintings_img.crop((x, y, x + w, y + h))
+    art_thumb_img = art_img.copy().resize((w * thumb_scale, h * thumb_scale))
+    art_thumb_img.save(os.path.join(breakout_dir, "painting_%02d.png" % i))
     # scale image up to fix in max size
     art_scale = min(max_size / w, max_size / h)
     if art_scale > 1:
