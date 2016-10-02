@@ -1,0 +1,139 @@
+On branch 1.10.3
+Changes to be committed:
+  (use "git reset HEAD <file>..." to unstage)
+
+	deleted:    ../core/assets/minecraft/textures/entity/shulker/endergolem.pxm
+
+Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)
+  (use "git checkout -- <file>..." to discard changes in working directory)
+
+	modified:   ../core/assets/minecraft/textures/entity/shulker/endergolem.png
+	modified:   ../core/assets/minecraft/textures/gui/container/panels.cfg
+	modified:   ../core/assets/minecraft/textures/gui/overlay.sh
+	modified:   ../core/pack.mcmeta
+	modified:   assets/minecraft/lang/en_US.lang
+	modified:   assets/minecraft/loot_tables/entities/elder_guardian.json
+	modified:   assets/minecraft/loot_tables/entities/guardian.json
+	modified:   assets/minecraft/loot_tables/entities/rabbit.json
+	modified:   assets/minecraft/loot_tables/entities/shulker.json
+	modified:   assets/minecraft/loot_tables/entities/skeleton_horse.json
+	modified:   assets/minecraft/loot_tables/entities/stray.json
+	modified:   assets/minecraft/loot_tables/entities/zombie_horse.json
+	modified:   assets/minecraft/loot_tables/gameplay/fishing/junk.json
+	modified:   assets/minecraft/models/block/bone_block.json
+	modified:   assets/minecraft/models/block/cross.json
+	modified:   assets/minecraft/models/block/tinted_cross.json
+	modified:   assets/minecraft/models/item/filled_map.json
+	modified:   assets/minecraft/structures/igloo/igloo_bottom.nbt
+	modified:   assets/minecraft/texts/splashes.txt
+	modified:   assets/minecraft/textures/blocks/bone_block_side.png
+	modified:   assets/minecraft/textures/blocks/bone_block_top.png
+	modified:   assets/minecraft/textures/blocks/magma.png
+	modified:   assets/minecraft/textures/blocks/nether_wart_block.png
+	modified:   assets/minecraft/textures/blocks/red_nether_brick.png
+	modified:   assets/minecraft/textures/blocks/structure_block.png
+	modified:   assets/minecraft/textures/blocks/structure_block_corner.png
+	modified:   assets/minecraft/textures/blocks/structure_block_data.png
+	modified:   assets/minecraft/textures/blocks/structure_block_load.png
+	modified:   assets/minecraft/textures/blocks/structure_block_save.png
+	modified:   assets/minecraft/textures/entity/bear/polarbear.png
+	modified:   assets/minecraft/textures/entity/chicken.png
+	modified:   assets/minecraft/textures/entity/skeleton/skeleton.png
+	modified:   assets/minecraft/textures/entity/skeleton/stray.png
+	modified:   assets/minecraft/textures/entity/skeleton/stray_overlay.png
+	modified:   assets/minecraft/textures/entity/skeleton/wither_skeleton.png
+	modified:   assets/minecraft/textures/entity/zombie/husk.png
+	modified:   assets/minecraft/textures/font/ascii.png
+	modified:   assets/minecraft/textures/font/unicode_page_01.png
+	modified:   assets/minecraft/textures/gui/container/anvil.png
+	modified:   assets/minecraft/textures/gui/container/horse.png
+	modified:   assets/minecraft/textures/gui/container/inventory.png
+	modified:   assets/minecraft/textures/items/map_empty.png
+	modified:   assets/minecraft/textures/items/map_filled.png
+	modified:   assets/minecraft/textures/items/structure_void.png
+	modified:   assets/minecraft/textures/map/map_icons.png
+
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+
+	../core/assets/minecraft/textures/entity/shulker/shulker_purple.png
+	../core/assets/minecraft/textures/gui/container/parts/shulker_box.png
+	../core/assets/minecraft/textures/gui/container/shulker_box.png
+	../default_resourcepack.old/
+	10.3.changes
+	assets/minecraft/blockstates/observer.json
+	assets/minecraft/loot_tables/chests/woodland_mansion.json
+	assets/minecraft/loot_tables/entities/donkey.json
+	assets/minecraft/loot_tables/entities/evocation_illager.json
+	assets/minecraft/loot_tables/entities/husk.json
+	assets/minecraft/loot_tables/entities/llama.json
+	assets/minecraft/loot_tables/entities/mule.json
+	assets/minecraft/loot_tables/entities/villager.json
+	assets/minecraft/loot_tables/entities/vindication_illager.json
+	assets/minecraft/loot_tables/entities/zombie_villager.json
+	assets/minecraft/models/block/observer.json
+	assets/minecraft/models/item/black_shulker_box.json
+	assets/minecraft/models/item/blue_shulker_box.json
+	assets/minecraft/models/item/brown_shulker_box.json
+	assets/minecraft/models/item/cyan_shulker_box.json
+	assets/minecraft/models/item/gray_shulker_box.json
+	assets/minecraft/models/item/green_shulker_box.json
+	assets/minecraft/models/item/light_blue_shulker_box.json
+	assets/minecraft/models/item/lime_shulker_box.json
+	assets/minecraft/models/item/magenta_shulker_box.json
+	assets/minecraft/models/item/observer.json
+	assets/minecraft/models/item/orange_shulker_box.json
+	assets/minecraft/models/item/pink_shulker_box.json
+	assets/minecraft/models/item/purple_shulker_box.json
+	assets/minecraft/models/item/red_shulker_box.json
+	assets/minecraft/models/item/shulker_box.json
+	assets/minecraft/models/item/shulker_shell.json
+	assets/minecraft/models/item/silver_shulker_box.json
+	assets/minecraft/models/item/totem.json
+	assets/minecraft/models/item/white_shulker_box.json
+	assets/minecraft/models/item/yellow_shulker_box.json
+	assets/minecraft/structures/mansion/
+	assets/minecraft/textures/blocks/observer_back.png
+	assets/minecraft/textures/blocks/observer_front.png
+	assets/minecraft/textures/blocks/observer_side.png
+	assets/minecraft/textures/blocks/observer_top.png
+	assets/minecraft/textures/blocks/shulker_top_black.png
+	assets/minecraft/textures/blocks/shulker_top_blue.png
+	assets/minecraft/textures/blocks/shulker_top_brown.png
+	assets/minecraft/textures/blocks/shulker_top_cyan.png
+	assets/minecraft/textures/blocks/shulker_top_gray.png
+	assets/minecraft/textures/blocks/shulker_top_green.png
+	assets/minecraft/textures/blocks/shulker_top_light_blue.png
+	assets/minecraft/textures/blocks/shulker_top_lime.png
+	assets/minecraft/textures/blocks/shulker_top_magenta.png
+	assets/minecraft/textures/blocks/shulker_top_orange.png
+	assets/minecraft/textures/blocks/shulker_top_pink.png
+	assets/minecraft/textures/blocks/shulker_top_purple.png
+	assets/minecraft/textures/blocks/shulker_top_red.png
+	assets/minecraft/textures/blocks/shulker_top_silver.png
+	assets/minecraft/textures/blocks/shulker_top_white.png
+	assets/minecraft/textures/blocks/shulker_top_yellow.png
+	assets/minecraft/textures/entity/illager/
+	assets/minecraft/textures/entity/llama/
+	assets/minecraft/textures/entity/shulker/shulker_black.png
+	assets/minecraft/textures/entity/shulker/shulker_blue.png
+	assets/minecraft/textures/entity/shulker/shulker_brown.png
+	assets/minecraft/textures/entity/shulker/shulker_cyan.png
+	assets/minecraft/textures/entity/shulker/shulker_gray.png
+	assets/minecraft/textures/entity/shulker/shulker_green.png
+	assets/minecraft/textures/entity/shulker/shulker_light_blue.png
+	assets/minecraft/textures/entity/shulker/shulker_lime.png
+	assets/minecraft/textures/entity/shulker/shulker_magenta.png
+	assets/minecraft/textures/entity/shulker/shulker_orange.png
+	assets/minecraft/textures/entity/shulker/shulker_pink.png
+	assets/minecraft/textures/entity/shulker/shulker_purple.png
+	assets/minecraft/textures/entity/shulker/shulker_red.png
+	assets/minecraft/textures/entity/shulker/shulker_silver.png
+	assets/minecraft/textures/entity/shulker/shulker_white.png
+	assets/minecraft/textures/entity/shulker/shulker_yellow.png
+	assets/minecraft/textures/gui/container/shulker_box.png
+	assets/minecraft/textures/items/map_filled_markings.png
+	assets/minecraft/textures/items/shulker_shell.png
+	assets/minecraft/textures/items/totem.png
+

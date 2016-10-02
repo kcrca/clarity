@@ -135,5 +135,20 @@ models/armor/iron_layer_1.png
 models/armor/gold_layer_1.png
 models/armor/iron_layer_2.png
 models/armor/gold_layer_2.png
+entity/shulker/shulker_pink.png
+entity/shulker/shulker_gray.png
+entity/shulker/shulker_magenta.png
+entity/shulker/shulker_brown.png
+entity/shulker/shulker_blue.png
+entity/shulker/shulker_yellow.png
+entity/shulker/shulker_black.png
+entity/shulker/shulker_light_blue.png
+entity/shulker/shulker_green.png
+entity/shulker/shulker_orange.png
+entity/shulker/shulker_cyan.png
+entity/shulker/shulker_white.png
+entity/shulker/shulker_silver.png
+entity/shulker/shulker_red.png
+entity/shulker/shulker_lime.png
 
 (The files are in git to help the script know which files should exist)
