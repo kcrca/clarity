@@ -25,9 +25,9 @@
     <div class="menu">
         <table>
             <tr>
-                <td><a href="#" class="tablinks" onclick="openTab(event, 'Overview')">Overview</a></td>
-                <td><a href="#" class="tablinks" onclick="openTab(event, 'Downloads')">Downloads</a></td>
-                <td><a href="#" class="tablinks" onclick="openTab(event, 'Details')">Details</a></td>
+                <td class="tablinks Overview" onclick="openTab(event, 'Overview')">Overview</td>
+                <td class="tablinks Downloads" onclick="openTab(event, 'Downloads')">Downloads</td>
+                <td class="tablinks Details" onclick="openTab(event, 'Details')">Details</td>
             </tr>
         </table>
     </div>
@@ -147,38 +147,38 @@
         <div class="menu">
             <table class="downloads">
                 <tr>
-                    <td><a class="download_pack" href="packs/Clarity 1.10.zip"><img src="clarity_thumb.png"/> Download
-                        Clarity</a></td>
+                    <td class="download_pack" onclick="window.location='packs/Clarity 1.10.zip'"><img src="clarity_thumb.png"/> Download
+                        Clarity</td>
                 </tr>
                 <tr>
-                    <td><a class="download_pack" href="packs/Continuity 1.10.zip"><img src="continuity_thumb.png"/>
-                        Download Continuity</a></td>
+                    <td class="download_pack" onclick="window.location='packs/Continuity 1.10.zip'"><a><img src="continuity_thumb.png"/>
+                        Download Continuity</td>
                 </tr>
                 <tr>
-                    <td><a class="download_pack" href="packs/Connectivity 1.10.zip"><img src="connectivity_thumb.png"/>
-                        Download Connectivity</a>
+                    <td class="download_pack" onclick="window.location='packs/Connectivity 1.10.zip'"><a><img src="connectivity_thumb.png"/>
+                        Download Connectivity
                     </td>
                 </tr>
                 <tr>
-                    <td><a class="download_pack" href="packs/Beguile 1.10.zip"><img src="beguile_thumb.png"/> Download
-                        Beguile</a></td>
+                    <td class="download_pack" onclick="window.location='packs/Beguile 1.10.zip'"><a><img src="beguile_thumb.png"/> Download
+                        Beguile</td>
                 </tr>
                 <tr>
-                    <td><a href="#" onClick="downloadAll(event)">
+                    <td onClick="downloadAll(event)"><a>
                         <img src="clarity_thumb.png"/>
                         <img src="continuity_thumb.png"/>
                         <img src="connectivity_thumb.png"/>
                         <img src="beguile_thumb.png"/>
-                        Download All</a>
+                        Download All (multiple files)
                     </td>
                 </tr>
                 <tr>
-                    <td><a href="packs/ClarityFamily 1.10.zip">
+                    <td onclick="window.location='packs/ClarityFamily 1.10.zip'"><a>
                         <img src="clarity_thumb.png"/>
                         <img src="continuity_thumb.png"/>
                         <img src="connectivity_thumb.png"/>
                         <img src="beguile_thumb.png"/>
-                        Download All as a single zip file</a></td>
+                        Download All (a single zip file)</td>
                 </tr>
             </table>
         </div>
@@ -276,7 +276,7 @@
             liked it, and my choices were influenced by it.
 
         <p>
-            I also took some inspiration from the <a href="www.planetminecraft.com/texture_pack/paper-cut-out">Paper
+            I also took some inspiration from the <a href="http://www.planetminecraft.com/texture_pack/paper-cut-out">Paper
             Cut Out</a> resource pack by SuperAlgae. Which I really like.
         <p>
             I did a lot of my testing in <a
@@ -289,15 +289,15 @@
     </div>
 
     <div class="menu">
-        <p>&nbsp;
         <table>
             <tr>
-                <td><a href="#" class="tablinks" onclick="openTab(event, 'Overview')">Overview</a></td>
-                <td><a href="#" class="tablinks" onclick="openTab(event, 'Downloads')">Downloads</a></td>
-                <td><a href="#" class="tablinks" onclick="openTab(event, 'Details')">Details</a></td>
+                <td class="tablinks Overview" onclick="openTab(event, 'Overview')">Overview</td>
+                <td class="tablinks Downloads" onclick="openTab(event, 'Downloads')">Downloads</td>
+                <td class="tablinks Details" onclick="openTab(event, 'Details')">Details</td>
             </tr>
         </table>
     </div>
+
     <p class="timestamp">27 Sep 01:06
 
 </div>
@@ -314,8 +314,12 @@ function openTab(evt, tabName) {
     for (i = 0; i < tablinks.length; i++) {
         tablinks[i].className = tablinks[i].className.replace(" active", "");
     }
+
     document.getElementById(tabName).style.display = "block";
-    evt.currentTarget.className += " active";
+    activeButtons = document.getElementsByClassName(tabName);
+    for (i = 0; i < activeButtons.length; i++) {
+        activeButtons[i].className += " active";
+    }
 }
 
 function downloadAll(evt) {
@@ -334,7 +338,11 @@ tab_name = location.hash.substring(1);
 if (!tab_name) {
     tab_name = "Overview";
 }
-openTab(null, tab_name);
+
+document.addEventListener("DOMContentLoaded", function(event) { 
+    openTab(null, tab_name);
+});
+
 
 
 </script>
