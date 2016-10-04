@@ -52,15 +52,15 @@ figcaption {
     vertical-align: middle;
     font-style: italic;
     font-weight: bold;
-}
-
-.menu a:link, .menu a:visited {
-    text-decoration: none;
     color: white;
 }
 
-.menu td:hover, .menu td:active {
+.menu td:hover, .menu td.active {
     background-color: rgb(122, 131, 187);
+}
+
+.menu td:hover {
+    cursor: pointer;
 }
 
 .tabcontent {
