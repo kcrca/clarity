@@ -7,19 +7,20 @@ if [ x"$1" == x"-rm" ]; then
     shift
 fi
 
+typeset -a dirs
 dirs=( "$@" )
 if [ ${#dirs} -eq 0 ]; then
     dirs=( . )
 fi
 
-find $dirs -name '*_diff.gif' -delete
+find "${dirs[@]}" -name '*_diff.gif' -delete
 [ -z "$rm_only" ] || exit 0
 
 html=/tmp/overaly.html
 cp /dev/null $html
 skipped=""
 
-for new in $(find $dirs -name '*.png'); do
+for new in $(find "${dirs[@]}" -name '*.png'); do
     new="$(cd "$(dirname $new)" ; pwd)/$(basename $new)"
     old="${new/core/default_resourcepack}"
     base=$(dirname $new)/$(basename $new .png)
@@ -49,7 +50,7 @@ EOF
     fi
 done
 
-if [ x"$skipped" !+ x"" ]; then
+if [ x"$skipped" != x"" ]; then
     cat <<EOF >>$html
 <p>Skipped:<ul>$skipped</ul>
 EOF
