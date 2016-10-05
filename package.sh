@@ -42,6 +42,13 @@ function to_title() {
     echo "$(tr a-z A-Z <<< ${1:0:1})${1:1}"
 }
 
+function license() {
+    name=$1
+    ucname=$2
+    (echo "<p>${ucname}: Part of the Clarity Resource Pack Family for Minecraft.<br>" && cat License.html) > $name/License.html
+    (echo "${ucname}: Part of the Clarity Resource Pack Family for Minecraft." && cat License.txt) > $name/License.txt
+}
+
 # This function will build a single zip file
 function do_zip() {
     (
@@ -95,6 +102,7 @@ for name in "${dirs[@]}"; do
     *)
 	;;
     esac
+    license $name $ucname
     do_zip $name
     (
 	cd home/resourcepacks
@@ -121,5 +129,7 @@ for f in `find site -name build.sh`; do
 	build.sh
     )
 done
+echo ... site/update_version.sh $version
 site/update_version.sh $version
+echo ... site/split_paintings.sh
 site/split_paintings.sh $top/clarity/assets/minecraft/textures/painting/paintings_kristoffer_zetterstrand.png

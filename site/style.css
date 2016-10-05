@@ -75,7 +75,7 @@ figcaption {
     vertical-align:middle;
 }
 
-.timestamp {
+.timestamp, .license {
     text-align: right;
     font-style: italic;
     font-size: small;
