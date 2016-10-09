@@ -12,7 +12,7 @@ top=$PWD
 packs=$top/site/packs
 version=`cat core/pack_version.txt`
 
-dirs=(clarity continuity connectivity beguile)
+dirs=(clarity continuity connectivity changes beguile)
 rm -rf $packs $dirs
 
 # Create the packs dir
@@ -21,7 +21,7 @@ out=$top/repack.out
 rm -rf $out
 cp /dev/null $out
 
-echo Regenerating derived files in core
+echo Regenerating derived files
 for f in `find . -name '*.py'`; do
     dir=`dirname $f`
     script=`basename $f`
@@ -66,7 +66,7 @@ function do_zip() {
     )
 }
 
-# Creates special subparts of the texture pack set
+# Creates special subparts of the resource pack set as a standalone pack
 function do_create() {
     name=$1
     shift
@@ -87,6 +87,8 @@ for name in "${dirs[@]}"; do
     ucname=`to_title $name`
     zipname="$ucname $version"
     case "$name" in
+    "changes")
+	;;
     "beguile")
 	do_create $name assets/minecraft/textures/gui
 	;;
