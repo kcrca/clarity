@@ -17,7 +17,7 @@ timings['spring'] = 2
 
 day = 24000
 
-debug_timing = True
+debug_timing = False
 if debug_timing:
     weeks_in_year = 8
     timings['winter'] = 2
