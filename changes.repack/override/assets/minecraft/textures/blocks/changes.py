@@ -8,23 +8,33 @@ import Image
 
 __author__ = 'arnold'
 
-weeks_in_year = 8
+weeks_in_year = 52
 
 timings = collections.OrderedDict()
 timings['autumn'] = 2
-timings['winter'] = 2
+timings['winter'] = 8
 timings['spring'] = 2
-timings['summer'] = weeks_in_year - sum(timings[x] for x in timings)
 
-week = 15
-year = weeks_in_year * week
+day = 24000
+
+debug_timing = True
+if debug_timing:
+    weeks_in_year = 8
+    timings['winter'] = 2
+    day = 2
+
+week = day * 7
 transition = week / 2
+timings['summer'] = weeks_in_year - sum(timings[x] for x in timings)
+year = weeks_in_year * week
+
+if debug_timing:
+    transition = 70
 
 frames =[]
 anim_json = {
     "animation": {
-        "frametime": transition * 10,
-        "interpolate": True,
+        "frametime": transition,
         "frames": frames,
     }
 }
@@ -33,6 +43,8 @@ index = 0
 for season in timings:
     duration = timings[season]
     stay_time = duration * week - transition
+    if debug_timing:
+        stay_time = week
     frame_json = {'index': index, 'time': stay_time}
     frames.append(frame_json)
     frames.append(index)
@@ -56,8 +68,10 @@ for tree in ('oak','birch','jungle', 'big_oak', 'acacia'):
         else:
             leaves_img.paste(season_img, (0, frame_pos))
         index += 1
+    anim_json['animation']['interpolate'] = True
     with open('leaves_%s.png.mcmeta' % tree, 'w') as f:
         json.dump(anim_json, f, indent=2)
+    anim_json['animation']['interpolate'] = False
     with open('branches_%s.png.mcmeta' % tree, 'w') as f:
         json.dump(anim_json, f, indent=2)
     leaves_img.save('leaves_%s.png' % tree)
