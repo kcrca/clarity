@@ -12,7 +12,7 @@ top=$PWD
 packs=$top/site/packs
 version=`cat core/pack_version.txt`
 
-dirs=(clarity continuity connectivity beguile)
+dirs=(clarity continuity connectivity changes beguile)
 rm -rf $packs $dirs
 
 # Create the packs dir
@@ -21,7 +21,7 @@ out=$top/repack.out
 rm -rf $out
 cp /dev/null $out
 
-echo Regenerating derived files in core
+echo Regenerating derived files
 for f in `find . -name '*.py'`; do
     dir=`dirname $f`
     script=`basename $f`
@@ -66,7 +66,7 @@ function do_zip() {
     )
 }
 
-# Creates special subparts of the texture pack set
+# Creates special subparts of the resource pack set as a standalone pack
 function do_create() {
     name=$1
     shift
@@ -89,6 +89,12 @@ for name in "${dirs[@]}"; do
     case "$name" in
     "beguile")
 	do_create $name assets/minecraft/textures/gui
+	;;
+    "changes")
+	mkdir -p $name
+	tar c -C $name.repack/override . | tar xf - -C $name
+	find $name/assets/minecraft/textures/blocks -type d -depth 1 -print0 | xargs -0 rm -r
+	find $name \( -name '*.pxm' -o -name '*.py' -o -name '*.sh' \) -print0 | xargs -0 rm
 	;;
     "connectivity")
 	# Strip out everything but the continuity info and pack stuff

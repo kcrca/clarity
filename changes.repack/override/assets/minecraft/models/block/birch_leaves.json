@@ -1,0 +1,7 @@
+{
+    "parent": "block/changing_leaves",
+    "textures": {
+        "all": "blocks/leaves_birch",
+        "branches": "blocks/branches_birch"
+    }
+}
