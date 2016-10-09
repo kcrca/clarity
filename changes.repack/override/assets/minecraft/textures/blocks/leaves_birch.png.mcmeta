@@ -3,26 +3,34 @@
     "frames": [
       {
         "index": 0, 
-        "time": 252000
+        "time": 1
+      }, 
+      {
+        "index": 0, 
+        "time": 14
       }, 
       0, 
       {
         "index": 1, 
-        "time": 1260000
+        "time": 14
       }, 
       1, 
       {
         "index": 2, 
-        "time": 252000
+        "time": 14
       }, 
       2, 
       {
         "index": 3, 
-        "time": 6636000
+        "time": 14
+      }, 
+      {
+        "index": 3, 
+        "time": 1
       }, 
       3
     ], 
-    "frametime": 84000, 
+    "frametime": 70, 
     "interpolate": true
   }
 }

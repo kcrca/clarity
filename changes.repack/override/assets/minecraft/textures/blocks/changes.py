@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 
-import os
-import getopt
+import random
 import json
 import collections
 import Image
@@ -17,7 +16,7 @@ timings['spring'] = 2
 
 day = 24000
 
-debug_timing = False
+debug_timing = True
 if debug_timing:
     weeks_in_year = 8
     timings['winter'] = 2
@@ -31,13 +30,9 @@ year = weeks_in_year * week
 if debug_timing:
     transition = 70
 
-frames =[]
-anim_json = {
-    "animation": {
-        "frametime": transition,
-        "frames": frames,
-    }
-}
+frames = []
+animation = {'frametime': transition}
+wrapper = {'animation': animation}
 
 index = 0
 for season in timings:
@@ -50,12 +45,24 @@ for season in timings:
     frames.append(index)
     index += 1
 
-transparent=(0,0,0,0)
-for tree in ('oak','birch','jungle', 'big_oak', 'acacia'):
+# Set the seed to prevent the mcmeta changing each time this is run. Otherwise we end up checking a new file each time
+# we run the script.
+random.seed(13)
+
+transparent = (0, 0, 0, 0)
+for tree in ('oak', 'birch', 'jungle', 'big_oak', 'acacia'):
     leaves_img = None
     branches_img = None
     h = 0
     index = 0
+    adjust_start = random.randrange(0, day)
+    adjust_end = day - adjust_start
+    adjusted_frames = frames[:]
+    if adjust_start:
+        adjusted_frames.insert(0, {'index': 0, 'time': adjust_start})
+    if adjust_end:
+        adjusted_frames.insert(len(adjusted_frames) - 1, {'index': len(timings) - 1, 'time': adjust_end})
+    animation['frames'] = adjusted_frames
     for season in timings:
         season_img = Image.open('%s/leaves_%s.png' % (season, tree))
         if not leaves_img:
@@ -68,11 +75,11 @@ for tree in ('oak','birch','jungle', 'big_oak', 'acacia'):
         else:
             leaves_img.paste(season_img, (0, frame_pos))
         index += 1
-    anim_json['animation']['interpolate'] = True
+    animation['interpolate'] = True
     with open('leaves_%s.png.mcmeta' % tree, 'w') as f:
-        json.dump(anim_json, f, indent=2)
-    anim_json['animation']['interpolate'] = False
+        json.dump(wrapper, f, indent=2)
+        animation['interpolate'] = False
     with open('branches_%s.png.mcmeta' % tree, 'w') as f:
-        json.dump(anim_json, f, indent=2)
+        json.dump(wrapper, f, indent=2)
     leaves_img.save('leaves_%s.png' % tree)
     branches_img.save('branches_%s.png' % tree)

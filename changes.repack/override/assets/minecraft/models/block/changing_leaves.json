@@ -14,8 +14,8 @@
                 "east":  { "uv": [ 0, 0, 16, 16 ], "texture": "#all", "cullface": "east" }
             }
         },
-	{   "from": [ 2, 2, 2 ],
-            "to": [ 14, 14, 14 ],
+	{   "from": [ 0.5, 0.5, 0.5 ],
+            "to": [ 15.5, 15.5, 15.5 ],
             "faces": {
                 "down":  { "uv": [ 0, 0, 16, 16 ], "texture": "#branches", "cullface": "down" },
                 "up":    { "uv": [ 0, 0, 16, 16 ], "texture": "#branches", "cullface": "up" },
