@@ -87,10 +87,14 @@ for name in "${dirs[@]}"; do
     ucname=`to_title $name`
     zipname="$ucname $version"
     case "$name" in
-    "changes")
-	;;
     "beguile")
 	do_create $name assets/minecraft/textures/gui
+	;;
+    "changes")
+	mkdir -p $name
+	tar c -C $name.repack/override . | tar xf - -C $name
+	find $name/assets/minecraft/textures/blocks -type d -depth 1 -print0 | xargs -0 rm -r
+	find $name \( -name '*.pxm' -o -name '*.py' -o -name '*.sh' \) -print0 | xargs -0 rm
 	;;
     "connectivity")
 	# Strip out everything but the continuity info and pack stuff
