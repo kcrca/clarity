@@ -1,0 +1,9 @@
+{
+    "parent": "block/orientable_all",
+    "textures": {
+        "top": "blocks/dropper_top",
+        "front": "blocks/dropper_front_horizontal",
+        "side": "blocks/dropper_side",
+        "back": "blocks/dropper_back"
+    }
+}
