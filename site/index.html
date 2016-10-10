@@ -131,8 +131,9 @@
             </tr>
             <tr>
                 <td><img src="changes_thumb.png" border=1/></td>
-		<td><b>Changes</b> adds seasons to the trees. The seasons stretch over a year of  minecraft time, so
-		    don't expect quick changes!
+                <td><b>Changes</b> adds seasons to the trees with both Clarity and Continuity (must be above them in
+                    your resource
+                    options). The seasons stretch over a year of minecraft time, so don't expect quick changes!
                 </td>
             </tr>
             <tr>
@@ -149,8 +150,11 @@
 
         <p>
             <figure class="example">
-	    <figcaption>Here are the seasons changing. In game time, fall and spring are about two weeks, and winter eight weeks; the rest is summer.
-	    (Yes, it's a little ugly in winter without leaves; I've lived through winter, trust me, that's verisimilitude...)</figcaption>
+                <figcaption>Here are the seasons changing. In game time, fall and spring are about two weeks, and winter
+                    eight weeks; the rest is summer.
+                    (Yes, it's a little ugly in winter without leaves; I've lived through winter, trust me, that's
+                    verisimilitude...)
+                </figcaption>
                 <img src="changes_anim.gif">
             </figure>
 
@@ -213,8 +217,10 @@
             what's wrong with you, but this <em>is</em> the right place.)
 
         <ul>
-            <li> Version numbering will be the same as the Minecraft version they are built for (e.g., version 1.10.2 is ready
-                for Minecraft 1.10.2). If I need some way to distinguish between multiple versions of Clarity for the same
+            <li> Version numbering will be the same as the Minecraft version they are built for (e.g., version 1.10.2 is
+                ready
+                for Minecraft 1.10.2). If I need some way to distinguish between multiple versions of Clarity for the
+                same
                 version of Minecraft, I'll come up with something.
             <li> All mobs are modified, but for many of them, the primary goal is simply noise reduction. Chickens,
                 polar bears, endermen, etc., are primarily changed to simpler swaths of color.
@@ -225,15 +231,18 @@
                 annoying, but still quite visible.
             <li> Continuity doesn't make everything continuous. Things that are independent at the block level, such as
                 furnaces and pistons, are still edged.
-	    <li> Doing the seasons was constrained by the fact that animation interpolation ignores transparency. I also want
-		to have different kinds of trees change to different colors, and change at different times from each other.
-		This made animating foliage.png not work (in any way I could figure out) so I had to animate the leaf blocks.
-            <li> Items are about 85% done. As with mobs, many look good just with noise reduced. Others, such as the
+            <li> Doing the seasons was constrained by the fact that animation interpolation ignores transparency. I also
+                want
+                to have different kinds of trees change to different colors, and change at different times from each
+                other.
+                This made animating foliage.png not work (in any way I could figure out) so I had to animate the leaf
+                blocks.
+            <li> Items are about 90% done. As with mobs, many look good just with noise reduced. Others, such as the
                 tools, redstone dust, and sugar are less noisy if you use art that is displayed at 45º,
                 making lines that are pixelated at 45º actually straight. I still expect to do more items, when I can
                 figure out ways to reduce their noise without increasing the resolution. Or maybe I will just give in to
-		more higher-resolution items.
-	    <li>And I may find a good hi-res font to integrate. For now, pick your
+                more higher-resolution items.
+            <li>And I may find a good hi-res font to integrate. For now, pick your
                 favorite!
         </ul>
 
@@ -350,7 +359,7 @@
         Commons Attribution 4.0 International License</a>.
     <br>© 2016 by Ken Arnold. Based on a work at <a
             xmlns:dct="http://purl.org/dc/terms/" href="https://github.com/kcrca/clarity" rel="dct:source">https://github.com/kcrca/clarity</a>.
-    <!--CopyrightEnd-->
+        <!--CopyrightEnd-->
     <p class="timestamp">Page Last Edited: 8 Oct 23:21
 
 </div>
@@ -395,6 +404,7 @@ if (!tab_name) {
 document.addEventListener("DOMContentLoaded", function(event) { 
     openTab(null, tab_name);
 });
+
 
 </script>
 </body>
