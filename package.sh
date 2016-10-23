@@ -12,7 +12,7 @@ top=$PWD
 packs=$top/site/packs
 version=`cat core/pack_version.txt`
 
-dirs=(clarity continuity connectivity changes beguile)
+dirs=(clarity continuity connectivity changes charged beguile)
 rm -rf $packs $dirs
 
 # Create the packs dir
@@ -90,7 +90,7 @@ for name in "${dirs[@]}"; do
     "beguile")
 	do_create $name assets/minecraft/textures/gui
 	;;
-    "changes")
+    "changes"|"charged")
 	mkdir -p $name
 	tar c -C $name.repack/override . | tar xf - -C $name
 	find $name/assets/minecraft/textures/blocks -type d -depth 1 -print0 | xargs -0 rm -r
