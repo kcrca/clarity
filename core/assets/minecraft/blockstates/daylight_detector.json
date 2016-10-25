@@ -1,0 +1,20 @@
+{
+    "variants": {
+        "power=0": { "model": "daylight_detector_00" },
+        "power=1": { "model": "daylight_detector_01" },
+        "power=2": { "model": "daylight_detector_02" },
+        "power=3": { "model": "daylight_detector_03" },
+        "power=4": { "model": "daylight_detector_04" },
+        "power=5": { "model": "daylight_detector_05" },
+        "power=6": { "model": "daylight_detector_06" },
+        "power=7": { "model": "daylight_detector_07" },
+        "power=8": { "model": "daylight_detector_08" },
+        "power=9": { "model": "daylight_detector_09" },
+        "power=10": { "model": "daylight_detector_10" },
+        "power=11": { "model": "daylight_detector_11" },
+        "power=12": { "model": "daylight_detector_12" },
+        "power=13": { "model": "daylight_detector_13" },
+        "power=14": { "model": "daylight_detector_14" },
+        "power=15": { "model": "daylight_detector_15" }
+    }
+}
