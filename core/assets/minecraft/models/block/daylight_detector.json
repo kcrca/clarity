@@ -1,5 +1,21 @@
-{   "parent": "block/a_daylight_detector",
+{   "parent": "block/thin_block",
     "textures": {
-        "top": "blocks/daylight_detector"
-    }
+        "particle": "#top",
+	"side": "#top",
+        "ns": "#ns",
+        "ew": "#ew"
+    },
+    "elements": [
+        {   "from": [ 0, 0, 0 ],
+            "to": [ 16, 6, 16 ],
+            "faces": {
+                "down":  { "uv": [ 0, 0, 16, 16 ], "texture": "#side", "cullface": "down" },
+                "up":    { "uv": [ 0, 0, 16, 16 ], "texture": "#top" },
+                "north": { "uv": [ 0, 5, 16, 11 ], "texture": "#ns", "cullface": "north" },
+                "south": { "uv": [ 0, 5, 16, 11 ], "texture": "#ns", "cullface": "south" },
+                "west":  { "uv": [ 0, 5, 16, 11 ], "texture": "#ew", "cullface": "west" },
+                "east":  { "uv": [ 0, 5, 16, 11 ], "texture": "#ew", "cullface": "east" }
+            }
+        }
+    ]
 }
