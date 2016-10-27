@@ -2,7 +2,7 @@
     "textures": {
         "particle": "blocks/planks_oak",
         "hook": "blocks/trip_wire_source",
-        "wood": "blocks/wooden_button_pressed",
+        "wood": "blocks/planks_oak",
         "tripwire": "blocks/trip_wire"
     },
     "elements": [
@@ -15,8 +15,9 @@
                 "up":    { "uv": [ 0, 0, 16, 2 ], "texture": "#tripwire", "rotation": 90 }
             }
         },
-        {   "from": [ 6.2, 3.4, 6.7 ],
-            "to": [ 9.8, 4.2, 10.3 ],
+        {   "from": [ 6.2, 4.2, 6.7 ],
+            "to": [ 9.8, 5, 10.3 ],
+            "rotation": { "origin": [ 8, 4.2, 6.7 ], "axis": "x", "angle": -22.5, "rescale": false },
             "faces": {
                 "down":  { "uv": [ 5, 3, 11, 9 ], "texture": "#hook" },
                 "up":    { "uv": [ 5, 3, 11, 9 ], "texture": "#hook" },
@@ -26,33 +27,36 @@
                 "east":  { "uv": [ 5, 3, 11, 4 ], "texture": "#hook" }
             }
         },
-        {   "from": [ 7.4, 3.4, 9.1 ],
-            "to": [ 8.6, 4.2, 9.1 ],
+        {   "from": [ 7.4, 4.2, 9.1 ],
+            "to": [ 8.6, 5, 9.1 ],
+            "rotation": { "origin": [ 8, 4.2, 6.7 ], "axis": "x", "angle": -22.5, "rescale": false },
             "faces": {
                 "north": { "uv": [ 7, 8, 9, 9 ], "texture": "#hook" }
             }
         },
-        {   "from": [ 7.4, 3.4, 7.9 ],
-            "to": [ 8.6, 4.2, 7.9 ],
+        {   "from": [ 7.4, 4.2, 7.9 ],
+            "to": [ 8.6, 5, 7.9 ],
+            "rotation": { "origin": [ 8, 4.2, 6.7 ], "axis": "x", "angle": -22.5, "rescale": false },
             "faces": {
                 "south": { "uv": [ 7, 3, 9, 4 ], "texture": "#hook" }
             }
         },
-        {   "from": [ 7.4, 3.4, 7.9 ],
-            "to": [ 7.4, 4.2, 9.1 ],
+        {   "from": [ 7.4, 4.2, 7.9 ],
+            "to": [ 7.4, 5, 9.1 ],
+            "rotation": { "origin": [ 8, 4.2, 6.7 ], "axis": "x", "angle": -22.5, "rescale": false },
             "faces": {
                 "east": { "uv": [ 7, 8, 9, 9 ], "texture": "#hook" }
             }
         },
-        {   "from": [ 8.6, 3.4, 7.9 ],
-            "to": [ 8.6, 4.2, 9.1 ],
+        {   "from": [ 8.6, 4.2, 7.9 ],
+            "to": [ 8.6, 5, 9.1 ],
+            "rotation": { "origin": [ 8, 4.2, 6.7 ], "axis": "x", "angle": -22.5, "rescale": false },
             "faces": {
                 "west": { "uv": [ 7, 3, 9, 4 ], "texture": "#hook" }
             }
         },
         {   "from": [ 7.4, 5.2, 10 ],
             "to": [ 8.8, 6.8, 14 ],
-            "rotation": { "origin": [ 8, 6, 14 ], "axis": "x", "angle": -22.5 },
             "faces": {
                 "down":  { "uv": [ 7, 9,  9, 14 ], "texture": "#wood" },
                 "up":    { "uv": [ 7, 2,  9,  7 ], "texture": "#wood" },

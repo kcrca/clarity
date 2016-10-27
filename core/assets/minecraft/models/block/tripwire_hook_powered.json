@@ -2,21 +2,11 @@
     "textures": {
         "particle": "blocks/planks_oak",
         "hook": "blocks/trip_wire_source",
-        "wood": "blocks/wooden_button_pressed",
-        "tripwire": "blocks/trip_wire"
+        "wood": "blocks/wooden_button_pressed"
     },
     "elements": [
-        {   "from": [ 7.75, 1.25, 0.5 ],
-            "to": [ 8.25, 1.25, 6.7 ],
-            "shade": false,
-            "rotation": { "origin": [ 8, 0, 0 ], "axis": "x", "angle": -22.5, "rescale": true },
-            "faces": {
-                "down":  { "uv": [ 0, 2, 16, 0 ], "texture": "#tripwire", "rotation": 90 },
-                "up":    { "uv": [ 0, 0, 16, 2 ], "texture": "#tripwire", "rotation": 90 }
-            }
-        },
-        {   "from": [ 6.2, 3.4, 6.7 ],
-            "to": [ 9.8, 4.2, 10.3 ],
+        {   "from": [ 6.2, 4.2, 6.7 ],
+            "to": [ 9.8, 5, 10.3 ],
             "faces": {
                 "down":  { "uv": [ 5, 3, 11, 9 ], "texture": "#hook" },
                 "up":    { "uv": [ 5, 3, 11, 9 ], "texture": "#hook" },
@@ -26,26 +16,26 @@
                 "east":  { "uv": [ 5, 3, 11, 4 ], "texture": "#hook" }
             }
         },
-        {   "from": [ 7.4, 3.4, 9.1 ],
-            "to": [ 8.6, 4.2, 9.1 ],
+        {   "from": [ 7.4, 4.2, 9.1 ],
+            "to": [ 8.6, 5, 9.1 ],
             "faces": {
                 "north": { "uv": [ 7, 8, 9, 9 ], "texture": "#hook" }
             }
         },
-        {   "from": [ 7.4, 3.4, 7.9 ],
-            "to": [ 8.6, 4.2, 7.9 ],
+        {   "from": [ 7.4, 4.2, 7.9 ],
+            "to": [ 8.6, 5, 7.9 ],
             "faces": {
                 "south": { "uv": [ 7, 3, 9, 4 ], "texture": "#hook" }
             }
         },
-        {   "from": [ 7.4, 3.4, 7.9 ],
-            "to": [ 7.4, 4.2, 9.1 ],
+        {   "from": [ 7.4, 4.2, 7.9 ],
+            "to": [ 7.4, 5, 9.1 ],
             "faces": {
                 "east": { "uv": [ 7, 8, 9, 9 ], "texture": "#hook" }
             }
         },
-        {   "from": [ 8.6, 3.4, 7.9 ],
-            "to": [ 8.6, 4.2, 9.1 ],
+        {   "from": [ 8.6, 4.2, 7.9 ],
+            "to": [ 8.6, 5, 9.1 ],
             "faces": {
                 "west": { "uv": [ 7, 3, 9, 4 ], "texture": "#hook" }
             }
