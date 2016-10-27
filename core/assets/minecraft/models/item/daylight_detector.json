@@ -1,3 +1,7 @@
-{
-    "parent": "block/daylight_detector_00"
+{   "parent": "block/daylight_detector",
+    "textures": {
+        "top": "items/daylight_detector_top",
+        "ns": "items/daylight_detector_ns",
+        "ew": "items/daylight_detector_ew"
+    }
 }

@@ -1,7 +1,7 @@
 {   "parent": "block/thin_block",
     "textures": {
         "particle": "#top",
-	"side": "#top",
+        "side": "#top",
         "ns": "#ns",
         "ew": "#ew"
     },
