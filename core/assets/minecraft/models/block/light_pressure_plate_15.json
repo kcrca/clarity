@@ -1,6 +1,6 @@
 {
     "parent": "block/pressure_plate_down",
     "textures": {
-        "texture": "blocks/iron_block_pressed"
+        "texture": "blocks/light_pressure_plate_15"
     }
 }

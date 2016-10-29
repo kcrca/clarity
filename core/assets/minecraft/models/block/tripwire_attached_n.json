@@ -12,6 +12,6 @@
                 "down":  { "uv": [ 0, 4, 16, 2 ], "texture": "#texture", "rotation": 90 },
                 "up":    { "uv": [ 0, 2, 16, 4 ], "texture": "#texture", "rotation": 90 }
             }
-        },
+        }
     ]
 }

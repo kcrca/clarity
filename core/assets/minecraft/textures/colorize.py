@@ -200,6 +200,8 @@ def main(argv=None):
         key_file = file_from_color(file_opt_re.sub('', file_pat), key_color)
         print '%s: reading %s' % (coloring, key_file)
         src_img = Image.open(key_file)
+        if src_img.mode == 'P':
+            src_img = src_img.convert('RGB')
         src_data = src_img.load()
         num_channels = len(src_data[0, 0])
         has_alpha = num_channels > 3
