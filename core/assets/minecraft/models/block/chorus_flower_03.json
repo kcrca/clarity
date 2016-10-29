@@ -1,0 +1,5 @@
+{   "parent": "block/chorus_flower",
+    "textures": {
+        "texture": "blocks/chorus_flower_03"
+    }
+}
