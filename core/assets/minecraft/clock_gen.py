@@ -122,10 +122,10 @@ for i in range(0, ticks + 1):
     png_path = texture + '.png'
     model = 'item/clock/%s' % name
     json_path = model + '.json'
-    at_time_frace = day_frac
+    at_time_frac = day_frac
     if i > 0:
-        at_time_frace -= half_tick_fraction
-    overrides.append({"predicate": {"time": at_time_frace}, "model": model})
+        at_time_frac -= half_tick_fraction
+    overrides.append({"predicate": {"time": at_time_frac}, "model": model})
     if i < ticks:
         # no need to write the image when i >= ticks since we already have
         tick_img = blank_img.copy()

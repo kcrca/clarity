@@ -2,11 +2,6 @@
 
 import os
 import random
-import shutil
-import sys
-import getopt
-import ConfigParser
-import re
 import Image
 import json
 

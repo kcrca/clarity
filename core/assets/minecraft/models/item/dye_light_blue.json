@@ -1,0 +1,6 @@
+{
+    "parent": "item/dye",
+    "textures": {
+        "layer0": "items/dye_powder_light_blue"
+    }
+}
