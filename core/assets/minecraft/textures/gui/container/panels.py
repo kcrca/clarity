@@ -6,7 +6,7 @@ import Image
 import ImageDraw
 import ImageColor
 
-desc_re = re.compile(r'(.*)@(?:(\d+),(\d+)|(right|bottom))')
+desc_re = re.compile(r'(.*)@(?:(\d+),(\d+)(?:~(-?\d+))?|(right|bottom))')
 grid_re = re.compile(r'(\d+)(?:x(\d+))?')
 
 slot = Image.open('parts/slot.png').convert("RGBA")
@@ -34,7 +34,10 @@ panels = config.items('panels')
 # be part of PIL, but I can't find it.
 # From http://stackoverflow.com/questions/3374878/with-the-python-imaging
 # -library-pil-how-does-one-compose-an-image-with-an-alp
-def alpha_composite(output, image, pos):
+def alpha_composite(output, image, pos, rotation):
+    if rotation:
+        size = image.size
+        image = image.rotate(rotation, expand=1).resize(size, Image.ANTIALIAS)
     r, g, b, a = image.split()
     rgb = Image.merge("RGB", (r, g, b))
     mask = Image.merge("L", (a,))
@@ -85,7 +88,7 @@ for panel, part_str in panels:
         if not m:
             print '%s: cannot parse desc: %s' % (panel, desc)
         else:
-            part, x_pos_str, y_pos_str, relative = m.groups()
+            part, x_pos_str, y_pos_str, rotation_str, relative = m.groups()
 
             if relative == 'right':
                 x_pos, y_pos = x_size, 0
@@ -93,6 +96,7 @@ for panel, part_str in panels:
                 x_pos, y_pos = 0, y_size
             else:
                 x_pos, y_pos = int(x_pos_str), int(y_pos_str)
+            rotation = float(rotation_str) if rotation_str else 0
 
 
             def handle_part(part):
@@ -116,7 +120,7 @@ for panel, part_str in panels:
                         slot_x = x_pos + x * slot_width
                         for y in range(0, y_count):
                             slot_y = y_pos + y * slot_width
-                            alpha_composite(output, slot, (slot_x, slot_y))
+                            alpha_composite(output, slot, (slot_x, slot_y), rotation)
                     used_part_files.append('slot.png')
                 elif part == 'numbers':
                     draw = ImageDraw.Draw(output)
@@ -133,10 +137,10 @@ for panel, part_str in panels:
                             c = pixels[x,y]
                             if c[3] != 0:
                                 pixels[x,y] = (c[0], c[1], c[2], int(round(c[3] * 0.2)))
-                    alpha_composite(output, part_img, (x_pos, y_pos))
+                    alpha_composite(output, part_img, (x_pos, y_pos), rotation)
                 else:
                     part_img = Image.open('parts/%s' % part).convert("RGBA")
-                    alpha_composite(output, part_img, (x_pos, y_pos))
+                    alpha_composite(output, part_img, (x_pos, y_pos), rotation)
                     used_part_files.append(part)
 
 
