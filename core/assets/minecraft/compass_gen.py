@@ -64,7 +64,7 @@ with open('models/item/compass.json', 'w') as f:
     json.dump({
         "parent": "item/generated",
         "textures": {
-            "layer0": "items/compass/compass_%0*d" % (tick_digit_cnt, 0)
+            "layer0": "items/compass",
         },
         "overrides": overrides
     }, f, indent=4, sort_keys=True)
