@@ -11,3 +11,4 @@ for c in clarity connectivity continuity; do
 	${c}_frame.gif
 done
 convert -delay 100 *.gif -loop 0 ../../comparison_anim.gif
+rm -f *.gif
