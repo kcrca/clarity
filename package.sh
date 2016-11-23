@@ -58,6 +58,15 @@ function do_zip() {
 	cd $name
 
 	echo Building $zipname
+	if false; then
+	    # If enabled, this would use optipng to optimize the size of the
+	    # png files. This saves about 10% in the zip file sizes. Doesn't
+	    # seem worth it, especially since it would require some serious
+	    # testing to make sure that no bug in optipng changed the reults.
+	    echo ... optipng
+	    find . -name '*.png' -print0 | xargs -0 optipng -q -preserve
+	    echo ... zip
+	fi
 	# The "-o" flag says to make the mod time on the zip file the same
 	# as the most recent mod time on any of the files. This lets the
 	# zip file's mod time stand for the most recent change in the entire
