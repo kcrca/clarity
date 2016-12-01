@@ -1,5 +1,5 @@
 {
-    "parent": "block/thin_block",
+    "parent": "block/cube",
     "ambientocclusion": false,
     "textures": {
         "particle": "blocks/flower_pot",
