@@ -49,5 +49,4 @@ line_at((8, img_y), band_colors[0])
 line_at((6, img_y), band_colors[3])
 line_at((9, img_y), band_colors[3])
 
-img.show()
 img.save("blocks/portal.png")
