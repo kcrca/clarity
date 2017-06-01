@@ -18,8 +18,8 @@ target_opt_re = re.compile(r'([^:]*):(.*)')
 tile_spec_re = re.compile(r'(\d+)x(\d+)(?:@(\d+),(\d+))?')
 block_id_re = re.compile(r'(\d+):?([\d&-]*)')
 ctm_opt_re = re.compile(r'([A-Z]*):?([\d:&,-]+)@?([\d]*)')
-skip_dirs_re = re.compile(r'^\.|^no$')
-do_not_copy_re = re.compile(r'\.(py.*|cfg|sh|pxm|psd|config|tiff)$|/(.$|\.)')
+skip_dirs_re = re.compile(r'^\.|^(no|alternates)$')
+do_not_copy_re = re.compile(r'\.(py.*|cfg|sh|pxm|psd|config|tiff|bak)$|/(.$|\.)')
 solid_prop_re = re.compile(r'\nsolid=(\d+)\n')
 
 warnings = []
@@ -533,12 +533,13 @@ class Pass(object):
 
     def run(self):
         print "=== %s" % self.src_top
-        for dir_name, subdir_list, file_list in os.walk(self.src_top):
+        for dir_name, subdir_list, file_list in os.walk(self.src_top, topdown=True):
             src_dir = dir_name
             dst_dir = dir_name.replace(self.src_top, self.dst_top)
-            for f in subdir_list:
-                if skip_dirs_re.match(f):
-                    subdir_list.remove(f)
+            subdirs_to_skip = [d for d in subdir_list if skip_dirs_re.match(d)]
+            for d in subdirs_to_skip:
+                subdir_list.remove(d)
+            print '-- %s' % (dst_dir)
             safe_mkdirs(dst_dir)
             file_list = [f for f in file_list if not do_not_copy_re.search(f)]
             for f in file_list:
@@ -706,11 +707,6 @@ def copytree(src, dst, symlinks=False, ignore=None, copy_function=shutil.copy2,
             errors.extend((src, dst, str(why)))
     if errors:
         raise shutil.Error, errors
-
-
-# noinspection PyUnusedLocal
-def only_pack_files(directory, files):
-    return [f for f in files if skip_dirs_re.match(f) or do_not_copy_re.search(f)]
 
 
 # noinspection PyUnusedLocal
