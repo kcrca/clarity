@@ -1,7 +1,5 @@
 #!/bin/sh
 
-set -x
-
 if [ x"$1" == x"-rm" ]; then
     rm_only=yes
     shift
@@ -21,6 +19,7 @@ cp /dev/null $html
 skipped=""
 
 for new in $(find "${dirs[@]}" -name '*.png'); do
+    echo $new
     new="$(cd "$(dirname $new)" ; pwd)/$(basename $new)"
     old="${new/core/default_resourcepack}"
     base=$(dirname $new)/$(basename $new .png)
