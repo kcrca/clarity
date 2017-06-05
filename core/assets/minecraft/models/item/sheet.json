@@ -9,7 +9,7 @@
 	"fixed": {
             "rotation": [ 0, 0, -45 ],
             "translation": [ 0, 0, 0],
-            "scale":[ 1.1, 1.1, 1.1 ]
+            "scale":[ 0.8, 0.8, 0.8 ]
         },
         "ground": {
             "rotation": [ 0, 0, 45 ],
