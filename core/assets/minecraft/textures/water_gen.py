@@ -42,7 +42,7 @@ def iround(f):
 
 def adjust(color, steps, factor):
     for i in range(0, steps):
-        color = (c * factor for c in color[:3])
+        color = tuple(c * factor for c in color[:3])
     return tuple(iround(c) for c in color)
 
 
@@ -96,7 +96,7 @@ stagger = []
 for x in range(0, DIM):
     stagger += (random.randint(0, 7),)
 
-color = lighter(1)
+color = lighter(3)
 for frame_num in range(0, FRAMES):
     frame = Image.new('RGBA', (DIM, DIM), color=bg_color)
     draw = ImageDraw.Draw(frame)
