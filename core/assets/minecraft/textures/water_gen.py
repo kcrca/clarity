@@ -1,10 +1,12 @@
+import random
+
 from PIL import Image, ImageDraw
 import math
 
-alpha = int(0.6 * 255)
-width = 16
-frames = 32
-radians_per_frame = 2 * math.pi / frames
+ALPHA = int(0.6 * 255)
+DIM = 16
+FRAMES = 32
+RADIANS_PER_FRAME = 2 * math.pi / FRAMES
 
 
 class Square:
@@ -17,6 +19,15 @@ class Square:
         self.size = size
         self.direction = Square.next_direction
         Square.next_direction *= -1
+
+    def alpha_adjust(self, frame_num):
+        adjust = frame_num % FRAMES
+        if adjust >= FRAMES / 2:
+            adjust = abs(FRAMES - adjust)
+        if sq.direction < 0:
+            adjust = FRAMES / 2 - adjust
+        adjust += 2
+        return adjust
 
 
 def to_range(v):
@@ -31,7 +42,7 @@ def iround(f):
 
 def adjust(color, steps, factor):
     for i in range(0, steps):
-        color = (c * factor for c in color)
+        color = (c * factor for c in color[:3])
     return tuple(iround(c) for c in color)
 
 
@@ -46,63 +57,58 @@ def lighter(steps):
 bg_color = (42, 63, 255)
 squares = (
     Square((4, 5), lighter(1), 7, 5),
-    # Square((12, 12), darker(2), 12, 6),
     Square((9, 10), lighter(1), 4, 7),
-    # Square((12, 12), lighter(2), 6, 12),
 )
 
-bg_color += (alpha,)
+bg_color += (ALPHA,)
 
-img = Image.new('RGBA', (width, frames * width), color=bg_color)
+img = Image.new('RGBA', (DIM, FRAMES * DIM), color=bg_color)
 
-frame_images = []
-
-for i in range(0, frames):
-    frame = Image.new('RGBA', (width, width), color=bg_color)
+for frame_num in range(0, FRAMES):
+    frame = Image.new('RGBA', (DIM, DIM), color=bg_color)
     draw = ImageDraw.Draw(frame)
-    image_num = 1
-    in_y = False
     for sq in squares:
-        angle = radians_per_frame * i * sq.direction
-        size_adjust = int(round(((sq.center_x + i) % frames )/ (frames / 2)))
-        alpha_adjust = i % frames
-        if alpha_adjust >= frames / 2:
-            alpha_adjust = abs(frames - alpha_adjust)
-        # if alpha_adjust >= 8:
-        #     alpha_adjust -= alpha_adjust % 8
-        x = math.sin(angle) * sq.radius
-        y = math.cos(angle) * sq.radius
-        in_y = not in_y
-        if in_y:
+        angle = RADIANS_PER_FRAME * frame_num * sq.direction
+        size_adjust = int(round(((sq.center_x + frame_num) % FRAMES) / (FRAMES / 2)))
+        alpha_adjust = sq.alpha_adjust(frame_num)
+        if sq.direction > 0:
             x = 0
+            y = math.cos(angle) * sq.radius
         else:
+            x = math.sin(angle) * sq.radius
             y = 0
-            alpha_adjust = frames / 2 - alpha_adjust
-        alpha_adjust += 2
         for x_pos in (-1, 0, 1):
             for y_pos in (-1, 0, 1):
-                pos1 = (iround(sq.center_x + x + x_pos * width), iround(sq.center_y + y + y_pos * width))
+                pos1 = (iround(sq.center_x + x + x_pos * DIM), iround(sq.center_y + y + y_pos * DIM))
                 pos2 = (pos1[0] + sq.size + size_adjust, pos1[1] + sq.size + size_adjust)
-                draw.rectangle(pos1 + pos2, outline=sq.color + (alpha + alpha_adjust,))
-        # if i == 0:
-        #     frame.show()
-        image_num += 1
-    img.paste(frame, (0, i * width))
-    frame_images += [frame, ]
+                draw.rectangle(pos1 + pos2, outline=sq.color + (ALPHA + alpha_adjust,))
+    img.paste(frame, (0, frame_num * DIM))
 
-# img.show()
 img.save("blocks/water_still.png")
-#
-# from moviepy.editor import VideoClip
-#
-#
-# def make_frame(t):
-#     """ returns an image of the frame at time t """
-#     # ... create the frame with any library
-#     return frame_images[t % len(frame_images)]  # (Height x Width x 3) Numpy array
-#
-#
-# animation = VideoClip(make_frame, duration=3)  # 3-second clip
-#
-# # For the export, many options/formats/optimizations are supported
-# animation.write_gif("/tmp/water.gif", fps=24)  # export as GIF (slow)
+
+DIM *= 2
+
+img = Image.new('RGBA', (DIM, FRAMES * DIM), color=bg_color)
+skitter = 13
+
+random.seed(0)
+stagger = []
+for x in range(0, DIM):
+    stagger += (random.randint(0, 7),)
+
+color = lighter(1)
+for frame_num in range(0, FRAMES):
+    frame = Image.new('RGBA', (DIM, DIM), color=bg_color)
+    draw = ImageDraw.Draw(frame)
+    # alpha_adjust = sq.alpha_adjust(frame_num)
+    alpha_adjust = squares[0].alpha_adjust(frame_num)
+    for x_pos in (-1, 0, 1):
+        for y_pos in (-1, 0, 1):
+            for x in range(0, DIM, 4):
+                for y in range(0, DIM, 10):
+                    pos1 = (iround(x + x_pos * DIM), iround(y + stagger[x] + frame_num + y_pos * DIM))
+                    pos2 = (pos1[0] + 2, pos1[1] + 8)
+                    draw.rectangle(pos1 + pos2, outline=color + (ALPHA + alpha_adjust,))
+    img.paste(frame, (0, frame_num * DIM))
+
+img.save("blocks/water_flow.png")
