@@ -2,9 +2,9 @@
 import ConfigParser
 import os
 import re
-import Image
-import ImageDraw
-import ImageColor
+from PIL import Image
+from PIL import ImageDraw
+from PIL import ImageColor
 
 desc_re = re.compile(r'(.*)@(?:(\d+),(\d+)(?:~(-?\d+))?|(right|bottom))')
 grid_re = re.compile(r'(\d+)(?:x(\d+))?')

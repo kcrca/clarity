@@ -5,8 +5,8 @@ import subprocess
 import ConfigParser
 import sys
 
-import Image
-import ImageChops
+from PIL import Image
+from PIL import ImageChops
 
 __author__ = 'arnold'
 

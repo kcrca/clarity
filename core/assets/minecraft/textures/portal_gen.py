@@ -1,4 +1,4 @@
-import Image
+from PIL import Image
 
 
 def to_range(v):

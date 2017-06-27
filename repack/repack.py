@@ -6,10 +6,10 @@ import re
 import shutil
 import copy
 
-import Image
+from PIL import Image
 import errno
 
-import ImageDraw
+from PIL import ImageDraw
 
 __author__ = 'arnold'
 

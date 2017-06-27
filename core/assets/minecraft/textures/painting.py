@@ -2,7 +2,7 @@
 
 import os
 import random
-import Image
+from PIL import Image
 import json
 
 __author__ = 'arnold'

@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 import os
-import Image
+from PIL import Image
 import json
 
 NUM_FRAMES = 16

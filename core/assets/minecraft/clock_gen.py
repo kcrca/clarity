@@ -4,7 +4,7 @@ import ConfigParser
 import json
 import shutil
 
-import Image
+from PIL import Image
 import os
 import math
 

@@ -3,7 +3,7 @@
 import random
 import json
 import collections
-import Image
+from PIL import Image
 
 __author__ = 'arnold'
 
