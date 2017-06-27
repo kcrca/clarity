@@ -96,7 +96,7 @@ stagger = []
 for x in range(0, DIM):
     stagger += (random.randint(0, 7),)
 
-color = lighter(3)
+color = lighter(1)
 for frame_num in range(0, FRAMES):
     frame = Image.new('RGBA', (DIM, DIM), color=bg_color)
     draw = ImageDraw.Draw(frame)
@@ -106,6 +106,8 @@ for frame_num in range(0, FRAMES):
         for y_pos in (-1, 0, 1):
             for x in range(0, DIM, 4):
                 for y in range(0, DIM, 10):
+                    if (x / 4 + y / 10) % 2 == 1:
+                        continue
                     pos1 = (iround(x + x_pos * DIM), iround(y + stagger[x] + frame_num + y_pos * DIM))
                     pos2 = (pos1[0] + 2, pos1[1] + 8)
                     draw.rectangle(pos1 + pos2, outline=color + (ALPHA + alpha_adjust,))
