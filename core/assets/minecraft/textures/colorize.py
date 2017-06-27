@@ -6,7 +6,7 @@ import sys
 import getopt
 import ConfigParser
 import re
-import Image
+from PIL import Image
 
 __author__ = 'arnold'
 
