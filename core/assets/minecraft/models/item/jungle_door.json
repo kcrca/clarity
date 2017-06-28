@@ -1,5 +1,5 @@
 {
-    "parent": "block/door_inventory",
+    "parent": "item/door",
     "textures": {
         "top": "blocks/door_jungle_upper",
         "bottom": "blocks/door_jungle_lower"

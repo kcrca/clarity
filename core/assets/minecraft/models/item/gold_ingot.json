@@ -1,5 +1,5 @@
 {
-    "parent": "item/a_brick",
+    "parent": "item/cuboid",
     "textures": {
         "sides": "blocks/gold_block"
     }

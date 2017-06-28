@@ -42,10 +42,7 @@ for i in range(0, ticks + 1):
     with open('models/%s' % json_path, 'w') as f:
         angle = ((angle_frac + half_tick_fraction) * 360 + 270) % 360
         json.dump({
-            "parent": "item/generated",
-            "textures": {
-                "layer0": "items/compass"
-            },
+            "parent": "item/base_compass",
             "display": {
                 "firstperson_righthand": {
                     "rotation": [xrot, yrot, -angle + 27],
@@ -62,9 +59,6 @@ for i in range(0, ticks + 1):
 
 with open('models/item/compass.json', 'w') as f:
     json.dump({
-        "parent": "item/generated",
-        "textures": {
-            "layer0": "items/compass",
-        },
+        "parent": "item/base_compass",
         "overrides": overrides
     }, f, indent=4, sort_keys=True)

@@ -1,5 +1,5 @@
 {
-    "parent": "item/minecart_block_inventory",
+    "parent": "item/combo_minecart",
     "textures": {
         "block_bottom": "blocks/furnace_top",
         "block_top": "blocks/furnace_top",

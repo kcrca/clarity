@@ -35,8 +35,5 @@
             ]
         }
     }, 
-    "parent": "item/generated", 
-    "textures": {
-        "layer0": "items/compass"
-    }
+    "parent": "item/base_compass"
 }
