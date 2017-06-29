@@ -38,15 +38,18 @@ def path_from_only(groups):
 
 
 class FileStatus(object):
-    def __init__(self, prefix, pattern, ignore_pats=(), path_from_groups=whole_match):
+    def __init__(self, prefix, pattern, path_from_groups=whole_match):
         self.pat = re.compile(pattern)
         self.prefix = prefix
         self.files = set()
         self.ignore = []
+        self.unused_ignores = set()
         self.path_from_groups = path_from_groups
         try:
             to_ignore = config.get('ignore', prefix.lower())
-            self.ignore = [re.compile(pat) for pat in to_ignore.split()]
+            pats = set(to_ignore.split())
+            self.ignore = [re.compile(pat) for pat in pats]
+            self.unused_ignores |= pats
         except ConfigParser.NoOptionError:
             pass
         status_by_name[self.prefix] = self
@@ -62,16 +65,27 @@ class FileStatus(object):
     def dump(self):
         for f in sorted(self.files):
             print '%s: %s' % (self.prefix, f)
+        if len(self.unused_ignores) > 0:
+            print '  UNUSED:', ', '.join(sorted(self.unused_ignores))
 
     def add_path(self, groups, path):
-        if path and not any(pat.search(path) for pat in self.ignore):
+        """
+        Add the given path to list of matches for this path UNLESS it matches the patterns to be ignored.
+        """
+        if path:
+            for pat in self.ignore:
+                if pat.search(path):
+                    self.unused_ignores.discard(pat.pattern)
+                    return
             self.files.add(path)
 
 
-# This does an extra check for changed PNG files to see if they are really different
+            # This does an extra check for changed PNG files to see if they are really different
+
+
 class ChangedFileStatus(FileStatus):
     def __init__(self, prefix, pattern, same_file_status, ignore_pats=()):
-        super(ChangedFileStatus, self).__init__(prefix, pattern, ignore_pats, first_group)
+        super(ChangedFileStatus, self).__init__(prefix, pattern, first_group)
         self.same_file_status = same_file_status
 
     def add_path(self, groups, path):
