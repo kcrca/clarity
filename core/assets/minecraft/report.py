@@ -45,6 +45,7 @@ class FileStatus(object):
         self.ignore = []
         self.unused_ignores = set()
         self.path_from_groups = path_from_groups
+        self.multi_matches = dict()
         try:
             to_ignore = config.get('ignore', prefix.lower())
             pats = set(to_ignore.split())
@@ -66,18 +67,26 @@ class FileStatus(object):
         for f in sorted(self.files):
             print '%s: %s' % (self.prefix, f)
         if len(self.unused_ignores) > 0:
-            print '  UNUSED:', ', '.join(sorted(self.unused_ignores))
+            print '  UNUSED pattern:', ', '.join(sorted(self.unused_ignores))
+        if len(self.multi_matches) > 0:
+            print '  MULTIPLE pattern matches for path:'
+            for p in sorted(self.multi_matches):
+                print '    %s: %s' % (p, ', '.join(self.multi_matches[p]))
 
     def add_path(self, groups, path):
         """
         Add the given path to list of matches for this path UNLESS it matches the patterns to be ignored.
         """
         if path:
+            patterns = []
             for pat in self.ignore:
                 if pat.search(path):
+                    patterns.append(pat.pattern)
                     self.unused_ignores.discard(pat.pattern)
-                    return
-            self.files.add(path)
+            if len(patterns) == 0:
+                self.files.add(path)
+            elif len(patterns) > 1:
+                self.multi_matches[path] = patterns
 
 
             # This does an extra check for changed PNG files to see if they are really different
