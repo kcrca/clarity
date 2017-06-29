@@ -121,7 +121,7 @@ other_esc = other.replace('.', '\\.')
 
 same_checker = FileStatus('Same', r'^Files (?:\./)?(.*) and .* identical', path_from_groups=no_path)
 statuses = (
-    FileStatus('Ignored', r'\.swp|\~|\/.$|\.DS_Store', path_from_groups=whole_match),
+    FileStatus('Ignored', r'\.swp|\~|\/.$|\.DS_Store|_diff\.gif$', path_from_groups=whole_match),
     same_checker,
     ChangedFileStatus('Changed', r'^Files (?:\./)?(.*) and ([^\s]*) differ', same_checker),
     FileStatus('Missing', r'^Only in ' + other_esc + '/?(.*): (.*)', path_from_groups=path_from_only),
