@@ -19,8 +19,10 @@ tile_spec_re = re.compile(r'(\d+)x(\d+)(?:@(\d+),(\d+))?')
 block_id_re = re.compile(r'(\d+):?([\d&-]*)')
 ctm_opt_re = re.compile(r'([A-Z]*):?([\d:&,-]+)@?([\d]*)')
 skip_dirs_re = re.compile(r'^\.|^(no|alternates)$')
-do_not_copy_re = re.compile(r'\.(ai|py.*|cfg|sh|pxm|psd|config|tiff|bak)$|/(.$|\.)')
 solid_prop_re = re.compile(r'\nsolid=(\d+)\n')
+
+# Keep the support file list (.bak, .psd, ...) consistent with report_default.cfg
+do_not_copy_re = re.compile(r'\.(ai|bak|cfg|DS_Store|gif|psd|pxm|pyc|py|sh|tiff)$|/(.$|\.)')
 
 warnings = []
 
