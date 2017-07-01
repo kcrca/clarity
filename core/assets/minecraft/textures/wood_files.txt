@@ -28,6 +28,7 @@ blocks/rail_golden_powered.png
 blocks/piston_top_normal.png
 blocks/piston_side.png
 entity/boat.png
+entity/bed
 blocks/ladder.png
 blocks/rail_activator.png
 blocks/rail_activator_powered.png
