@@ -2,12 +2,15 @@
 import ConfigParser
 import os
 import re
+import shutil
+from collections import defaultdict
+
 from PIL import Image
 from PIL import ImageDraw
 from PIL import ImageColor
 import numpy
 
-desc_re = re.compile(r'(large_)?(.*)_(.*)@(\d+),(\d+)')
+desc_re = re.compile(r'(large)?_?(.*)_(.*)@(\d+),(\d+)')
 dim_re = re.compile(r'(\d+)x(\d+)')
 
 
@@ -43,9 +46,8 @@ def colored_arrow(img, colors, which):
     return arrow
 
 
-def left_arrows(which):
+def left_arrows(which, types=('norm', 'hover')):
     img = Image.open('container/parts/arrow_%s.png' % which).convert('RGBA')
-    types = ('norm', 'hover')
     try:
         bar = Image.open('container/parts/arrow_%s_bar.png' % which).convert('RGBA')
         types += ('barred',)
@@ -69,8 +71,8 @@ def generate_arrows(which, src_arrows, transform):
 
 def build_arrows(size, hover=None):
     if hover:
-        imgs = left_arrows(size)
-        imgs.update(left_arrows(hover))
+        imgs = left_arrows(size, ('norm',))
+        imgs.update(left_arrows(hover, ('hover',)))
     else:
         imgs = left_arrows(size)
 
@@ -82,30 +84,41 @@ def build_arrows(size, hover=None):
     }
 
 
+debug_nums = defaultdict(lambda: 0)
+tmpdir = '/tmp/p'
+shutil.rmtree(tmpdir)
+os.makedirs(tmpdir)
+
+
+def debug_image(panel_name, panel):
+    debug_nums[panel_name] +=1
+    panel.save('%s/%s%d.png' % (tmpdir, os.path.basename(panel_name), debug_nums[panel_name]))
+
+
 config = ConfigParser.SafeConfigParser()
 config.read('arrows.cfg')
 
 arrows = {
     'small': build_arrows('small'),
-    'large': build_arrows('large_norm', 'large_hover'),
+    'large': build_arrows('large'),
+    # 'large': build_arrows('large_norm', 'large_hover'),
 }
 
 panels = config.items('files')
+
 for panel_name, part_str in panels:
     path = '%s.png' % panel_name
     panel = Image.open(path).convert("RGBA")
     draw = ImageDraw.Draw(panel)
 
     parts = part_str.split()
-    dimension_str = parts[0]
-    parts = parts[1:]
 
-    space = map(lambda s: int(s), dim_re.match(dimension_str).groups())
-
-    i = 0
-    panel.save('p%d.png' % i)
-    i += 1
+    debug_image(panel_name, panel)
     for desc in parts:
+        m = dim_re.match(desc)
+        if m:
+            space = map(lambda s: int(s), m.groups())
+            continue
         m = desc_re.match(desc)
         if not m:
             print '%s: cannot parse desc: %s' % (panel_name, desc)
@@ -126,6 +139,6 @@ for panel_name, part_str in panels:
             dim = arrow.size
             delta = map(lambda i: int((space[i] - dim[i]) / 2), range(0, len(space)))
             alpha_composite(panel, arrow, (x + delta[0], y + delta[1]))
-            panel.save('p%d.png' % i)
-            i += 1
+            debug_image(panel_name, panel)
             x += space[0]
+    panel.save(path)
