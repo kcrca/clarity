@@ -94,7 +94,7 @@ os.makedirs(tmpdir)
 
 
 def debug_image(panel_name, panel):
-    debug_nums[panel_name] +=1
+    debug_nums[panel_name] += 1
     panel.save('%s/%s%d.png' % (tmpdir, os.path.basename(panel_name), debug_nums[panel_name]))
 
 
@@ -102,7 +102,6 @@ config = ConfigParser.SafeConfigParser()
 config.read('arrows.cfg')
 
 barred_arrows = config.getboolean('settings', 'barred_arrows')
-
 
 arrows = {
     'small': build_arrows('small'),
