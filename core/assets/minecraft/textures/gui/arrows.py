@@ -28,8 +28,8 @@ def alpha_composite(output, image, pos, rotation=0):
     output.paste(rgb, pos, mask)
 
 
-def to_colors(arrow_name):
-    strs = config.get('settings', 'small').split()
+def to_colors(which):
+    strs = config.get('settings', which).split()
     return {
         'norm': ImageColor.getcolor(strs[0], 'RGBA'),
         'hover': ImageColor.getcolor(strs[1], 'RGBA'),
@@ -74,17 +74,15 @@ def generate_arrows(which, src_arrows, transform):
 
 def build_arrows(size, hover=None):
     if hover:
-        imgs = left_arrows(size, ('norm',))
-        imgs.update(left_arrows(hover, ('hover',)))
+        left = left_arrows(size, ('norm',))
+        left.update(left_arrows(hover, ('hover',)))
     else:
-        imgs = left_arrows(size)
+        left = left_arrows(size)
 
-    return {
-        'left': imgs,
-        'right': generate_arrows('right', imgs, Image.FLIP_LEFT_RIGHT),
-        'up': generate_arrows('up', imgs, Image.ROTATE_270),
-        'down': generate_arrows('down', imgs, Image.ROTATE_90),
-    }
+    up = generate_arrows('up', left, Image.ROTATE_270)
+    right = generate_arrows('right', left, Image.FLIP_LEFT_RIGHT)
+    down = generate_arrows('down', up, Image.FLIP_TOP_BOTTOM)
+    return {'left': left, 'right': right, 'up': up, 'down': down}
 
 
 debug_nums = defaultdict(lambda: 0)
