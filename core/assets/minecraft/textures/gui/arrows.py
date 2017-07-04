@@ -38,6 +38,9 @@ def to_colors(arrow_name):
 
 
 def colored_arrow(img, colors, which):
+    if not barred_arrows and which == 'barred':
+        return Image.new("RGBA", img.size)
+
     data = numpy.array(img)
     _, _, _, alpha = data.T
     image_areas = alpha != 0
@@ -97,6 +100,9 @@ def debug_image(panel_name, panel):
 
 config = ConfigParser.SafeConfigParser()
 config.read('arrows.cfg')
+
+barred_arrows = config.getboolean('settings', 'barred_arrows')
+
 
 arrows = {
     'small': build_arrows('small'),
