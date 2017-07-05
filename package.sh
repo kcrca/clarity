@@ -22,7 +22,7 @@ rm -rf $out
 cp /dev/null $out
 
 echo Regenerating derived files
-for f in `find . -name '*.py'`; do
+for f in `find -s . -name '*.py'`; do
     dir=`dirname $f`
     script=`basename $f`
     case $script in

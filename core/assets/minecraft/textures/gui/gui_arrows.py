@@ -97,7 +97,7 @@ def debug_image(panel_name, panel):
 
 
 config = ConfigParser.SafeConfigParser()
-config.read('arrows.cfg')
+config.read('gui_arrows.cfg')
 
 barred_arrows = config.getboolean('settings', 'barred_arrows')
 
