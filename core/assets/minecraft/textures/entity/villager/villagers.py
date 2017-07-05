@@ -42,4 +42,7 @@ for i in range(0, len(professions)):
         img = Image.alpha_composite(t, prof_img)
         path = prof + ('' if n == 1 else '%d' % n) + '.png'
         img.save(os.path.join(output_dir, path))
+        # Save the canonical ones
+        if i + 1 == n:
+            img.save(prof + '.png')
         n += 1
