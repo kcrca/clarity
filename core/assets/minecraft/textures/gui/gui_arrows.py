@@ -85,15 +85,18 @@ def build_arrows(size, hover=None):
     return {'left': left, 'right': right, 'up': up, 'down': down}
 
 
+DEBUG = False
 debug_nums = defaultdict(lambda: 0)
 tmpdir = '/tmp/p'
-shutil.rmtree(tmpdir)
-os.makedirs(tmpdir)
+if DEBUG:
+    shutil.rmtree(tmpdir)
+    os.makedirs(tmpdir)
 
 
 def debug_image(panel_name, panel):
-    debug_nums[panel_name] += 1
-    panel.save('%s/%s%d.png' % (tmpdir, os.path.basename(panel_name), debug_nums[panel_name]))
+    if DEBUG:
+        debug_nums[panel_name] += 1
+        panel.save('%s/%s%d.png' % (tmpdir, os.path.basename(panel_name), debug_nums[panel_name]))
 
 
 config = ConfigParser.SafeConfigParser()
