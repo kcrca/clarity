@@ -451,7 +451,7 @@ def _target_re(target):
 
 class Pass(object):
     def __init__(self, src_name, dst_name):
-        self.change_for = {}
+        self.changes_for = {}
         self.re_changes = []
         self.default_change = CopyChange()
         self.src_top = normpath(src_name)
@@ -463,27 +463,27 @@ class Pass(object):
         self.dst_blocks_dir = os.path.join(self.dst_assets_dir, 'textures', 'blocks')
         self.dst_blocks_dir_len = len(self.dst_blocks_dir)
         self.src_blocks_dir = self.dst_blocks_dir.replace(self.dst_top, self.src_top)
-        self.change_for = {}
+        self.changes_for = {}
         self.re_changes = []
         config = ConfigParser.SafeConfigParser()
         config.read(os.path.join(self.repack_dir, 'repack.cfg'))
         self.parse_config(config)
         self.unused_changes = set(
-            self.change_for.keys() + [c[0].pattern for c in self.re_changes])
+            self.changes_for.keys() + [c[0].pattern for c in self.re_changes])
 
     def parse_config(self, config):
         try:
             for change_name, targets in config.items('changes'):
                 change = change_by_name[change_name]
                 for target in targets.split():
-                    self.set_change(os.path.join('assets', 'minecraft', 'textures', 'blocks', target), change)
+                    self.set_changes(os.path.join('assets', 'minecraft', 'textures', 'blocks', target), change)
         except ConfigParser.NoSectionError:
             pass
 
     def record_change(self, subpath):
         pass
 
-    def set_change(self, target, change):
+    def set_changes(self, target, change):
         m = target_opt_re.match(target)
         if m:
             target, opt_str = m.groups()
@@ -493,15 +493,16 @@ class Pass(object):
             self.re_changes.append((regexp, change))
         else:
             path = target + '.png'
-            if path in self.change_for:
-                existing = self.change_for[path]
-                print 'Duplicate change for %s: %s and %s' % (
-                    target, change.name(), existing.name())
-                os.sys.exit(1)
+            if path in self.changes_for:
+                # existing = self.changes_for[path]
+                # print 'Duplicate change for %s: %s and %s' % (
+                #     target, change.name(), existing.name())
+                self.changes_for[path] += (change,)
+                # os.sys.exit(1)
             else:
-                self.change_for[path] = change
+                self.changes_for[path] = (change,)
 
-    def _find_change(self, path_png):
+    def _find_changes(self, path_png):
         if path_png.endswith('.png'):
             path = path_png[:-4]
         else:
@@ -509,13 +510,13 @@ class Pass(object):
 
         # look for exact match of name
         k = None
-        if path in self.change_for:
+        if path in self.changes_for:
             k = path
-        elif path_png in self.change_for:
+        elif path_png in self.changes_for:
             k = path_png
         if k:
             self.unused_changes.remove(k)
-            return self.change_for[k]
+            return self.changes_for[k]
 
         # look for pattern match
         for (regexp, change) in self.re_changes:
@@ -529,7 +530,7 @@ class Pass(object):
                     self.unused_changes.remove(regexp.pattern)
                 except KeyError:
                     pass
-                return change
+                return (change,)
 
         return None
 
@@ -547,7 +548,7 @@ class Pass(object):
             for f in file_list:
                 src = os.path.join(src_dir, f)
                 dst = os.path.join(dst_dir, f)
-                self.change(src, dst)
+                self.changes(src, dst)
         if len(self.unused_changes):
             global warnings
             warnings += (self.__class__.__name__ + 'Changes not done: Files not found: %s' % ', '.join(
@@ -558,31 +559,32 @@ class Pass(object):
         subpath = dst[len(self.dst_top) + 1:]
         return dst, subpath
 
-    def change(self, src, dst):
+    def changes(self, src, dst):
         dst, subpath = self.subpath_for(dst)
-        change = self._find_change(subpath)
-        if not change and dst[:self.dst_assets_dir_len] == self.dst_assets_dir:
+        changes = self._find_changes(subpath)
+        if not changes and dst[:self.dst_assets_dir_len] == self.dst_assets_dir:
             base = dst[self.dst_assets_dir_len + 1:]
-            change = self._find_change(base)
-        if not change and dst[:self.dst_blocks_dir_len] == self.dst_blocks_dir:
+            changes = self._find_changes(base)
+        if not changes and dst[:self.dst_blocks_dir_len] == self.dst_blocks_dir:
             base = os.path.basename(dst)
-            change = self._find_change(base)
-        if not change:
-            change = self.default_change
-        if not change:
+            changes = self._find_changes(base)
+        if not changes:
+            changes = (self.default_change,)
+        if not changes:
             return
         self.record_change(subpath)
         override = os.path.join(self.override_top, subpath)
-        if os.path.isfile(override):
-            if change.use_override:
-                print '%s: using overridden file: %s' % (
-                    change.name(), override)
-                src = override
-            else:
-                shutil.copy(override, dst)
-                print '%s: %s overridden' % (change.name(), subpath)
-                return
-        change.apply(src, dst, subpath)
+        for change in changes:
+            if os.path.isfile(override):
+                if change.use_override:
+                    print '%s: using overridden file: %s' % (
+                        change.name(), override)
+                    src = override
+                else:
+                    shutil.copy(override, dst)
+                    print '%s: %s overridden' % (change.name(), subpath)
+                    return
+            change.apply(src, dst, subpath)
 
 
 class ContinuityPass(Pass):
@@ -607,13 +609,13 @@ class ConnectivityPass(Pass):
         for template_name, targets in config.items('ctm'):
             change = ConnectedTextureChange(template_name, self)
             for target in targets.split():
-                self.set_change(target, change)
+                self.set_changes(target, change)
         if len(self.re_changes) > 0:
             SyntaxError('Cannot use RE\'s in %s (%s)' % (self.repack_dir, self.re_changes))
 
     def add_known(self, subpath):
         is_block = subpath.startswith(self.block_subpath)
-        if is_block and subpath not in self.change_for:
+        if is_block and subpath not in self.changes_for:
             SyntaxError('No Connectivity spec for %s' % subpath)
 
 
