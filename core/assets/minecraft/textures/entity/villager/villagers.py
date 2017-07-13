@@ -53,6 +53,11 @@ for career, desc in canonical_config:
 all_desc = config.get('people', 'all')
 all_hairs = all_desc.split()
 
+only_listed = set()
+only_listed_desc = config.get('settings', 'only_listed', None)
+if only_listed_desc:
+    only_listed = set(only_listed_desc.split())
+
 eyebrows = ()
 eyebrows_desc = config.get('settings', 'eyebrows', None)
 if eyebrows_desc:
@@ -61,7 +66,7 @@ if eyebrows_desc:
         brow_width, x, y = m.groups()
         eyebrows += (tuple((int(v) for v in m.groups()), ),)
 
-no_eyebrows = config.get('settings', 'no_eyebrows', '').split()
+no_eyebrows = set(config.get('settings', 'no_eyebrows', '').split())
 
 hair_color_pos = ()
 hair_color_desc = config.get('settings', 'hair_color', None)
@@ -90,7 +95,10 @@ def build_avatars(career):
             skin_path = 'parts/%s.png' % skin
             skin_img = skin_imgs[skin] = Image.open(skin_path).convert('RGBA')
 
-        for hair_desc in hair_descs.split() + all_hairs:
+        hairs = hair_descs.split()
+        if skin not in only_listed:
+            hairs += all_hairs
+        for hair_desc in hairs:
             m = hair_re.match(hair_desc)
             hair, percent = m.groups()
             hair_path = 'parts/hair_%s.png' % hair
@@ -160,7 +168,8 @@ for career in career_imgs:
         if len(weights) > 0:
             weights += ','
         t += weight
-        weights += str(int(round(weight * 1000)))
+        # use max to make sure nothing has zero chance.
+        weights += str(max(1, int(round(weight * 1000))))
         props.write('# %2d: %6.3f %s\n' % (i, weight, genotypes[i]))
 
     props.write('#     %6.3f\n' % t)
