@@ -3,12 +3,23 @@ import ConfigParser
 import glob
 import os
 import re
-
-import errno
+import sys
 from PIL import Image
 
 hair_re = re.compile(r'([^@]*)(?:@(\d+\.?\d*))?')
+brows_re = re.compile(r'(\d+)@(\d+),(\d+)')
+hair_color_re = re.compile(r'(\d+),(\d+)')
 avatar_dir = '../../../mcpatcher/mob/villager'
+
+
+def to_rgb(desc):
+    return tuple(int(desc[i:i + 2], 16) for i in (0, 2, 4))
+
+
+def dark(chan):
+    return int(chan * 0.85)
+
+
 for filename in glob.glob('%s/*' % avatar_dir):
     os.unlink(filename)
 
@@ -42,6 +53,31 @@ for career, desc in canonical_config:
 all_desc = config.get('people', 'all')
 all_hairs = all_desc.split()
 
+only_listed = set()
+only_listed_desc = config.get('settings', 'only_listed', None)
+if only_listed_desc:
+    only_listed = set(only_listed_desc.split())
+
+eyebrows = ()
+eyebrows_desc = config.get('settings', 'eyebrows', None)
+if eyebrows_desc:
+    for brow_desc in eyebrows_desc.split():
+        m = brows_re.match(brow_desc)
+        brow_width, x, y = m.groups()
+        eyebrows += (tuple((int(v) for v in m.groups()), ),)
+
+no_eyebrows = set(config.get('settings', 'no_eyebrows', '').split())
+
+hair_color_pos = ()
+hair_color_desc = config.get('settings', 'hair_color', None)
+if hair_color_desc:
+    m = hair_color_re.match(hair_color_desc)
+    hair_color_pos = tuple(int(v) for v in m.groups())
+
+if (len(eyebrows) > 0) != (len(hair_color_pos) > 0):
+    print "Must specific both eyebrows and hair_color pos, or neither."
+    sys.exit(1)
+
 
 def build_avatars(career):
     avatar_num = 1
@@ -59,7 +95,10 @@ def build_avatars(career):
             skin_path = 'parts/%s.png' % skin
             skin_img = skin_imgs[skin] = Image.open(skin_path).convert('RGBA')
 
-        for hair_desc in hair_descs.split() + all_hairs:
+        hairs = hair_descs.split()
+        if skin not in only_listed:
+            hairs += all_hairs
+        for hair_desc in hairs:
             m = hair_re.match(hair_desc)
             hair, percent = m.groups()
             hair_path = 'parts/hair_%s.png' % hair
@@ -76,13 +115,28 @@ def build_avatars(career):
             if percent:
                 odds[avatar_num] = float(percent)
             img = Image.alpha_composite(skin_img, career_img)
+
+            # Special case for eyebrows
+            if hair not in no_eyebrows and eyebrows:
+                hair_color = hair_img.getpixel(hair_color_pos)
+                # Alpha is zero, so no real hair color
+                if hair_color[3] == 0:
+                    continue
+                eyebrow_color = (dark(hair_color[0]), dark(hair_color[1]), dark(hair_color[2]), hair_color[3])
+                for eyebrow in eyebrows:
+                    length, x, y = eyebrow
+                    for i in range(0, length):
+                        # Need eyebrows only if the career image hasn't set the pixel
+                        need_eyebrows = career_img.getpixel((x, y))[3] == 0
+                        if need_eyebrows:
+                            img.putpixel((x + i, y), eyebrow_color)
+
             img = Image.alpha_composite(img, hair_img)
+
             avatar_num_str = str(avatar_num)
             avatar_path = '%s/%s%s.png' % (avatar_dir, career, avatar_num_str)
             img.save(avatar_path)
             avatar_num += 1
-            if career == 'butcher':
-                print avatar_num
             if canonical[career] == [skin, hair]:
                 img.save('%s.png' % career)
                 print 'Canonical %s: %s' % (career, genotype)
@@ -114,7 +168,8 @@ for career in career_imgs:
         if len(weights) > 0:
             weights += ','
         t += weight
-        weights += str(int(round(weight * 1000)))
+        # use max to make sure nothing has zero chance.
+        weights += str(max(1, int(round(weight * 1000))))
         props.write('# %2d: %6.3f %s\n' % (i, weight, genotypes[i]))
 
     props.write('#     %6.3f\n' % t)
