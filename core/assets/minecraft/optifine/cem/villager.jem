@@ -9,9 +9,7 @@
       "rotate": [0, 0, 0],
       "animations":[
         {
-          "this:hair.rx": "-part.rx",
-          "this:hair.tz": "4- sin(torad(head_pitch/4))",
-          "this:hair.ty": "sin(torad(head_pitch))"
+          "this:hair.rx": "clamp(-part.rx/2, -part.rx, -part.rx + 10 )"
         }
       ]
     }
