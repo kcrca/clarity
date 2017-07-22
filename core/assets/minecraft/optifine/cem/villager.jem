@@ -1,0 +1,18 @@
+{
+  "models": 
+  [
+    {
+      "model": "villager_head.jpm",
+      "part": "head", 
+	  "attach": false,
+      "translate": [8, 0, -8],
+      "rotate": [0, 0, 0],
+      "animations":[
+        {
+          "this:hair.rx": "-part.rx",
+          "this:hair.tz": "4-sin(head_pitch)"
+        }
+      ]
+    }
+  ]
+}
