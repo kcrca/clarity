@@ -46,7 +46,7 @@ def lighter(steps):
 
 bg_color = (212, 90, 18)
 squares = (
-    Square((4, 5), lighter(1), 7, 5),
+    Square((4, 5), lighter(2), 7, 5),
     Square((9, 10), lighter(1), 4, 7),
 )
 
