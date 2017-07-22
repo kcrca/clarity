@@ -10,7 +10,8 @@
       "animations":[
         {
           "this:hair.rx": "-part.rx",
-          "this:hair.tz": "4-sin(head_pitch)"
+          "this:hair.tz": "4- sin(torad(head_pitch/4))",
+          "this:hair.ty": "sin(torad(head_pitch))"
         }
       ]
     }
