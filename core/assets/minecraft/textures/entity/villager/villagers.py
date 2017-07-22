@@ -120,16 +120,15 @@ def build_avatars(career):
             if hair not in no_eyebrows and eyebrows:
                 hair_color = hair_img.getpixel(hair_color_pos)
                 # Alpha is zero, so no real hair color
-                if hair_color[3] == 0:
-                    continue
-                eyebrow_color = (dark(hair_color[0]), dark(hair_color[1]), dark(hair_color[2]), hair_color[3])
-                for eyebrow in eyebrows:
-                    length, x, y = eyebrow
-                    for i in range(0, length):
-                        # Need eyebrows only if the career image hasn't set the pixel
-                        need_eyebrows = career_img.getpixel((x, y))[3] == 0
-                        if need_eyebrows:
-                            img.putpixel((x + i, y), eyebrow_color)
+                if hair_color[3] != 0:
+                    eyebrow_color = (dark(hair_color[0]), dark(hair_color[1]), dark(hair_color[2]), hair_color[3])
+                    for eyebrow in eyebrows:
+                        length, x, y = eyebrow
+                        for i in range(0, length):
+                            # Need eyebrows only if the career image hasn't set the pixel
+                            need_eyebrows = career_img.getpixel((x, y))[3] == 0
+                            if need_eyebrows:
+                                img.putpixel((x + i, y), eyebrow_color)
 
             img = Image.alpha_composite(img, hair_img)
 
@@ -137,12 +136,9 @@ def build_avatars(career):
             avatar_path = '%s/%s%s.png' % (avatar_dir, career, avatar_num_str)
             img.save(avatar_path)
             avatar_num += 1
-            try:
-                if canonical[career] == [skin, hair]:
-                    img.save('%s.png' % career)
-                    print 'Canonical %s: %s' % (career, genotype)
-            except:
-                pass
+            if career in canonical and canonical[career] == [skin, hair]:
+                img.save('%s.png' % career)
+                print 'Canonical %s: %s' % (career, genotype)
 
     # adjust odds for the number of folks with the same hair.
     for hair in same_hair:
