@@ -137,9 +137,12 @@ def build_avatars(career):
             avatar_path = '%s/%s%s.png' % (avatar_dir, career, avatar_num_str)
             img.save(avatar_path)
             avatar_num += 1
-            if canonical[career] == [skin, hair]:
-                img.save('%s.png' % career)
-                print 'Canonical %s: %s' % (career, genotype)
+            try:
+                if canonical[career] == [skin, hair]:
+                    img.save('%s.png' % career)
+                    print 'Canonical %s: %s' % (career, genotype)
+            except:
+                pass
 
     # adjust odds for the number of folks with the same hair.
     for hair in same_hair:
