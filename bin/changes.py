@@ -1,14 +1,16 @@
 #!/usr/bin/env python
+
+# Generate the animations and images needed to provide the "changes" texture pack.
+
+__author__ = 'arnold'
+
 import os
 import random
 import json
 import collections
 
-import sys
 from PIL import Image
 import clip
-
-__author__ = 'arnold'
 
 weeks_in_year = 52
 
