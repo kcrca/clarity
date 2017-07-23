@@ -1,10 +1,18 @@
+import os
+
 from PIL import Image
+import clip
 
 
 def to_range(v):
     if v < 0:
         v += 16
     return v % 16
+
+
+def line_at(xy, color):
+    for p in range(0, 16):
+        img.putpixel((xy[0], xy[1] + p), color)
 
 
 band_colors = (
@@ -17,12 +25,6 @@ width = 16
 frames = 16 + len(band_colors) - 2
 
 img = Image.new('RGBA', (width, frames * width), color=(55, 0, 157, 160))
-
-
-def line_at(xy, color):
-    for p in range(0, 16):
-        img.putpixel((xy[0], xy[1] + p), color)
-
 
 img_y = 0
 for i in range(0, 16):
@@ -49,4 +51,4 @@ line_at((8, img_y), band_colors[0])
 line_at((6, img_y), band_colors[3])
 line_at((9, img_y), band_colors[3])
 
-img.save("blocks/portal.png")
+img.save(clip.directory('textures', 'blocks/portal.png'))
