@@ -17,3 +17,4 @@ home
 core/assets/minecraft/report_default
 *_diff.gif
 repack.out
+*.pyc
