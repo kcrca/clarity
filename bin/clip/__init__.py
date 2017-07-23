@@ -12,7 +12,12 @@ def directory(name, *args):
     :return: The full path of the named directory.
     """
     top = os.path.dirname(os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
-    path = dict(textures='core/assets/minecraft/textures', models="core/assets/minecraft/models", site='site')[name]
+    path = {
+        'top': '',
+        'textures': 'core/assets/minecraft/textures',
+        'models': "core/assets/minecraft/models",
+        'site': 'site',
+    }[name]
     path = os.path.join(top, path)
     for arg in args:
         for part in arg.split('/'):

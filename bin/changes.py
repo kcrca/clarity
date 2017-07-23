@@ -1,9 +1,12 @@
 #!/usr/bin/env python
-
+import os
 import random
 import json
 import collections
+
+import sys
 from PIL import Image
+import clip
 
 __author__ = 'arnold'
 
@@ -48,6 +51,8 @@ for season in timings:
 # Set the seed to prevent the mcmeta changing each time this is run. Otherwise we end up checking a new file each time
 # we run the script.
 random.seed(13)
+
+os.chdir(clip.directory('top', 'changes.repack', 'override', 'assets', 'minecraft', 'textures', 'blocks'))
 
 transparent = (0, 0, 0, 0)
 for tree in ('oak', 'birch', 'jungle', 'big_oak', 'acacia'):
