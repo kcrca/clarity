@@ -1,21 +1,26 @@
 #!/usr/bin/env python
 
-import os
-import random
-from PIL import Image
-import json
+# Generates derived files from the paintings. This includes:
+#
+#     (*) The animated item, which cycles through the individual paintings.
+#     (*) Broken-out images of each individual painting for the site.
 
 __author__ = 'arnold'
+
+import os
+import random
+import json
+from PIL import Image
+import clip
 
 # If this ever changes it could be worth the trouble to generalize, but for now I'm
 # just assuming the structure of the images.
 
-texture_dir = os.path.dirname(os.path.abspath(__file__))
-painting_dir = os.path.join(texture_dir, 'painting')
-paintings = os.path.join(painting_dir, 'paintings_kristoffer_zetterstrand.png')
+texture_dir = clip.directory('textures')
+paintings = os.path.join(texture_dir, 'painting', 'paintings_kristoffer_zetterstrand.png')
 texture = os.path.join(texture_dir, 'items', 'painting.png')
 animation = os.path.join(texture_dir, 'items', 'painting.png.mcmeta')
-breakout_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(texture_dir)))), 'site', 'paintings')
+breakout_dir = clip.directory('site', 'paintings')
 
 paintings_img = Image.open(paintings).convert('RGBA')
 assert paintings_img.size[0] == paintings_img.size[1]
@@ -39,6 +44,7 @@ for x in range(0, 3):
     images.append((x * 4, 12, 4, 4))
 for y in range(0, 2):
     images.append((12, 4 + y * 3, 4, 3))
+
 # Set the seed to prevent the png changing each time this is run. Otherwise we end up checking a new png file each time
 # we run the script.
 random.seed(13)
