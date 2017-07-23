@@ -13,3 +13,7 @@ def directory(name):
         "models": "core/assets/minecraft/models",
     }[name]
     return os.path.join(top, path)
+
+
+def pretty(value):
+    return "{:,}".format(value)
