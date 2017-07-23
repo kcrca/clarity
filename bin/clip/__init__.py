@@ -1,4 +1,6 @@
 import os
+import shutil
+import math
 
 
 def directory(name, *args):
@@ -16,8 +18,15 @@ def directory(name, *args):
     path = os.path.join(top, path)
     for arg in args:
         for part in arg.split('/'):
-           path = os.path.join(path, part)
+            path = os.path.join(path, part)
     return path
+
+
+def clear_out_tree(dir_name):
+    if os.path.exists(dir_name):
+        shutil.rmtree(dir_name)
+    os.makedirs(dir_name)
+    return dir_name
 
 
 def pretty(value):
@@ -26,3 +35,7 @@ def pretty(value):
 
 def hex_to_rgba(desc, alpha=255):
     return tuple(int(desc[i:i + 2], 16) for i in (0, 2, 4)) + (alpha,)
+
+
+def num_digits(value):
+    return int(math.ceil(math.log(value, 10)))
