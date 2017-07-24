@@ -1,33 +1,31 @@
 #!/usr/bin/env python
 
+__author__ = 'arnold'
+
 import ConfigParser
 import json
 import shutil
-
-from PIL import Image
 import os
 import math
+from PIL import Image
+import clip
 
 
 # Someday I should let the user specify an input config file on the command line... For now it's all hardcoded in here.
 
 
-def to_color(color_spec):
-    if color_spec[0] == '#':
-        color_spec = color_spec[1:]
-    return tuple(map(ord, color_spec.decode('hex')))
-
-
 def clock_colors(config, section):
     return (
-        to_color(config.get(section, 'face_color')),
-        to_color(config.get(section, 'on_color')),
-        to_color(config.get(section, 'off_color')),
+        clip.hex_to_rgba(config.get(section, 'face_color')),
+        clip.hex_to_rgba(config.get(section, 'on_color')),
+        clip.hex_to_rgba(config.get(section, 'off_color')),
     )
 
 
 config = ConfigParser.SafeConfigParser()
-config.read('clock_gen.cfg')
+config.read(clip.directory('bin', 'clock_gen.cfg'))
+
+os.chdir(clip.directory('minecraft'))
 
 # The 'clock_in' describes the input image that defines the clock font, etc.
 in_sec = 'clock_in'

@@ -40,6 +40,7 @@ def directory(name, *args):
         'top': '',
         'textures': 'core/assets/minecraft/textures',
         'models': "core/assets/minecraft/models",
+        'minecraft': "core/assets/minecraft",
         'site': 'site',
     }[name]
     path = os.path.join(top, path)
@@ -61,7 +62,14 @@ def pretty(value):
 
 
 def hex_to_rgba(desc, alpha=255):
-    return tuple(int(desc[i:i + 2], 16) for i in (0, 2, 4)) + (alpha,)
+    if desc[0] == '#':
+        desc = desc[1:]
+    if len(desc) % 4 == 0:
+        return tuple(int(desc[i:i + 2], 16) for i in (0, 2, 4, 6))
+    result = tuple(int(desc[i:i + 2], 16) for i in (0, 2, 4))
+    if alpha < 0:
+        return result
+    return result + (alpha,)
 
 
 def num_digits(value):
