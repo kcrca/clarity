@@ -1,7 +1,8 @@
 import os
 import shutil
-
 import math
+
+from PIL import Image
 
 
 class Square:
@@ -83,3 +84,17 @@ def darker(c, steps):
 
 def lighter(c, steps):
     return adjust(c, steps, 1.15)
+
+
+# This composites an image onto another merging the alpha properly. This should be part of PIL, but I can't find it.
+# (This differs from Image.alpha_composite by working on a specific subimage.
+# From http://stackoverflow.com/questions/3374878/with-the-python-imaging
+# -library-pil-how-does-one-compose-an-image-with-an-alp
+def alpha_composite(output, image, pos, rotation=0):
+    if rotation:
+        size = image.size
+        image = image.rotate(rotation, expand=1).resize(size, Image.ANTIALIAS)
+    r, g, b, a = image.split()
+    rgb = Image.merge("RGB", (r, g, b))
+    mask = Image.merge("L", (a,))
+    output.paste(rgb, pos, mask)

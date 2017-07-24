@@ -1,4 +1,7 @@
 #!/usr/bin/env python
+
+__author__ = 'arnold'
+
 import ConfigParser
 import os
 import re
@@ -9,23 +12,12 @@ from PIL import Image
 from PIL import ImageDraw
 from PIL import ImageColor
 import numpy
+import clip
 
 desc_re = re.compile(r'(large)?_?(.*)_(.*)@(\d+),(\d+)')
 dim_re = re.compile(r'(\d+)x(\d+)')
 
-
-# This composites an image onto another merging the alpha properly. This should
-# be part of PIL, but I can't find it.
-# From http://stackoverflow.com/questions/3374878/with-the-python-imaging
-# -library-pil-how-does-one-compose-an-image-with-an-alp
-def alpha_composite(output, image, pos, rotation=0):
-    if rotation:
-        size = image.size
-        image = image.rotate(rotation, expand=1).resize(size, Image.ANTIALIAS)
-    r, g, b, a = image.split()
-    rgb = Image.merge("RGB", (r, g, b))
-    mask = Image.merge("L", (a,))
-    output.paste(rgb, pos, mask)
+gui_dir = clip.directory('textures', 'gui')
 
 
 def to_colors(which):
@@ -50,11 +42,12 @@ def colored_arrow(img, colors, which):
 
 
 def left_arrows(which, types=('norm', 'hover')):
-    img = Image.open('container/parts/arrow_%s.png' % which).convert('RGBA')
+    img = Image.open(os.path.join(gui_dir, 'container/parts/arrow_%s.png' % which)).convert('RGBA')
     try:
-        bar = Image.open('container/parts/arrow_%s_bar.png' % which).convert('RGBA')
+        barred_path = os.path.join(gui_dir, 'container/parts/arrow_%s_bar.png' % which)
+        bar = Image.open(barred_path).convert('RGBA')
         types += ('barred',)
-    except:
+    except IOError as e:
         bar = None
     colors = to_colors(which)
     arrows = {}
@@ -100,7 +93,7 @@ def debug_image(panel_name, panel):
 
 
 config = ConfigParser.SafeConfigParser()
-config.read('gui_arrows.cfg')
+config.read(clip.directory('bin', 'gui_arrows.cfg'))
 
 barred_arrows = config.getboolean('settings', 'barred_arrows')
 
@@ -113,7 +106,7 @@ arrows = {
 panels = config.items('files')
 
 for panel_name, part_str in panels:
-    path = '%s.png' % panel_name
+    path = os.path.join(gui_dir, '%s.png' % panel_name)
     panel = Image.open(path).convert("RGBA")
     draw = ImageDraw.Draw(panel)
 
@@ -144,7 +137,7 @@ for panel_name, part_str in panels:
             arrow = arrows[size][towards][type]
             dim = arrow.size
             delta = map(lambda i: int((space[i] - dim[i]) / 2), range(0, len(space)))
-            alpha_composite(panel, arrow, (x + delta[0], y + delta[1]))
+            clip.alpha_composite(panel, arrow, (x + delta[0], y + delta[1]))
             debug_image(panel_name, panel)
             x += space[0]
     panel.save(path)
