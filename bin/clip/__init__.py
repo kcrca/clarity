@@ -87,11 +87,11 @@ def adjust(color, steps, factor):
     return tuple(iround(c) for c in color)
 
 
-def darker(c, steps):
-    return adjust(c, steps, 0.9)
+def darker(c, steps=1):
+    return adjust(c, steps, 0.85)
 
 
-def lighter(c, steps):
+def lighter(c, steps=1):
     return adjust(c, steps, 1.15)
 
 

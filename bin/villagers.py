@@ -5,26 +5,18 @@ import os
 import re
 import sys
 from PIL import Image
+import clip
+
+config = ConfigParser.SafeConfigParser()
+config.read(clip.directory('config', 'villagers.cfg'))
 
 hair_re = re.compile(r'([^@]*)(?:@(\d+\.?\d*))?')
 brows_re = re.compile(r'(\d+)@(\d+),(\d+)')
 hair_color_re = re.compile(r'(\d+),(\d+)')
 avatar_dir = '../../../mcpatcher/mob/villager'
 
-
-def to_rgb(desc):
-    return tuple(int(desc[i:i + 2], 16) for i in (0, 2, 4))
-
-
-def dark(chan):
-    return int(chan * 0.85)
-
-
 for filename in glob.glob('%s/*' % avatar_dir):
     os.unlink(filename)
-
-config = ConfigParser.SafeConfigParser()
-config.read('villagers.cfg')
 
 people_config = config.items('people')
 canonical_config = config.items('canonical')
@@ -33,6 +25,8 @@ hair_imgs = {}
 villager_imgs = {}
 career_imgs = {}
 skin_imgs = {}
+
+os.chdir(clip.directory('textures', 'entity/villager'))
 
 career_files = ()
 for file in glob.glob('parts/*.png'):
@@ -75,7 +69,7 @@ if hair_color_desc:
     hair_color_pos = tuple(int(v) for v in m.groups())
 
 if (len(eyebrows) > 0) != (len(hair_color_pos) > 0):
-    print "Must specific both eyebrows and hair_color pos, or neither."
+    print "Must specify both eyebrows and hair_color pos, or neither."
     sys.exit(1)
 
 
@@ -121,7 +115,7 @@ def build_avatars(career):
                 hair_color = hair_img.getpixel(hair_color_pos)
                 # Alpha is zero, so no real hair color
                 if hair_color[3] != 0:
-                    eyebrow_color = (dark(hair_color[0]), dark(hair_color[1]), dark(hair_color[2]), hair_color[3])
+                    eyebrow_color = clip.darker(hair_color[0:3]) + (hair_color[3],)
                     for eyebrow in eyebrows:
                         length, x, y = eyebrow
                         for i in range(0, length):
