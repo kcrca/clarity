@@ -1,4 +1,7 @@
 #!/usr/bin/env python
+
+# Generates a report comparing two packs.
+
 import os
 import re
 import subprocess
@@ -7,6 +10,7 @@ import sys
 
 from PIL import Image
 from PIL import ImageChops
+from clip import *
 
 __author__ = 'arnold'
 
@@ -109,7 +113,7 @@ class ChangedFileStatus(FileStatus):
         super(ChangedFileStatus, self).add_path(groups, path)
 
 
-config_file = 'report_default.cfg'
+config_file = directory('bin', 'report_default.cfg')
 if len(sys.argv) > 1:
     config_file = sys.argv[1]
 
