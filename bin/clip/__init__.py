@@ -37,6 +37,7 @@ def directory(name, *args):
     top = os.path.dirname(os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
     path = {
         'bin': 'bin',
+        'config': 'bin',
         'top': '',
         'textures': 'core/assets/minecraft/textures',
         'models': "core/assets/minecraft/models",

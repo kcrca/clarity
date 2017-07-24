@@ -1,24 +1,30 @@
 #!/usr/bin/env python
+
+# Generate the panels for the containers.
+
+__author__ = 'arnold'
+
 import ConfigParser
 import os
 import re
 from PIL import Image
 from PIL import ImageDraw
-from PIL import ImageColor
+import clip
+
+config = ConfigParser.SafeConfigParser()
+config.read(clip.directory('config', 'panels.cfg'))
 
 desc_re = re.compile(r'(.*)@(?:(\d+),(\d+)(?:~(-?\d+))?|(right|bottom))')
 grid_re = re.compile(r'(\d+)(?:x(\d+))?')
 
+os.chdir(clip.directory('textures', 'gui', 'container'))
 slot = Image.open('parts/slot.png').convert("RGBA")
 
 slot_width = slot_height = 18
 
-config = ConfigParser.SafeConfigParser()
-config.read('panels.cfg')
-
 
 def config_color(cname):
-    return ImageColor.getcolor(config.get('basic', cname), 'RGBA')
+    return clip.hex_to_rgba(config.get('basic', cname))
 
 
 bg_in = config_color('background_in')
@@ -134,9 +140,9 @@ for panel, part_str in panels:
                     pixels = part_img.load()
                     for x in range(0, part_img.size[0]):
                         for y in range(0, part_img.size[1]):
-                            c = pixels[x,y]
+                            c = pixels[x, y]
                             if c[3] != 0:
-                                pixels[x,y] = (c[0], c[1], c[2], int(round(c[3] * 0.2)))
+                                pixels[x, y] = (c[0], c[1], c[2], int(round(c[3] * 0.2)))
                     alpha_composite(output, part_img, (x_pos, y_pos), rotation)
                 else:
                     part_img = Image.open('parts/%s' % part).convert("RGBA")

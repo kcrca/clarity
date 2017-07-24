@@ -23,7 +23,7 @@ def clock_colors(config, section):
 
 
 config = ConfigParser.SafeConfigParser()
-config.read(clip.directory('bin', 'clock_gen.cfg'))
+config.read(clip.directory('config', 'clock_gen.cfg'))
 
 os.chdir(clip.directory('minecraft'))
 

@@ -113,7 +113,7 @@ class ChangedFileStatus(FileStatus):
         super(ChangedFileStatus, self).add_path(groups, path)
 
 
-config_file = directory('bin', 'report_default.cfg')
+config_file = directory('config', 'report_default.cfg')
 if len(sys.argv) > 1:
     config_file = sys.argv[1]
 
