@@ -7,13 +7,23 @@ import math
 class Square:
     next_direction = 1
 
-    def __init__(self, pos, color, radius, size):
+    def __init__(self, pos, color, radius, size, frames):
         (self.center_x, self.center_y) = pos
         self.color = color
         self.radius = radius / 2
         self.size = size
         self.direction = Square.next_direction
+        self.frames = frames
         Square.next_direction *= -1
+
+    def alpha_adjust(self, frame_num):
+        adjust = frame_num % self.frames
+        if adjust >= self.frames / 2:
+            adjust = abs(self.frames - adjust)
+        if self.direction < 0:
+            adjust = self.frames / 2 - adjust
+        adjust += 2
+        return adjust
 
 
 def directory(name, *args):

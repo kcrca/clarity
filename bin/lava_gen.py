@@ -8,8 +8,8 @@ RADIANS_PER_FRAME = 2 * math.pi / FRAMES
 
 bg_color = (212, 90, 18)
 squares = (
-    Square((4, 5), lighter(bg_color, 2), 7, 5),
-    Square((9, 10), lighter(bg_color, 1), 4, 7),
+    Square((4, 5), lighter(bg_color, 2), 7, 5, FRAMES),
+    Square((9, 10), lighter(bg_color, 1), 4, 7, FRAMES),
 )
 
 img = Image.new('RGB', (DIM, FRAMES * DIM), color=bg_color)
