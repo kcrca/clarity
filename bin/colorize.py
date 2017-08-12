@@ -31,16 +31,15 @@ def configure_aliases():
 
 
 def decode_color(color_nums, has_alpha=None):
-    if has_alpha and color_nums[3] is '':
-        color_nums = (color_nums[0], color_nums[1], color_nums[2], '255')
-    elif not has_alpha and len(color_nums) > 3:
-        color_nums = color_nums[:3]
-    return tuple(map(int, color_nums))
+    color = clip.hex_to_rgba(color_nums)
+    if not has_alpha:
+        color = color[:3]
+    return color
 
 
 def color_list(colors_config, has_alpha):
     l = []
-    for color_nums in color_re.findall(colors_config):
+    for color_nums in colors_config.split():
         l.append(decode_color(color_nums, has_alpha))
     return l
 
@@ -185,7 +184,7 @@ def main(argv=None):
         if o in ('-l', '--list'):
             list_colorings.append(a)
         elif o in ('-x', '--exclude'):
-            color = decode_color(a)
+            color = decode_color(a, False)
             exclude_colors.add(color)
 
     if len(list_colorings):
