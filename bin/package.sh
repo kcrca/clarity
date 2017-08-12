@@ -7,8 +7,9 @@
 
 set -e
 
-cd `dirname $0`
-top=$PWD
+bin=`dirname $0`
+cd $bin/..
+top="$PWD"
 packs=$top/site/packs
 version=`cat core/pack_version.txt`
 
@@ -28,12 +29,20 @@ for f in `find -s . -name '*.py'`; do
     case $script in
 	report.py|repack.py)
 	    ;;
+	colorize.py)
+	    ;;
 	*)
-	    (
-		echo ... python $f 2>&1 | tee -a $out
-		cd $dir
-		python $script >> $out
-	    )
+	    args=""
+	    if [[ $script == 'colorize.py' ]]; then
+		args=$(find $top -name colorize.cfg)
+	    fi
+	    for a in $args; do
+		(
+		    echo ... python $f $a 2>&1 | tee -a $out
+		    cd $dir
+		    python $script >> $out
+		)
+	    done
 	    ;;
     esac
 done
