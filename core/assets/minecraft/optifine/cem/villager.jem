@@ -10,7 +10,7 @@
       "animations":[
         {
           "this:hair.rx": "clamp(-part.rx/2, -part.rx+0.1, part.rx)",
-          "this:pony_tail.rx": "-part.rx"
+          "this:pony_tail.rx": "clamp(-part.rx, 0, 90)"
         }
       ]
     }

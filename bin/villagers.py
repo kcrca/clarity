@@ -21,6 +21,7 @@ for filename in glob.glob('%s/*' % avatar_dir):
 people_config = config.items('people')
 canonical_config = config.items('canonical')
 
+style_imgs = {}
 hair_imgs = {}
 villager_imgs = {}
 career_imgs = {}
@@ -62,15 +63,37 @@ if eyebrows_desc:
 
 no_eyebrows = set(config.get('settings', 'no_eyebrows', '').split())
 
-hair_color_pos = ()
-hair_color_desc = config.get('settings', 'hair_color', None)
+hair_color_pos = []
+hair_color_desc = config.get('settings', 'hair_color', None).split()
 if hair_color_desc:
-    m = hair_color_re.match(hair_color_desc)
-    hair_color_pos = tuple(int(v) for v in m.groups())
+    for i in range(0, len(hair_color_desc)):
+        m = hair_color_re.match(hair_color_desc[i])
+        hair_color_pos.append(tuple(int(v) for v in m.groups()))
 
 if (len(eyebrows) > 0) != (len(hair_color_pos) > 0):
     print "Must specify both eyebrows and hair_color pos, or neither."
     sys.exit(1)
+
+hair_styles = []
+hair_style_desc = config.get('settings', 'styles', None).split()
+if hair_style_desc:
+    for i in range(0, len(hair_style_desc)):
+        m = hair_re.match(hair_style_desc[i])
+        hair_styles.append(m.groups())
+    remaining = 100.0
+    equal_chance = 0
+    for style in hair_styles:
+        cut, chance = style
+        if chance is None:
+            equal_chance += 1
+        else:
+            remaining -= float(chance)
+    for i in range(0, len(hair_styles)):
+        cut, chance = hair_styles[i]
+        if chance is None:
+            hair_styles[i] = (cut, (remaining / equal_chance))
+        else:
+            hair_styles[i] = (cut, float(chance))
 
 
 def build_avatars(career):
@@ -78,6 +101,7 @@ def build_avatars(career):
     career_img = career_imgs[career]
     odds = {}
     genotypes = {}
+    styles = {}
     same_hair = {}
     for skin, hair_descs in people_config:
         if skin == 'all':
@@ -92,59 +116,77 @@ def build_avatars(career):
         hairs = hair_descs.split()
         if skin not in only_listed:
             hairs += all_hairs
-        for hair_desc in hairs:
-            m = hair_re.match(hair_desc)
-            hair, percent = m.groups()
-            hair_path = 'parts/hair_%s.png' % hair
-            if hair in hair_imgs:
-                hair_img = hair_imgs[hair]
-            else:
-                hair_img = hair_imgs[hair] = Image.open(hair_path).convert('RGBA')
-            if hair in same_hair:
-                same_hair[hair] += (avatar_num,)
-            else:
-                same_hair[hair] = (avatar_num,)
-            genotype = '%s_%s' % (skin, hair)
-            genotypes[avatar_num] = genotype
-            if percent:
-                odds[avatar_num] = float(percent)
-            img = Image.alpha_composite(skin_img, career_img)
+        for style_desc in hair_styles:
+            for hair_desc in hairs:
+                m = hair_re.match(hair_desc)
+                hair, percent = m.groups()
+                style, style_percent = style_desc
+                if style == 'shaved':
+                    hair_path = 'parts/hair_styles/hair_%s.png' % style
+                else:
+                    hair_path = 'parts/hair_styles/test_crap/hair_%s_%s.png' % (style, hair)
 
-            # Special case for eyebrows
-            if hair not in no_eyebrows and eyebrows:
-                hair_color = hair_img.getpixel(hair_color_pos)
-                # Alpha is zero, so no real hair color
-                if hair_color[3] != 0:
-                    eyebrow_color = clip.darker(hair_color[0:3]) + (hair_color[3],)
-                    for eyebrow in eyebrows:
-                        length, x, y = eyebrow
-                        for i in range(0, length):
-                            # Need eyebrows only if the career image hasn't set the pixel
-                            need_eyebrows = career_img.getpixel((x, y))[3] == 0
-                            if need_eyebrows:
-                                img.putpixel((x + i, y), eyebrow_color)
+                if (hair, style) in hair_imgs:
+                    hair_img = hair_imgs[(hair, style)]
+                else:
+                    hair_img = hair_imgs[(hair, style)] = Image.open(hair_path).convert('RGBA')
+                if (hair, style) in same_hair:
+                    same_hair[(hair, style)] += (avatar_num,)
+                else:
+                    same_hair[(hair, style)] = (avatar_num,)
+                if style != 'shaved':
+                    genotype = '%s_%s_%s' % (skin, hair, style)
+                else:
+                    genotype = '%s_%s' % (skin, style)
+                genotypes[avatar_num] = genotype
+                styles[avatar_num] = (style, style_percent)
+                if percent:
+                    if style != 'shaved':
+                        odds[avatar_num] = (float(percent) / 100) * (style_percent / 100) * 100
+                    else:
+                        odds[avatar_num] = style_percent
+                img = Image.alpha_composite(skin_img, career_img)
 
-            img = Image.alpha_composite(img, hair_img)
+                # Special case for eyebrows
+                if hair not in no_eyebrows and eyebrows:
+                    hair_color = [0, 0, 0, 0]
+                    for color_pos in hair_color_pos:
+                        if hair_color[3] != 0:
+                            continue
+                        hair_color = hair_img.getpixel(color_pos)
+                    # Alpha is zero, so no real hair color
+                    if hair_color[3] != 0:
+                        eyebrow_color = clip.darker(hair_color[0:3]) + (hair_color[3],)
+                        for eyebrow in eyebrows:
+                            length, x, y = eyebrow
+                            for i in range(0, length):
+                                # Need eyebrows only if the career image hasn't set the pixel
+                                need_eyebrows = career_img.getpixel((x, y))[3] == 0
+                                if need_eyebrows:
+                                    img.putpixel((x + i, y), eyebrow_color)
+                img = Image.alpha_composite(img, hair_img)
 
-            avatar_num_str = str(avatar_num)
-            avatar_path = '%s/%s%s.png' % (avatar_dir, career, avatar_num_str)
-            img.save(avatar_path)
-            avatar_num += 1
-            if career in canonical and canonical[career] == [skin, hair]:
-                img.save('%s.png' % career)
-                print 'Canonical %s: %s' % (career, genotype)
+                avatar_num_str = str(avatar_num)
+                avatar_path = '%s/%s%s.png' % (avatar_dir, career, avatar_num_str)
+                img.save(avatar_path)
+                avatar_num += 1
+                if career in canonical and canonical[career] == [skin, hair]:
+                    img.save('%s.png' % career)
+                    print 'Canonical %s: %s' % (career, genotype)
+                if style == 'shaved':
+                    break
 
     # adjust odds for the number of folks with the same hair.
-    for hair in same_hair:
-        same = same_hair[hair]
+    for (hair, style) in same_hair:
+        same = same_hair[(hair, style)]
         if same[0] in odds:
             for i in same:
                 odds[i] /= len(same)
-    return avatar_num - 1, odds, genotypes
+    return avatar_num - 1, odds, genotypes, styles
 
 
 for career in career_imgs:
-    num_avatars, odds, genotypes = build_avatars(career)
+    num_avatars, odds, genotypes, styles = build_avatars(career)
 
     prop_path = '%s/%s.properties' % (avatar_dir, career)
     props = open(prop_path, 'w')
@@ -156,6 +198,7 @@ for career in career_imgs:
     default_odds = remaining / (num_avatars - len(odds))
     weights = ''
     t = 0.0
+    style_percentages = []
     for i in range(1, num_avatars + 1):
         weight = odds[i] if i in odds else default_odds
         if len(weights) > 0:
@@ -163,9 +206,10 @@ for career in career_imgs:
         t += weight
         # use max to make sure nothing has zero chance.
         weights += str(max(1, int(round(weight * 1000))))
-        props.write('# %2d: %6.3f %s\n' % (i, weight, genotypes[i]))
+        props.write('# %2d: %6.7f %s\n' % (i, weight, genotypes[i]))
 
     props.write('#     %6.3f\n' % t)
     props.write('skins.1=1-%d\n' % num_avatars)
     props.write('weights.1=%s\n' % weights)
+    props.write('\nskins.2=1\n')  # should be changed to canonical texture
     props.close()
