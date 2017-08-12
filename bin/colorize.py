@@ -7,12 +7,11 @@ import getopt
 import ConfigParser
 import re
 from PIL import Image
+import clip
 
 __author__ = 'arnold'
 
 config = ConfigParser.SafeConfigParser()
-script_dir = os.path.dirname(os.path.abspath(__file__))
-config.read('colorize.cfg')
 
 color_re = re.compile(r'\(?\s*(\d+),\s*(\d+),\s*(\d+),?\s*(\d+)?\s*\)?')
 file_opt_re = re.compile(r'\?$')
@@ -163,10 +162,15 @@ def main(argv=None):
         except getopt.error, msg:
             raise Usage(msg)
             # more code, unchanged
+        if len(args) != 1:
+            raise Usage('must specifiy one dir to process')
+        os.chdir(args[0])
     except Usage, err:
         print >> sys.stderr, err.msg
         print >> sys.stderr, 'for help use --help'
         return 2
+
+    config.read(['colorize.cfg', clip.directory('config', 'colorize.cfg')])
 
     list_colorings = []
     exclude_colors = set()
