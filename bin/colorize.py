@@ -7,6 +7,7 @@ import getopt
 import ConfigParser
 import re
 from PIL import Image
+from bs4 import BeautifulSoup
 import clip
 
 __author__ = 'arnold'
@@ -14,9 +15,11 @@ __author__ = 'arnold'
 config = ConfigParser.SafeConfigParser()
 
 color_re = re.compile(r'\(?\s*(\d+),\s*(\d+),\s*(\d+),?\s*(\d+)?\s*\)?')
+rgba_re = re.compile(r'rgba\((\d+),\s*(\d+),\s*(\d+)\s*,(\d+\.\d+)\)')
 file_opt_re = re.compile(r'\?$')
 
 aliases = {}
+color_config = {}
 
 
 def configure_aliases():
@@ -31,26 +34,28 @@ def configure_aliases():
 
 
 def decode_color(color_nums, has_alpha=None):
-    color = clip.hex_to_rgba(color_nums)
     if not has_alpha:
-        color = color[:3]
-    return color
+        color_nums = color_nums[:3]
+    elif len(color_nums) == 3:
+        color_nums += (255,)
+    return color_nums
 
 
 def color_list(colors_config, has_alpha):
     l = []
-    for color_nums in colors_config.split():
+    for color_nums in colors_config:
         l.append(decode_color(color_nums, has_alpha))
     return l
 
 
 def map_for(map_name, key_color, has_alpha):
-    key_list = color_list(config.get(map_name, key_color), has_alpha)
+    key_list = color_list(color_config[map_name][key_color], has_alpha)
     num_colors = len(key_list)
     color_map = {}
-    for color_name, colors_config in config.items(map_name):
+    for color_name in color_config[map_name]:
         if color_name == key_color:
             continue
+        colors_config = color_config[map_name][color_name]
         l = color_list(colors_config, has_alpha)
         if len(l) != num_colors:
             print('Mismatch: %s: %s: expected %d colors, found %d' % (
@@ -151,6 +156,38 @@ def list_image_colors(files):
             print '  %s' % str(c)
 
 
+def color_for(cell):
+    try:
+        style = str(cell.attrs['style'])
+        rgba = rgba_re.search(style)
+        return tuple(map(int, rgba.groups()[0:3])) + (int(round(float(rgba.group(4)) * 255)),)
+    except KeyError:
+        return clip.hex_to_rgba(cell.attrs['bgcolor'])[0:3]
+
+
+def parse_colors():
+    with open(clip.directory('config', 'colorize.html')) as fp:
+        doc = BeautifulSoup(fp, 'html.parser')
+        for table in doc.find_all('table'):
+            section = {}
+            which = str(table.caption.contents[0]).strip()
+            for row in table.find_all('tr'):
+                colors = ()
+                try:
+                    if row.attrs['class'][0] == u'Note':
+                        continue
+                except KeyError:
+                    pass
+                row_name = ''
+                for cell in row.find_all('td'):
+                    if row_name == '':
+                        row_name = str(cell.contents[0]).strip()
+                    else:
+                        colors += (color_for(cell),)
+                section[row_name] = colors
+            color_config[which] = section
+
+
 def main(argv=None):
     if argv is None:
         argv = sys.argv
@@ -169,6 +206,7 @@ def main(argv=None):
         print >> sys.stderr, 'for help use --help'
         return 2
 
+    parse_colors()
     config.read(['colorize.cfg', clip.directory('config', 'colorize.cfg')])
 
     list_colorings = []
