@@ -20,6 +20,7 @@ file_opt_re = re.compile(r'\?$')
 
 aliases = {}
 color_config = {}
+initial_cap = False
 
 
 def configure_aliases():
@@ -107,6 +108,8 @@ def file_from_color(file_pat, color_name):
     file_pat = file_opt_re.sub('', file_pat)
     required = file_pat == orig_pat
     for n in others:
+        if initial_cap:
+            n = n[0].capitalize() + n[1:]
         cpath = file_pat.replace('COLOR', n)
         if os.path.isfile(cpath):
             return cpath
@@ -189,6 +192,8 @@ def parse_colors():
 
 
 def main(argv=None):
+    global initial_cap
+
     if argv is None:
         argv = sys.argv
     try:
@@ -208,6 +213,10 @@ def main(argv=None):
 
     parse_colors()
     config.read(['colorize.cfg', clip.directory('config', 'colorize.cfg')])
+    try:
+        initial_cap = config.getboolean('settings', 'initial_cap')
+    except KeyError:
+        pass
 
     list_colorings = []
     exclude_colors = set()
