@@ -1,0 +1,7 @@
+{
+	"type":"NORMAL",
+	"textures":[
+        "./lime-bubble"
+    ],
+    "layer":"TRANSLUCENT"
+}

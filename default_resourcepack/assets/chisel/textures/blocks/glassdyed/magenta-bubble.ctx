@@ -1,0 +1,7 @@
+{
+	"type":"NORMAL",
+	"textures":[
+        "./magenta-bubble"
+    ],
+    "layer":"TRANSLUCENT"
+}

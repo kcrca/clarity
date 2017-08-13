@@ -1,0 +1,7 @@
+{
+	"type":"NORMAL",
+	"textures":[
+        "./lightgray-transparent"
+    ],
+    "layer":"TRANSLUCENT"
+}

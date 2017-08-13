@@ -1,0 +1,7 @@
+{
+    "textures":[
+        "./screenDiscoherent.ctx",
+        "./screenCyan.ctx"
+    ],
+    "particle":"screenCyan.ctx"
+}
