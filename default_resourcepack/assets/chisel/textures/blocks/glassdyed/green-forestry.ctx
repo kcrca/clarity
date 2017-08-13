@@ -1,0 +1,7 @@
+{
+	"type":"NORMAL",
+	"textures":[
+        "./green-forestry"
+    ],
+    "layer":"TRANSLUCENT"
+}

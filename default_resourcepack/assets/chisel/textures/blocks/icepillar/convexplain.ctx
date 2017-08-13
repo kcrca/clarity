@@ -1,0 +1,8 @@
+{
+    "type":"CTMV",
+    "textures": [
+        "./convexplain-top.ctx",
+        "./convexplain-ctmv.ctx"
+    ],
+    "layer":"TRANSLUCENT"
+}

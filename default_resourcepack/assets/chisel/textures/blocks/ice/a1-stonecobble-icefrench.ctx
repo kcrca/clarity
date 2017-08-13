@@ -1,0 +1,7 @@
+{
+	"type":"NORMAL",
+	"textures":[
+        "./a1-stonecobble-icefrench"
+    ],
+    "layer":"TRANSLUCENT"
+}
