@@ -23,29 +23,29 @@ rm -rf $out
 cp /dev/null $out
 
 echo Regenerating derived files
-for f in `find -s . -name '*.py'`; do
+for f in bin/*.py; do
     dir=`dirname $f`
     script=`basename $f`
     case $script in
-	report.py|repack.py)
+	report.py)
 	    ;;
 	colorize.py)
+	    for cfg in `find $top -name colorize.cfg`; do
+		d=`dirname $cfg`
+		echo ... python $script $d 2>&1 | tee -a $out
+		python $f $d
+	    done
+	    ;;
+	gui_arrows.py)
 	    ;;
 	*)
-	    args=""
-	    if [[ $script == 'colorize.py' ]]; then
-		args=$(find $top -name colorize.cfg)
-	    fi
-	    for a in $args; do
-		(
-		    echo ... python $f $a 2>&1 | tee -a $out
-		    cd $dir
-		    python $script >> $out
-		)
-	    done
+	    echo ... python $script $a 2>&1 | tee -a $out
+	    python $f >> $out
 	    ;;
     esac
 done
+echo ... python gui_arrows.py $a 2>&1 | tee -a $out
+python bin/gui_arrows.py >> $out
 
 function to_title() {
     echo "$(tr a-z A-Z <<< ${1:0:1})${1:1}"
