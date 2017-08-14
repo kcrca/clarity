@@ -1,0 +1,24 @@
+{
+  "forge_marker":1,
+  "defaults":{
+    "transform":"forge:default-block",
+    "model":"orientable",
+    "textures":{
+      "particle":"stevescarts:blocks/cargo_manager_top",
+      "top":"stevescarts:blocks/cargo_manager_top",
+      "down":"stevescarts:blocks/cargo_manager_bot",
+      "south": "stevescarts:blocks/cargo_manager_blue",
+      "north": "stevescarts:blocks/cargo_manager_yellow",
+      "east": "stevescarts:blocks/cargo_manager_red",
+      "west": "stevescarts:blocks/cargo_manager_green"
+    }
+  },
+  "variants":{
+    "inventory":{
+      "transform":"forge:default-block"
+    },
+    "normal":{
+      "transform":"forge:default-block"
+    }
+  }
+}

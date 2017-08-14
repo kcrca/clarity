@@ -1,0 +1,29 @@
+{
+  "forge_marker": 1,
+  "defaults": {
+    "textures": {},
+    "model": "cube_all"
+  },
+  "variants": {
+    "inventory": [
+      {}
+    ],
+    "type": {
+      "0": {
+        "textures": {
+          "all": "stevescarts:blocks/reinforced_metal_block"
+        }
+      },
+      "1": {
+        "textures": {
+          "all": "stevescarts:blocks/galgadorian_block"
+        }
+      },
+      "2": {
+        "textures": {
+          "all": "stevescarts:blocks/enhanced_galgadorian_block"
+        }
+      }
+    }
+  }
+}

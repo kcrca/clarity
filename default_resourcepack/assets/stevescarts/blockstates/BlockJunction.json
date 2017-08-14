@@ -1,0 +1,84 @@
+{
+  "forge_marker": 1,
+  "defaults": {
+    "textures": {
+      "rail": "stevescarts:blocks/junction_rail"
+    },
+    "model": "normal_rail_flat"
+  },
+  "variants": {
+    "inventory": {
+      "model": "builtin/generated",
+      "transform": "forge:default-item",
+      "textures": {
+        "layer0": "stevescarts:blocks/junction_rail"
+      }
+    },
+    "shape=north_south": {
+      "model": "normal_rail_flat",
+      "textures": {
+        "rail": "stevescarts:blocks/junction_rail"
+      }
+    },
+    "shape=east_west": {
+      "model": "normal_rail_flat",
+      "y": 90,
+      "textures": {
+        "rail": "stevescarts:blocks/junction_rail"
+      }
+    },
+    "shape=ascending_east": {
+      "model": "normal_rail_raised_ne",
+      "y": 90,
+      "textures": {
+        "rail": "stevescarts:blocks/junction_rail"
+      }
+    },
+    "shape=ascending_west": {
+      "model": "normal_rail_raised_sw",
+      "y": 90,
+      "textures": {
+        "rail": "stevescarts:blocks/junction_rail"
+      }
+    },
+    "shape=ascending_north": {
+      "model": "normal_rail_raised_ne",
+      "textures": {
+        "rail": "stevescarts:blocks/junction_rail"
+      }
+    },
+    "shape=ascending_south": {
+      "model": "normal_rail_raised_sw",
+      "textures": {
+        "rail": "stevescarts:blocks/junction_rail"
+      }
+    },
+    "shape=south_east": {
+      "model": "normal_rail_curved",
+      "textures": {
+        "rail": "stevescarts:blocks/junction_rail_corner"
+      }
+    },
+    "shape=south_west": {
+      "model": "normal_rail_curved",
+      "y": 90,
+      "textures": {
+        "rail": "stevescarts:blocks/junction_rail_corner"
+      }
+    },
+    "shape=north_west": {
+      "model": "normal_rail_curved",
+      "y": 180,
+      "textures": {
+        "rail": "stevescarts:blocks/junction_rail_corner"
+      }
+    },
+    "shape=north_east": {
+      "model": "normal_rail_curved",
+      "y": 270,
+      "textures": {
+        "rail": "stevescarts:blocks/junction_rail_corner"
+      }
+    }
+  }
+}

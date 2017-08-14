@@ -1,0 +1,152 @@
+{
+  "forge_marker": 1,
+  "defaults": {
+    "textures": {
+      "rail": "stevescarts:blocks/advanced_detector_rail"
+    },
+    "model": "normal_rail_flat"
+  },
+  "variants": {
+    "inventory": {
+      "model": "builtin/generated",
+      "transform": "forge:default-item",
+      "textures": {
+        "layer0": "stevescarts:blocks/advanced_detector_rail"
+      }
+    },
+    "powered=true,shape=north_south": {
+      "model": "normal_rail_flat",
+      "textures": {
+        "rail": "stevescarts:blocks/advanced_detector_rail"
+      }
+    },
+    "powered=true,shape=east_west": {
+      "model": "normal_rail_flat",
+      "y": 90,
+      "textures": {
+        "rail": "stevescarts:blocks/advanced_detector_rail"
+      }
+    },
+    "powered=true,shape=ascending_east": {
+      "model": "normal_rail_raised_ne",
+      "y": 90,
+      "textures": {
+        "rail": "stevescarts:blocks/advanced_detector_rail"
+      }
+    },
+    "powered=true,shape=ascending_west": {
+      "model": "normal_rail_raised_sw",
+      "y": 90,
+      "textures": {
+        "rail": "stevescarts:blocks/advanced_detector_rail"
+      }
+    },
+    "powered=true,shape=ascending_north": {
+      "model": "normal_rail_raised_ne",
+      "textures": {
+        "rail": "stevescarts:blocks/advanced_detector_rail"
+      }
+    },
+    "powered=true,shape=ascending_south": {
+      "model": "normal_rail_raised_sw",
+      "textures": {
+        "rail": "stevescarts:blocks/advanced_detector_rail"
+      }
+    },
+    "powered=true,shape=south_east": {
+      "model": "normal_rail_curved",
+      "textures": {
+        "rail": "stevescarts:blocks/advanced_detector_rail_corner"
+      }
+    },
+    "powered=true,shape=south_west": {
+      "model": "normal_rail_curved",
+      "y": 90,
+      "textures": {
+        "rail": "stevescarts:blocks/advanced_detector_rail_corner"
+      }
+    },
+    "powered=true,shape=north_west": {
+      "model": "normal_rail_curved",
+      "y": 180,
+      "textures": {
+        "rail": "stevescarts:blocks/advanced_detector_rail_corner"
+      }
+    },
+    "powered=true,shape=north_east": {
+      "model": "normal_rail_curved",
+      "y": 270,
+      "textures": {
+        "rail": "stevescarts:blocks/advanced_detector_rail_corner"
+      }
+    },
+
+    "powered=false,shape=north_south": {
+      "model": "normal_rail_flat",
+      "textures": {
+        "rail": "stevescarts:blocks/advanced_detector_rail"
+      }
+    },
+    "powered=false,shape=east_west": {
+      "model": "normal_rail_flat",
+      "y": 90,
+      "textures": {
+        "rail": "stevescarts:blocks/advanced_detector_rail"
+      }
+    },
+    "powered=false,shape=ascending_east": {
+      "model": "normal_rail_raised_ne",
+      "y": 90,
+      "textures": {
+        "rail": "stevescarts:blocks/advanced_detector_rail"
+      }
+    },
+    "powered=false,shape=ascending_west": {
+      "model": "normal_rail_raised_sw",
+      "y": 90,
+      "textures": {
+        "rail": "stevescarts:blocks/advanced_detector_rail"
+      }
+    },
+    "powered=false,shape=ascending_north": {
+      "model": "normal_rail_raised_ne",
+      "textures": {
+        "rail": "stevescarts:blocks/advanced_detector_rail"
+      }
+    },
+    "powered=false,shape=ascending_south": {
+      "model": "normal_rail_raised_sw",
+      "textures": {
+        "rail": "stevescarts:blocks/advanced_detector_rail"
+      }
+    },
+    "powered=false,shape=south_east": {
+      "model": "normal_rail_curved",
+      "textures": {
+        "rail": "stevescarts:blocks/advanced_detector_rail_corner"
+      }
+    },
+    "powered=false,shape=south_west": {
+      "model": "normal_rail_curved",
+      "y": 90,
+      "textures": {
+        "rail": "stevescarts:blocks/advanced_detector_rail_corner"
+      }
+    },
+    "powered=false,shape=north_west": {
+      "model": "normal_rail_curved",
+      "y": 180,
+      "textures": {
+        "rail": "stevescarts:blocks/advanced_detector_rail_corner"
+      }
+    },
+    "powered=false,shape=north_east": {
+      "model": "normal_rail_curved",
+      "y": 270,
+      "textures": {
+        "rail": "stevescarts:blocks/advanced_detector_rail_corner"
+      }
+    }
+
+  }
+}
