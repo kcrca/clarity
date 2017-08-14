@@ -1,0 +1,41 @@
+{
+  "forge_marker": 1,
+  "defaults": {
+    "model": "excompressum:auto_hammer",
+    "transform": "forge:default-block"
+  },
+  "variants": {
+    "normal": [{}],
+    "inventory": [{
+    }],
+    "hammer_mod": {
+      "none": {
+      },
+      "omnia": {
+        "model": "excompressum:auto_hammer_inventory",
+        "textures": {
+          "hammer": "exnihiloomnia:items/hammer_diamond"
+        }
+      },
+      "adscensio": {
+        "model": "excompressum:auto_hammer_inventory",
+        "textures": {
+          "hammer": "exnihiloadscensio:items/hammerDiamond"
+        }
+      }
+    },
+    "facing": {
+      "north": {
+      },
+      "south": {
+        "y": 180
+      },
+      "west": {
+        "y": 90
+      },
+      "east": {
+        "y": -90
+      }
+    }
+  }
+}
