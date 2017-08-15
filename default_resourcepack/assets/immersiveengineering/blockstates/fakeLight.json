@@ -1,0 +1,15 @@
+{
+	"forge_marker": 1,
+	"defaults":
+	{
+		"model": "immersiveengineering:ieEmpty"
+	},
+	"variants":
+	{
+		"inventory,type=air": [{}],
+		"type":
+		{
+			"air": {}
+		}
+	}
+}
