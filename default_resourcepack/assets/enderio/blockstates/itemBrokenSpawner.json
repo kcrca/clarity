@@ -1,0 +1,13 @@
+{
+    "forge_marker":1,
+    "variants":{
+        "inventory":{
+            "model":"enderio:hollowCube",
+            "textures":{
+	            "side": "enderio:items/itemBrokenSpawner",
+	            "top": "enderio:items/itemBrokenSpawner",
+	            "bottom": "enderio:items/itemBrokenSpawner"
+            }
+        }
+    }
+}
