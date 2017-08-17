@@ -4,5 +4,7 @@ blocks/metalDecoration0_coilLV_top.png
 blocks/metalDecoration0_coilMV_top.png
 blocks/metalDecoration0_coilLV_side.png
 blocks/metalDecoration0_coilMV_side.png
+blocks/metalDecoration2_steelPost.png
+blocks/metalDecoration2_aluminumPost.png
 
 (The files are in git to help the script know which files should exist)

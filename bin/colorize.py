@@ -98,33 +98,45 @@ def list_colors(color_name, file_name, exclude_colors):
     print ''
 
 
-def file_from_color(file_pat, color_name):
+def file_from_color(file_patterns, color_name):
     try:
         others = aliases[color_name]
     except KeyError:
         others = [color_name]
 
-    orig_pat = file_pat
-    file_pat = file_opt_re.sub('', file_pat)
-    required = file_pat == orig_pat
-    for n in others:
-        if initial_cap:
-            n = n[0].capitalize() + n[1:]
-        cpath = file_pat.replace('COLOR', n)
+    for file_pat in file_patterns.split('|'):
+        orig_pat = file_pat
+        file_pat = file_opt_re.sub('', file_pat)
+        required = file_pat == orig_pat
+        for n in others:
+            if initial_cap:
+                n = n[0].capitalize() + n[1:]
+            cpath = file_pat.replace('COLOR', n)
+            if os.path.isfile(cpath):
+                return cpath
+
+        # Handle the case where one color is the canonical one. For example, as of 1.9,
+        # there is "sandstone.png" and "red_standstone.png". The first is a yellow sandstone,
+        # but it isn't called "yellow_standstong.png" because when it was created, there was
+        # only one color. So this code allows there to be a version of the file without the
+        # "COLOR_" part of the file name, but only if it actually exists.
+        cpath = file_pat.replace('COLOR_', '')
         if os.path.isfile(cpath):
             return cpath
 
-    # Handle the case where one color is the canonical one. For example, as of 1.9,
-    # there is "sandstone.png" and "red_standstone.png". The first is a yellow sandstone,
-    # but it isn't called "yellow_standstong.png" because when it was created, there was
-    # only one color. So this code allows there to be a version of the file without the
-    # "COLOR_" part of the file name, but only if it actually exists.
-    cpath = file_pat.replace('COLOR_', '')
-    if os.path.isfile(cpath):
-        return cpath
+        if required:
+            raise Exception('No path found for %s in %s' % (file_pat, others))
 
-    if required:
-        raise Exception('No path found for %s in %s' % (file_pat, others))
+        # there is "sandstone.png" and "red_standstone.png". The first is a yellow sandstone,
+        # but it isn't called "yellow_standstong.png" because when it was created, there was
+        # only one color. So this code allows there to be a version of the file without the
+        # "COLOR_" part of the file name, but only if it actually exists.
+        cpath = file_pat.replace('COLOR_', '')
+        if os.path.isfile(cpath):
+            return cpath
+
+        if required:
+            raise Exception('No path found for %s in %s' % (file_pat, others))
 
     return ''
 
