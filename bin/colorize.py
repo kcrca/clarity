@@ -14,13 +14,18 @@ __author__ = 'arnold'
 
 config = ConfigParser.SafeConfigParser()
 
+directory = '/tmp'
+
 color_re = re.compile(r'\(?\s*(\d+),\s*(\d+),\s*(\d+),?\s*(\d+)?\s*\)?')
 rgba_re = re.compile(r'rgba\((\d+),\s*(\d+),\s*(\d+)\s*,(\d+\.\d+)\)')
 file_opt_re = re.compile(r'\?$')
+color_spec_re = re.compile(r'^([a-z]+)@([^:]+):(.*)')
+assets_re = re.compile('/assets/[^/]+')
+camel_caps_re = re.compile('_([a-z])')
 
 aliases = {}
 color_config = {}
-initial_cap = False
+camel_caps = False
 
 
 def configure_aliases():
@@ -97,6 +102,8 @@ def list_colors(color_name, file_name, exclude_colors):
             sys.stdout.write(' %-13s' % ('(%d,%d,%d)' % c[:]))
     print ''
 
+def to_camel_case(m):
+    return m.group(1).upper()
 
 def file_from_color(file_patterns, color_name):
     try:
@@ -104,16 +111,21 @@ def file_from_color(file_patterns, color_name):
     except KeyError:
         others = [color_name]
 
+    m = color_spec_re.match(color_name)
+    if m:
+        color_name, pkg, key_file = m.groups()
+        key_file = assets_re.sub('/assets/' + pkg, directory) + '/' + key_file
+        return color_name, key_file
     for file_pat in file_patterns.split('|'):
         orig_pat = file_pat
         file_pat = file_opt_re.sub('', file_pat)
         required = file_pat == orig_pat
         for n in others:
-            if initial_cap:
-                n = n[0].capitalize() + n[1:]
+            if camel_caps:
+                n = camel_caps_re.sub(to_camel_case, n[0].capitalize() + n[1:])
             cpath = file_pat.replace('COLOR', n)
             if os.path.isfile(cpath):
-                return cpath
+                return color_name, cpath
 
         # Handle the case where one color is the canonical one. For example, as of 1.9,
         # there is "sandstone.png" and "red_standstone.png". The first is a yellow sandstone,
@@ -122,7 +134,7 @@ def file_from_color(file_patterns, color_name):
         # "COLOR_" part of the file name, but only if it actually exists.
         cpath = file_pat.replace('COLOR_', '')
         if os.path.isfile(cpath):
-            return cpath
+            return color_name, cpath
 
         if required:
             raise Exception('No path found for %s in %s' % (file_pat, others))
@@ -133,12 +145,12 @@ def file_from_color(file_patterns, color_name):
         # "COLOR_" part of the file name, but only if it actually exists.
         cpath = file_pat.replace('COLOR_', '')
         if os.path.isfile(cpath):
-            return cpath
+            return color_name, cpath
 
         if required:
             raise Exception('No path found for %s in %s' % (file_pat, others))
 
-    return ''
+    return color_name, ''
 
 
 def list_coloring(coloring, exclude_colors):
@@ -204,7 +216,7 @@ def parse_colors():
 
 
 def main(argv=None):
-    global initial_cap
+    global camel_caps
 
     if argv is None:
         argv = sys.argv
@@ -217,7 +229,9 @@ def main(argv=None):
             # more code, unchanged
         if len(args) != 1:
             raise Usage('must specifiy one dir to process')
-        os.chdir(args[0])
+        global directory
+        directory = args[0]
+        os.chdir(directory)
     except Usage, err:
         print >> sys.stderr, err.msg
         print >> sys.stderr, 'for help use --help'
@@ -226,7 +240,7 @@ def main(argv=None):
     parse_colors()
     config.read(['colorize.cfg', clip.directory('config', 'colorize.cfg')])
     try:
-        initial_cap = config.getboolean('settings', 'initial_cap')
+        camel_caps = config.getboolean('settings', 'camel_caps')
     except ConfigParser.NoSectionError:
         pass
 
@@ -263,7 +277,7 @@ def main(argv=None):
         map_name, key_color, file_pat, ignore_spec = decode_coloring(coloring)
         ignores = ignore_spec.split(',') if ignore_spec else ()
         # The key file is always required, so remove any options
-        key_file = file_from_color(file_opt_re.sub('', file_pat), key_color)
+        key_color, key_file = file_from_color(file_opt_re.sub('', file_pat), key_color)
         print '%s: reading %s' % (coloring, key_file)
         src_img = Image.open(key_file)
         if src_img.mode == 'P':
@@ -276,7 +290,7 @@ def main(argv=None):
         for color_name, color_map in color_maps.iteritems():
             if color_name in ignores:
                 continue
-            dst_file = file_from_color(file_pat, color_name)
+            _, dst_file = file_from_color(file_pat, color_name)
             if dst_file == '':
                 continue
             print ('    %s' % dst_file)
