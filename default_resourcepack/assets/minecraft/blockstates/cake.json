@@ -1,6 +1,6 @@
 {
     "variants": {
-        "bites=0": { "model": "cake_uneaten" },
+        "bites=0": { "model": "cake" },
         "bites=1": { "model": "cake_slice1" },
         "bites=2": { "model": "cake_slice2" },
         "bites=3": { "model": "cake_slice3" },

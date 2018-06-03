@@ -3,6 +3,6 @@
     "textures": {
         "bottom": "blocks/red_sandstone_bottom",
         "top": "blocks/red_sandstone_top",
-        "side": "blocks/red_sandstone_normal"
+        "side": "blocks/red_sandstone"
     }
 }

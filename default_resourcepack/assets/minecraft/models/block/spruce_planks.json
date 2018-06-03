@@ -1,6 +1,6 @@
 {
     "parent": "block/cube_all",
     "textures": {
-        "all": "blocks/planks_spruce"
+        "all": "blocks/spruce_planks"
     }
 }

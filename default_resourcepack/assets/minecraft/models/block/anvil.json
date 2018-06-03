@@ -1,4 +1,9 @@
 {   "parent": "block/block",
+    "textures": {
+        "particle": "blocks/anvil",
+        "body": "blocks/anvil",
+        "top": "blocks/anvil_top"
+    },
     "display": {
         "fixed": {
             "rotation": [ 0, 90, 0 ],

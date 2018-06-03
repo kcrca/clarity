@@ -1,8 +1,0 @@
-{
-  "model": { "model": "cube"},
-  "face":"chisel:bookshelf_spruce/brim.cf",
-  "overrides":{
-    "UP":"minecraft:blocks/planks_spruce.cf",
-    "DOWN":"minecraft:blocks/planks_spruce.cf"
-  }
-}

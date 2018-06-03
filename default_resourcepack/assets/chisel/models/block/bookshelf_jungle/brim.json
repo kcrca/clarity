@@ -1,8 +1,0 @@
-{
-  "model": { "model": "cube"},
-  "face":"chisel:bookshelf_jungle/brim.cf",
-  "overrides":{
-    "UP":"minecraft:blocks/planks_jungle.cf",
-    "DOWN":"minecraft:blocks/planks_jungle.cf"
-  }
-}

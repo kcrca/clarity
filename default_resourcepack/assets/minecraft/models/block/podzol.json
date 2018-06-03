@@ -2,7 +2,7 @@
     "parent": "block/cube_bottom_top",
     "textures": {
         "bottom": "blocks/dirt",
-        "top": "blocks/dirt_podzol_top",
-        "side": "blocks/dirt_podzol_side"
+        "top": "blocks/podzol_top",
+        "side": "blocks/podzol_side"
     }
 }

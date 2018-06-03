@@ -2,7 +2,7 @@
     "parent": "block/orientable",
     "textures": {
         "top": "blocks/furnace_top",
-        "front": "blocks/furnace_front_off",
+        "front": "blocks/furnace_front",
         "side": "blocks/furnace_side"
     }
 }

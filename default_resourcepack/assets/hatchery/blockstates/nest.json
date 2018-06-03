@@ -1,6 +1,0 @@
-{
-    "variants": {
-        "hasegg=false": { "model": "hatchery:nest"},
-		"hasegg=true": { "model": "hatchery:nest"}
-    }
-}
