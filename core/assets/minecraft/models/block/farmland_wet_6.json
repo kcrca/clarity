@@ -1,8 +1,0 @@
-{
-    "parent": "block/farmland",
-    "textures": {
-        "particle": "blocks/farmland_wet_stage_6",
-        "dirt": "blocks/dirt",
-        "top": "blocks/farmland_wet_stage_6"
-    }
-}
