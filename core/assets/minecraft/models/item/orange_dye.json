@@ -1,6 +1,6 @@
 {
     "parent": "item/dye",
     "textures": {
-        "layer0": "items/dye_powder_gray"
+        "layer0": "items/orange_dye"
     }
 }

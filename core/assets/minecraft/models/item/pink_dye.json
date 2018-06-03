@@ -1,6 +1,6 @@
 {
     "parent": "item/dye",
     "textures": {
-        "layer0": "items/dye_powder_black"
+        "layer0": "items/pink_dye"
     }
 }
