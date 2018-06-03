@@ -1,6 +1,6 @@
 {
     "parent": "item/small",
     "textures": {
-        "layer0": "blocks/flower_dandelion"
+        "layer0": "blocks/dandelion"
     }
 }
