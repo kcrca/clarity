@@ -1,6 +1,6 @@
 {
     "parent": "item/cuboid",
     "textures": {
-        "sides": "items/netherbrick"
+        "sides": "items/nether_bricks"
     }
 }
