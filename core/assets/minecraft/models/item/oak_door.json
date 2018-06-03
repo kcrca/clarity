@@ -1,7 +1,7 @@
 {
     "parent": "item/door",
     "textures": {
-        "top": "blocks/door_wood_upper",
-        "bottom": "blocks/door_wood_lower"
+        "top": "blocks/wood_door_top",
+        "bottom": "blocks/wood_door_bottom"
     }
 }
