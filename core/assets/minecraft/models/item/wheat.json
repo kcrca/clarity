@@ -1,6 +1,6 @@
 {
     "parent": "item/sheet",
     "textures": {
-        "layer0": "blocks/wheat_stage_7"
+        "layer0": "blocks/wheat_stage7"
     }
 }
