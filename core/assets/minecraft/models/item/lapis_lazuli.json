@@ -1,6 +1,6 @@
 {
     "parent": "item/gem",
     "textures": {
-        "layer0": "items/blue_dye"
+        "layer0": "items/lapis_lazuli"
     }
 }
