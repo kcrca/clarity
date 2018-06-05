@@ -1,7 +1,7 @@
 {
-    "parent": "block/waterlily",
+    "parent": "block/lily_pad",
     "textures": {
-        "layer0": "blocks/waterlily"
+        "layer0": "blocks/lily_pad"
     },
     "elements": [
         {   "from": [ 0, 0, 0 ],
