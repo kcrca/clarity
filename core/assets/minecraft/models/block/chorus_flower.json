@@ -1,6 +1,6 @@
 {   "parent": "block/block",
     "textures": {
-        "particle": "blocks/chorus_flower_00",
+        "particle": "blocks/chorus_flower_2",
         "bottom": "blocks/chorus_plant"
     },
     "elements": [

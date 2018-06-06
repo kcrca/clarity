@@ -2,9 +2,9 @@
     "parent": "block/thin_block",
     "ambientocclusion": false,
     "textures": {
-        "particle": "blocks/comparator_off",
+        "particle": "blocks/comparator",
         "slab": "blocks/stone_slab_top",
-        "top": "blocks/comparator_off",
+        "top": "blocks/comparator",
         "unlit": "blocks/redstone_torch_off",
         "lit": "blocks/redstone_torch_on"
     },

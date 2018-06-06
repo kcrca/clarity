@@ -1,6 +1,6 @@
 {
     "parent": "block/cross",
     "textures": {
-        "cross": "blocks/double_plant_fern_bottom"
+        "cross": "blocks/large_fern_bottom"
     }
 }
