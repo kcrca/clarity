@@ -5,7 +5,7 @@
         "particle": "blocks/comparator",
         "slab": "blocks/stone_slab_top",
         "top": "blocks/comparator",
-        "unlit": "blocks/redstone_torch_ff",
+        "unlit": "blocks/redstone_torch_off",
         "lit": "blocks/redstone_torch"
     },
     "elements": [
