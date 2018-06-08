@@ -1,10 +1,10 @@
 {
     "ambientocclusion": false,
     "textures": {
-        "particle": "blocks/repeater_off",
+        "particle": "blocks/repeater",
         "slab": "blocks/stone_slab_top",
-        "top": "blocks/repeater_off",
-        "lock": "blocks/hardened_clay_stained_black",
+        "top": "blocks/repeater",
+        "lock": "blocks/black_terracotta",
         "unlit": "blocks/redstone_torch_off"
     },
     "elements": [
@@ -19,8 +19,8 @@
                 "east":  { "uv": [ 0, 14, 16, 16 ], "texture": "#slab", "cullface": "east" }
             }
         },
-        {   "from": [ 2, 2, 8 ],
-            "to": [ 14, 4, 10 ],
+        {   "from": [ 2, 2, 6 ],
+            "to": [ 14, 4, 8 ],
             "faces": {
                 "down":  { "uv": [ 7, 2,  9, 14 ], "texture": "#lock", "rotation": 90 },
                 "up":    { "uv": [ 7, 2,  9, 14 ], "texture": "#lock", "rotation": 90 },

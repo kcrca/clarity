@@ -1,10 +1,10 @@
 {
     "ambientocclusion": false,
     "textures": {
-        "particle": "blocks/repeater_off",
+        "particle": "blocks/repeater",
         "slab": "blocks/stone_slab_top",
-        "top": "blocks/repeater_off",
-        "lock": "blocks/hardened_clay_stained_black",
+        "top": "blocks/repeater",
+        "lock": "blocks/black_terracotta",
         "unlit": "blocks/redstone_torch_off"
     },
     "elements": [

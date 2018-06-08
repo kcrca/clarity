@@ -4,8 +4,8 @@
         "particle": "blocks/repeater_on",
         "slab": "blocks/stone_slab_top",
         "top": "blocks/repeater_on",
-        "lit": "blocks/redstone_torch_on",
-        "lock": "blocks/hardened_clay_stained_black"
+        "lit": "blocks/redstone_torch",
+        "lock": "blocks/black_terracotta"
     },
     "elements": [
         {   "from": [ 0, 0, 0 ],
@@ -19,8 +19,8 @@
                 "east":  { "uv": [ 0, 14, 16, 16 ], "texture": "#slab", "cullface": "east" }
             }
         },
-        {   "from": [ 2, 2, 8 ],
-            "to": [ 14, 4, 10 ],
+        {   "from": [ 2, 2, 6 ],
+            "to": [ 14, 4, 8 ],
             "faces": {
                 "down":  { "uv": [ 7, 2,  9, 14 ], "texture": "#lock", "rotation": 90 },
                 "up":    { "uv": [ 7, 2,  9, 14 ], "texture": "#lock", "rotation": 90 },
