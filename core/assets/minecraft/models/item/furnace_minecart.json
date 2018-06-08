@@ -3,7 +3,7 @@
     "textures": {
         "block_bottom": "blocks/furnace_top",
         "block_top": "blocks/furnace_top",
-        "block_front": "blocks/furnace_front_off",
+        "block_front": "blocks/furnace_front",
         "block_back": "blocks/furnace_side",
         "block_left": "blocks/furnace_side",
         "block_right": "blocks/furnace_side"
