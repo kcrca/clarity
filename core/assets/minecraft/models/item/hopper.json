@@ -1,5 +1,5 @@
 {
-    "parent": "block/hopper_down",
+    "parent": "block/hopper",
     "textures": {
         "layer0": "items/hopper"
     }
