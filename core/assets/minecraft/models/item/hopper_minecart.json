@@ -3,9 +3,9 @@
     "textures": {
         "sides": "items/minecart_sides",
         "top": "items/minecart_top",
-        "htop": "blocks/hopper_top_down",
+        "htop": "blocks/hopper_top",
         "side": "blocks/hopper_outside",
-        "inside": "blocks/hopper_inside_down"
+        "inside": "blocks/hopper_inside"
     },
     "elements": [
         {   "from": [ -2, 0, 0 ],

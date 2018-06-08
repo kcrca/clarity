@@ -3,9 +3,9 @@
     "ambientocclusion": false,
     "textures": {
         "particle": "blocks/hopper_outside",
-        "top": "blocks/hopper_top_down",
+        "top": "blocks/hopper_top",
         "side": "blocks/hopper_outside",
-        "inside": "blocks/hopper_inside_down"
+        "inside": "blocks/hopper_inside"
     },
     "elements": [
         {   "from": [ 0, 10, 0 ],

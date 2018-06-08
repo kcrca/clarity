@@ -2,10 +2,10 @@
     "ambientocclusion": false,
     "textures": {
         "particle": "blocks/hopper_outside",
-        "top": "blocks/hopper_top",
+        "top": "blocks/hopper_top_side",
         "side": "blocks/hopper_outside",
         "front": "blocks/hopper_front",
-        "inside": "blocks/hopper_inside"
+        "inside": "blocks/hopper_inside_side"
     },
     "elements": [
         {   "from": [ 0, 10, 0 ],
