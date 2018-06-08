@@ -1,0 +1,11 @@
+{
+    "variants": {
+	"normal": [
+	    {"model": "magma_block"},
+	    {"model": "magma_block_2"},
+	    {"model": "magma_block_3"},
+	    {"model": "magma_block_4"},
+	    {"model": "magma_block_5"}
+	]
+    }
+}
