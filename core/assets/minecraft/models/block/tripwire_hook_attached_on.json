@@ -1,9 +1,9 @@
 {
     "textures": {
         "particle": "blocks/oak_planks",
-        "hook": "blocks/trip_wire_source",
-        "wood": "blocks/wooden_button_pressed",
-        "tripwire": "blocks/trip_wire"
+        "hook": "blocks/tripwire_hook",
+        "wood": "blocks/oak_button_pressed",
+        "tripwire": "blocks/tripwire"
     },
     "elements": [
         {   "from": [ 7.75, 1.25, 0.5 ],
