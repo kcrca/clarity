@@ -2,7 +2,7 @@
     "textures": {
         "particle": "blocks/oak_planks",
         "hook": "blocks/tripwire_hook",
-        "wood": "blocks/oak_button_pressed"
+        "wood": "blocks/oak_on"
     },
     "elements": [
         {   "from": [ 6.2, 4.2, 6.7 ],
