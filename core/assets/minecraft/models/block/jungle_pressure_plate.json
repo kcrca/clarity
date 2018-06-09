@@ -1,6 +1,6 @@
 {
     "parent": "block/pressure_plate",
     "textures": {
-        "texture": "blocks/oak_planks"
+        "texture": "blocks/jungle_planks"
     }
 }
