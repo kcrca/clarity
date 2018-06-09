@@ -1,6 +1,6 @@
 {
     "parent": "block/cube_all",
     "textures": {
-        "all": "items/leaves_oak_tinted"
+        "all": "items/oak_leaves_tinted"
     }
 }

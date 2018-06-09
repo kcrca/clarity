@@ -1,6 +1,6 @@
 {
     "parent": "block/cube_all",
     "textures": {
-        "all": "items/leaves_acacia_tinted"
+        "all": "items/acacia_leaves_tinted"
     }
 }
