@@ -1,6 +1,6 @@
 {
     "parent": "item/fortyfive",
     "textures": {
-        "layer0": "items/beef_raw"
+        "layer0": "items/beef"
     }
 }
