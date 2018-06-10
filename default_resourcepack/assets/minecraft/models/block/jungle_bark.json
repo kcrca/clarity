@@ -1,6 +1,7 @@
 {
-    "parent": "block/cube_all",
+    "parent": "block/cube_column",
     "textures": {
-        "all": "blocks/jungle_log"
+        "end": "blocks/jungle_bark_top",
+        "side": "blocks/jungle_log"
     }
 }

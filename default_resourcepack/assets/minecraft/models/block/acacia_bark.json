@@ -1,6 +1,7 @@
 {
-    "parent": "block/cube_all",
+    "parent": "block/cube_column",
     "textures": {
-        "all": "blocks/acacia_log"
+        "end": "blocks/acacia_bark_top",
+        "side": "blocks/acacia_log"
     }
 }
