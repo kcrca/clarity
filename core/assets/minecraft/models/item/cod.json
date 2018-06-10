@@ -1,7 +1,7 @@
 {
     "parent": "item/fortyfive",
     "textures": {
-        "layer0": "items/fish_cod_raw"
+        "layer0": "items/cod"
     },
     "display": {
         "head": {

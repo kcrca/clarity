@@ -1,6 +1,6 @@
 {
     "parent": "item/fortyfive",
     "textures": {
-        "layer0": "items/fish_clownfish_raw"
+        "layer0": "items/clownfish"
     }
 }
