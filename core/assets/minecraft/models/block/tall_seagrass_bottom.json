@@ -1,0 +1,6 @@
+{
+    "parent": "block/crop2x",
+    "textures": {
+        "crop": "blocks/tall_seagrass_bottom"
+    }
+}

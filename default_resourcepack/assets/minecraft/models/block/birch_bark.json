@@ -1,6 +1,7 @@
 {
-    "parent": "block/cube_all",
+    "parent": "block/cube_column",
     "textures": {
-        "all": "blocks/birch_log"
+        "end": "blocks/birch_bark_top",
+        "side": "blocks/birch_log"
     }
 }

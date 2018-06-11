@@ -150,6 +150,10 @@ blocks/stripped_dark_oak_log_top.png
 blocks/stripped_acacia_log_top.png
 blocks/stripped_jungle_log_top.png
 blocks/stripped_birch_log_top.png
+blocks/spruce_bark_top.png
+blocks/dark_oak_bark_top.png
+blocks/acacia_bark_top.png
+blocks/birch_bark_top.png
 entity/boat/spruce.png
 entity/boat/dark_oak.png
 entity/boat/acacia.png
