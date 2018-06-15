@@ -2,9 +2,9 @@
 
 bin=`dirname $0`
 
-delete_only=0
-if [ x"$1" == x"-d" ]; then
-    delete_only=1
+remove_only=0
+if [ x"$1" == x"-rm" ]; then
+    remove_only=1
     shift
 fi
 
@@ -14,11 +14,11 @@ d=$top/default_resourcepack
 [ -d $d ] || (echo "No default pack: " $d && exit 1) 1>&2
 
 find . -name .[dc] -type l -delete
-if [ "$delete_only" == "1" ]; then
+if [ "$remove_only" == "1" ]; then
     exit 0
 fi
 
-(( $delete_only )) && exit 0
+(( $remove_only )) && exit 0
 
 c=$top/core
 cd $c

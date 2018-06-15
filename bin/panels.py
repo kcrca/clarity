@@ -68,7 +68,11 @@ used_part_files = []
 
 for panel, part_str in panels:
     output_path = '%s.png' % panel
-    blank = os.path.join('parts', output_path)
+    if re.match(r'^\.\./', output_path):
+        print output_path
+    # We remove any leading "../"s to make it possible to rework a file above
+    # the 'container' dir.
+    blank = os.path.join('parts', re.sub(r'^(\.\./)+', '', output_path))
     input = Image.open(blank)
     used_part_files.append(output_path)
 

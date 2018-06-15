@@ -1,6 +1,7 @@
 {
   "gui.recipebook.toggleRecipes.all": "Show all",
   "gui.recipebook.toggleRecipes.craftable": "Show craftable",
+  "gui.recipebook.toggleRecipes.smeltable": "Show smeltable",
 
   "item.minecraft.flint_and_steel": "Lighter"
 }
