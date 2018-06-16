@@ -2,5 +2,12 @@
     "parent": "item/fortyfive",
     "textures": {
         "layer0": "items/clownfish"
+    },
+    "display": {
+        "head": {
+            "rotation": [ 0, 90, -60 ],
+            "translation": [ -7, -4, -7],
+            "scale":[ 0.8, 0.8, 0.8]
+        }
     }
 }
