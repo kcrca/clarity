@@ -17,7 +17,6 @@ from clip import pretty
 # If False, unused alpha channels will be retained.
 remove_unused_alpha = False
 
-global zero_pixel
 saved_overall = 0
 for f in sys.argv[1:]:
     size1 = os.stat(f).st_size
@@ -28,11 +27,19 @@ for f in sys.argv[1:]:
     alpha = img1.getdata(3)
     if remove_unused_alpha and (alpha) == 255 * img1.size[0] * img1.size[1]:
         img1 = raw1.convert("RGB")
+    orig_data = img1.getdata()
+    new_data = []
+    for data in orig_data:
+        if len(data) == 4 and data[3] == 0:
+            new_data.append((0, 0, 0, 0))
+        else:
+            new_data.append(data)
+    img1.putdata(new_data)
     img1.save(f)
     size2 = os.stat(f).st_size
     raw2 = Image.open(f)
     img2 = raw2.convert(img1.mode)
-    same = len(filter(lambda x: x != zero_pixel, ImageChops.difference(img1, img2).getdata())) == 0
+    same = len(filter(lambda x: len(x) != 4 or x[3] != 0, ImageChops.difference(img1, img2).getdata())) == 0
     saved = size1 - size2
     note = ''
     if saved < 0:
