@@ -1,10 +1,10 @@
 {
     "variants": {
-        "normal": [
-	    {"model": "kelp"},
-	    {"model": "kelp_2"},
-	    {"model": "kelp_3"},
-	    {"model": "kelp_4"}
+        "": [
+	    {"model": "block/kelp"},
+	    {"model": "block/kelp_2"},
+	    {"model": "block/kelp_3"},
+	    {"model": "block/kelp_4"}
 	]
     }
 }
