@@ -39,7 +39,7 @@ for frame_num in range(0, FRAMES):
                 draw.rectangle(pos1 + pos2, outline=sq.color + (ALPHA + alpha_adjust,))
     img.paste(frame, (0, frame_num * DIM))
 
-img.save(directory('textures', 'blocks/water_still.png'))
+img.save(directory('textures', 'block/water_still.png'))
 
 DIM *= 2
 
@@ -67,4 +67,4 @@ for frame_num in range(0, FRAMES):
                     draw.rectangle(pos1 + pos2, outline=color + (ALPHA + alpha_adjust,))
     img.paste(frame, (0, frame_num * DIM))
 
-img.save(directory('textures', 'blocks/water_flow.png'))
+img.save(directory('textures', 'block/water_flow.png'))

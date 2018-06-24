@@ -54,7 +54,7 @@ for season in timings:
 # we run the script.
 random.seed(13)
 
-os.chdir(clip.directory('top', 'changes.repack', 'override', 'assets', 'minecraft', 'textures', 'blocks'))
+os.chdir(clip.directory('top', 'changes.repack', 'override', 'assets', 'minecraft', 'textures', 'block'))
 
 transparent = (0, 0, 0, 0)
 for tree in ('oak', 'birch', 'jungle', 'big_oak', 'acacia'):

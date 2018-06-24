@@ -1,11 +1,11 @@
 {
     "parent": "item/combo_minecart",
     "textures": {
-        "block_bottom": "items/chest_minecart",
-        "block_top": "items/chest_minecart",
-        "block_front": "items/chest_minecart_front",
-        "block_back": "items/chest_minecart_side",
-        "block_left": "items/chest_minecart_side",
-        "block_right": "items/chest_minecart_side"
+        "block_bottom": "item/chest_minecart",
+        "block_top": "item/chest_minecart",
+        "block_front": "item/chest_minecart_front",
+        "block_back": "item/chest_minecart_side",
+        "block_left": "item/chest_minecart_side",
+        "block_right": "item/chest_minecart_side"
     }
 }

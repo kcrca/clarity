@@ -1,6 +1,6 @@
 {
     "parent": "item/boat",
     "textures": {
-        "wood": "blocks/dark_oak_planks"
+        "wood": "block/dark_oak_planks"
     }
 }

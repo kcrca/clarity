@@ -1,6 +1,6 @@
 {
     "parent": "item/fortyfive",
     "textures": {
-        "layer0": "items/spectral_arrow"
+        "layer0": "item/spectral_arrow"
     }
 }

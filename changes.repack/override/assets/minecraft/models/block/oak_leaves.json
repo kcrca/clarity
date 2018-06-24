@@ -1,7 +1,7 @@
 {
     "parent": "block/changing_leaves",
     "textures": {
-        "all": "blocks/leaves_oak",
-        "branches": "blocks/branches_oak"
+        "all": "block/leaves_oak",
+        "branches": "block/branches_oak"
     }
 }

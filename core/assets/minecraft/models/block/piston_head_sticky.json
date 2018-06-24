@@ -1,9 +1,9 @@
 {
     "parent": "block/template_piston_head",
     "textures": {
-        "unsticky": "blocks/piston_under_sticky",
-        "side": "blocks/piston_side_sticky",
-        "post": "blocks/piston_side_sticky",
-        "platform": "blocks/piston_top_sticky"
+        "unsticky": "block/piston_under_sticky",
+        "side": "block/piston_side_sticky",
+        "post": "block/piston_side_sticky",
+        "platform": "block/piston_top_sticky"
     }
 }

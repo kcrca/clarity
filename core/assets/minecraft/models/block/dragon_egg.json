@@ -1,9 +1,9 @@
 {   "parent": "block/block",
     "ambientocclusion": false,
     "textures": {
-        "other": "blocks/gold_block",
-        "particle": "blocks/dragon_egg",
-        "all": "blocks/dragon_egg"
+        "other": "block/gold_block",
+        "particle": "block/dragon_egg",
+        "all": "block/dragon_egg"
     },
     "elements": [
         {   "from": [ 6, 15, 6 ],

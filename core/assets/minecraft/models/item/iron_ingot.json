@@ -1,6 +1,6 @@
 {
     "parent": "item/cuboid",
     "textures": {
-        "sides": "blocks/iron_block"
+        "sides": "block/iron_block"
     }
 }

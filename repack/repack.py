@@ -265,7 +265,7 @@ class ConnectedTextureChange(Change):
         if self.do_tile_source:
             # This is pretty hard-coded, but then this is the only case I've seen, so I'll wait to generalize it until
             # I see some other case.
-            edged = os.path.join(self.ctm_pass.src_blocks_dir, base + '.png')
+            edged = os.path.join(self.ctm_pass.src_block_dir, base + '.png')
             img = Image.open(edged).convert('RGBA')
             tile_size = img.size[0] / 2
             tile_img = img.crop((1, 1, 1 + tile_size, 1 + tile_size))
@@ -460,9 +460,9 @@ class Pass(object):
         self.override_top = os.path.join(self.repack_dir, 'override')
         self.dst_assets_dir = os.path.join(self.dst_top, 'assets', 'minecraft')
         self.dst_assets_dir_len = len(self.dst_assets_dir)
-        self.dst_blocks_dir = os.path.join(self.dst_assets_dir, 'textures', 'blocks')
-        self.dst_blocks_dir_len = len(self.dst_blocks_dir)
-        self.src_blocks_dir = self.dst_blocks_dir.replace(self.dst_top, self.src_top)
+        self.dst_block_dir = os.path.join(self.dst_assets_dir, 'textures', 'block')
+        self.dst_block_dir_len = len(self.dst_block_dir)
+        self.src_block_dir = self.dst_block_dir.replace(self.dst_top, self.src_top)
         self.changes_for = {}
         self.re_changes = []
         config = ConfigParser.SafeConfigParser()
@@ -476,7 +476,7 @@ class Pass(object):
             for change_name, targets in config.items('changes'):
                 change = change_by_name[change_name]
                 for target in targets.split():
-                    self.set_changes(os.path.join('assets', 'minecraft', 'textures', 'blocks', target), change)
+                    self.set_changes(os.path.join('assets', 'minecraft', 'textures', 'block', target), change)
         except ConfigParser.NoSectionError:
             pass
 
@@ -565,7 +565,7 @@ class Pass(object):
         if not changes and dst[:self.dst_assets_dir_len] == self.dst_assets_dir:
             base = dst[self.dst_assets_dir_len + 1:]
             changes = self._find_changes(base)
-        if not changes and dst[:self.dst_blocks_dir_len] == self.dst_blocks_dir:
+        if not changes and dst[:self.dst_block_dir_len] == self.dst_block_dir:
             base = os.path.basename(dst)
             changes = self._find_changes(base)
         if not changes:
@@ -600,8 +600,8 @@ class ConnectivityPass(Pass):
     def __init__(self):
         super(ConnectivityPass, self).__init__(core, connectivity)
         self.edgeless_top = normpath('continuity')  # use the generated edgeless images
-        self.edgeless_block_dir = self.src_blocks_dir.replace(core, continuity)
-        self.block_subpath = self.dst_blocks_dir[len(self.dst_top) + 1:]
+        self.edgeless_block_dir = self.src_block_dir.replace(core, continuity)
+        self.block_subpath = self.dst_block_dir[len(self.dst_top) + 1:]
 
     def parse_config(self, config):
         # noinspection PyAttributeOutsideInit

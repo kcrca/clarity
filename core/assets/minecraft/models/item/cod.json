@@ -1,7 +1,7 @@
 {
     "parent": "item/fortyfive",
     "textures": {
-        "layer0": "items/cod"
+        "layer0": "item/cod"
     },
     "display": {
         "head": {

@@ -1,8 +1,8 @@
 {
     "parent": "block/orientable_vertical_all",
     "textures": {
-        "front": "blocks/dispenser_front_vertical",
-        "back": "blocks/dispenser_back_vertical",
-        "side": "blocks/dispenser_top"
+        "front": "block/dispenser_front_vertical",
+        "back": "block/dispenser_back_vertical",
+        "side": "block/dispenser_top"
     }
 }

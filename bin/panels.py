@@ -139,7 +139,7 @@ for panel, part_str in panels:
                         y = y_pos + slot_height - 1
                         draw.bitmap((x, y), digits[i], fill=font_color)
                     used_part_files.append('digits.png')
-                elif part.startswith("items/"):
+                elif part.startswith("item/"):
                     part_img = Image.open('../../%s.png' % part).convert("RGBA")
                     pixels = part_img.load()
                     for x in range(0, part_img.size[0]):

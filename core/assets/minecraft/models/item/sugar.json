@@ -1,6 +1,6 @@
 {
     "parent": "item/fortyfive",
     "textures": {
-        "layer0": "items/sugar"
+        "layer0": "item/sugar"
     }
 }

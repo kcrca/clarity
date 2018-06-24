@@ -1,7 +1,7 @@
 {
     "parent": "item/door",
     "textures": {
-        "top": "blocks/acacia_door_top",
-        "bottom": "blocks/acacia_door_bottom"
+        "top": "block/acacia_door_top",
+        "bottom": "block/acacia_door_bottom"
     }
 }

@@ -1,9 +1,9 @@
 {   "parent": "block/block",
     "textures": {
-        "particle": "blocks/grass_path_top",
-        "top": "blocks/grass_path_top",
-        "side": "blocks/grass_path_side",
-        "bottom": "blocks/dirt"
+        "particle": "block/grass_path_top",
+        "top": "block/grass_path_top",
+        "side": "block/grass_path_side",
+        "bottom": "block/dirt"
     },
     "elements": [
         {   "from": [ 0, 0, 0 ],

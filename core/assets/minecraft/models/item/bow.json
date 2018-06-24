@@ -1,7 +1,7 @@
 {
     "parent": "item/handheld",
     "textures": {
-        "layer0": "items/bow_standby"
+        "layer0": "item/bow_standby"
     },
     "display": {
         "thirdperson_righthand": {

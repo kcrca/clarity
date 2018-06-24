@@ -1,6 +1,6 @@
 {
     "parent": "item/small",
     "textures": {
-        "layer0": "blocks/poppy"
+        "layer0": "block/poppy"
     }
 }

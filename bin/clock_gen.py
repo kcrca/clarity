@@ -77,7 +77,7 @@ def clear_out_tree(dir_name):
     return dir_name
 
 
-texture_dir = clear_out_tree('textures/items/clock')
+texture_dir = clear_out_tree('textures/item/clock')
 model_dir = clear_out_tree('models/item/clock')
 
 clock_width = 4 * digit_size[0] + colon_width
@@ -116,7 +116,7 @@ for i in range(0, ticks + 1):
     # print "%d: %2d:%02d %f (%d)" % (i, hrs, mins, day_frac, round(day_frac * 24000))
 
     name = 'clock_%0*d' % (tick_digit_cnt, i % ticks)
-    texture = 'items/clock/%s' % name
+    texture = 'item/clock/%s' % name
     png_path = texture + '.png'
     model = 'item/clock/%s' % name
     json_path = model + '.json'
@@ -143,7 +143,7 @@ with open('models/item/clock.json', 'w') as f:
     json.dump({
         "parent": out_parent,
         "textures": {
-            "layer0": "items/clock/clock_%0*d" % (tick_digit_cnt, 0)
+            "layer0": "item/clock/clock_%0*d" % (tick_digit_cnt, 0)
         },
         "overrides": overrides
     }, f, indent=4, sort_keys=True)

@@ -18,8 +18,8 @@ import clip
 
 texture_dir = clip.directory('textures')
 paintings = os.path.join(texture_dir, 'painting', 'paintings_kristoffer_zetterstrand.png')
-texture = os.path.join(texture_dir, 'items', 'painting.png')
-animation = os.path.join(texture_dir, 'items', 'painting.png.mcmeta')
+texture = os.path.join(texture_dir, 'item', 'painting.png')
+animation = os.path.join(texture_dir, 'item', 'painting.png.mcmeta')
 breakout_dir = clip.directory('site', 'paintings')
 
 paintings_img = Image.open(paintings).convert('RGBA')

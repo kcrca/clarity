@@ -1,6 +1,6 @@
 {
     "parent": "block/hopper",
     "textures": {
-        "layer0": "items/hopper"
+        "layer0": "item/hopper"
     }
 }

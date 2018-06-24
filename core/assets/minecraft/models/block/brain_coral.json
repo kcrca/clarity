@@ -1,6 +1,6 @@
 {
     "parent": "block/full_cross",
     "textures": {
-        "cross": "blocks/brain_coral"
+        "cross": "block/brain_coral"
     }
 }

@@ -111,7 +111,7 @@ for name in "${dirs[@]}"; do
     "changes")
 	mkdir -p $name
 	tar c -C $name.repack/override . | tar xf - -C $name
-	find $name/assets/minecraft/textures/blocks -type d -depth 1 -print0 | xargs -0 rm -r
+	find $name/assets/minecraft/textures/block -type d -depth 1 -print0 | xargs -0 rm -r
 	find $name \( -name '*.pxm' -o -name '*.psd' -o -name '*.py' -o -name '*.sh' \) -print0 | xargs -0 rm
 	;;
     "connectivity")

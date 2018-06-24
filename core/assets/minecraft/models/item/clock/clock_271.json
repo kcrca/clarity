@@ -1,6 +1,6 @@
 {
     "parent": "item/flat_clock", 
     "textures": {
-        "layer0": "items/clock/clock_271"
+        "layer0": "item/clock/clock_271"
     }
 }

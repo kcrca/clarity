@@ -1,11 +1,11 @@
 {
     "parent": "block/block",
     "textures": {
-        "sides": "items/minecart_sides",
-        "top": "items/minecart_top",
-        "htop": "blocks/hopper_top",
-        "side": "blocks/hopper_outside",
-        "inside": "blocks/hopper_inside"
+        "sides": "item/minecart_sides",
+        "top": "item/minecart_top",
+        "htop": "block/hopper_top",
+        "side": "block/hopper_outside",
+        "inside": "block/hopper_inside"
     },
     "elements": [
         {   "from": [ -2, 0, 0 ],

@@ -20,8 +20,8 @@ NUM_FRAMES = 16
 # just assuming the structure of the images.
 
 texture_dir = clip.directory('textures')
-blocks_dir = os.path.join(texture_dir, 'blocks')
-items_dir = os.path.join(texture_dir, 'items')
+block_dir = os.path.join(texture_dir, 'block')
+item_dir = os.path.join(texture_dir, 'item')
 model_dir = os.path.join(clip.directory('models'), 'block')
 
 
@@ -45,4 +45,4 @@ for i in range(0, NUM_FRAMES):
             anim = anims[side] = Image.new("RGBA", (img.size[0], img.size[1] * NUM_FRAMES))
         anim.paste(img, (0, i * img.size[1]))
 for side in anims:
-    anims[side].save(os.path.join(items_dir, '%s_%s.png' % (detector, side)))
+    anims[side].save(os.path.join(item_dir, '%s_%s.png' % (detector, side)))

@@ -1,6 +1,6 @@
 {
     "parent": "block/crop2x",
     "textures": {
-        "crop": "blocks/seagrass"
+        "crop": "block/seagrass"
     }
 }

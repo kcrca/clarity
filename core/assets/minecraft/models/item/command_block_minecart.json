@@ -1,13 +1,13 @@
 {
     "parent": "item/combo_minecart",
     "textures": {
-        "sides": "items/minecart_sides",
-        "top": "items/minecart_top",
-	"block_bottom": "blocks/command_block_side",
-        "block_top": "blocks/command_block_side",
-        "block_front": "blocks/command_block_front",
-        "block_back": "blocks/command_block_back",
-        "block_left": "blocks/command_block_side",
-        "block_right": "blocks/command_block_side"
+        "sides": "item/minecart_sides",
+        "top": "item/minecart_top",
+	"block_bottom": "block/command_block_side",
+        "block_top": "block/command_block_side",
+        "block_front": "block/command_block_front",
+        "block_back": "block/command_block_back",
+        "block_left": "block/command_block_side",
+        "block_right": "block/command_block_side"
     }
 }

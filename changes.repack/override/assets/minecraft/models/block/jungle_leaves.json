@@ -1,7 +1,7 @@
 {
     "parent": "block/changing_leaves",
     "textures": {
-        "all": "blocks/leaves_jungle",
-        "branches": "blocks/branches_jungle"
+        "all": "block/leaves_jungle",
+        "branches": "block/branches_jungle"
     }
 }

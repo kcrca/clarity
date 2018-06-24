@@ -1,6 +1,6 @@
 {
     "parent": "item/dye",
     "textures": {
-        "layer0": "items/bone_meal"
+        "layer0": "item/bone_meal"
     }
 }

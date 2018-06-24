@@ -1,10 +1,10 @@
 {   "parent": "block/block",
     "textures": {
-        "particle": "blocks/enchanting_table_bottom",
-        "bottom": "blocks/enchanting_table_bottom",
-        "top": "blocks/enchanting_table_top",
-        "side": "blocks/enchanting_table_side",
-	"book": "items/enchanting_table_book"
+        "particle": "block/enchanting_table_bottom",
+        "bottom": "block/enchanting_table_bottom",
+        "top": "block/enchanting_table_top",
+        "side": "block/enchanting_table_side",
+	"book": "item/enchanting_table_book"
     },
     "display": {
         "fixed": {

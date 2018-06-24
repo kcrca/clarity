@@ -1,7 +1,7 @@
 {
     "parent": "block/double_height",
     "textures": {
-        "top": "blocks/fern",
-        "bottom": "blocks/large_fern_bottom"
+        "top": "block/fern",
+        "bottom": "block/large_fern_bottom"
     }
 }

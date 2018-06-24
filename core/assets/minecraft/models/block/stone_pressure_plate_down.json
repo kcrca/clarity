@@ -1,6 +1,6 @@
 {
     "parent": "block/pressure_plate_down",
     "textures": {
-        "texture": "blocks/stone_pressure_plate_down"
+        "texture": "block/stone_pressure_plate_down"
     }
 }

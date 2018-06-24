@@ -1,6 +1,6 @@
 {
     "parent": "block/button_pressed",
     "textures": {
-        "texture": "blocks/dark_oak_on"
+        "texture": "block/dark_oak_on"
     }
 }

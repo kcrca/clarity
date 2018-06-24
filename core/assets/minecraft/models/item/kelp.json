@@ -1,6 +1,6 @@
 {
     "parent": "item/sheet",
     "textures": {
-        "layer0": "blocks/kelp_plant"
+        "layer0": "block/kelp_plant"
     }
 }

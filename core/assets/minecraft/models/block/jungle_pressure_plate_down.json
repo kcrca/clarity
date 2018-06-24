@@ -1,6 +1,6 @@
 {
     "parent": "block/pressure_plate_down",
     "textures": {
-        "texture": "blocks/jungle_on"
+        "texture": "block/jungle_on"
     }
 }

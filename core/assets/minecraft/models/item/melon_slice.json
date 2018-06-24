@@ -1,6 +1,6 @@
 {
     "parent": "item/fortyfive",
     "textures": {
-        "layer0": "items/melon_slice"
+        "layer0": "item/melon_slice"
     }
 }

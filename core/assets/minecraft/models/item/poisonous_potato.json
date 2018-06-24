@@ -1,6 +1,6 @@
 {
     "parent": "item/sheet",
     "textures": {
-        "layer0": "items/poisonous_potato"
+        "layer0": "item/poisonous_potato"
     }
 }
