@@ -1,6 +1,6 @@
 {
     "parent": "block/rail_curved",
     "textures": {
-        "rail": "blocks/rail_corner"
+        "rail": "block/rail_corner"
     }
 }

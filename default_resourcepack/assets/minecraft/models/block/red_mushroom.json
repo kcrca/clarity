@@ -1,6 +1,6 @@
 {
     "parent": "block/cross",
     "textures": {
-        "cross": "blocks/red_mushroom"
+        "cross": "block/red_mushroom"
     }
 }

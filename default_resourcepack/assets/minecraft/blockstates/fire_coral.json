@@ -1,5 +1,5 @@
 {
     "variants": {
-        "normal": { "model": "fire_coral" }
+        "": { "model": "block/fire_coral" }
     }
 }

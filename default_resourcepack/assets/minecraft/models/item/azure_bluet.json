@@ -1,6 +1,6 @@
 {
     "parent": "item/generated",
     "textures": {
-        "layer0": "blocks/azure_bluet"
+        "layer0": "block/azure_bluet"
     }
 }

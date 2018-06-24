@@ -1,10 +1,10 @@
 {
     "ambientocclusion": false,
     "textures": {
-        "particle": "blocks/flower_pot",
-        "flowerpot": "blocks/flower_pot",
-        "dirt": "blocks/dirt",
-        "cactus": "blocks/cactus_side"
+        "particle": "block/flower_pot",
+        "flowerpot": "block/flower_pot",
+        "dirt": "block/dirt",
+        "cactus": "block/cactus_side"
     },
     "elements": [
         {   "from": [ 5, 0, 5 ],

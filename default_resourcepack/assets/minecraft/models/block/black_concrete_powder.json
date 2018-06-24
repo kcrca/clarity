@@ -1,6 +1,6 @@
 {
     "parent": "block/cube_all",
     "textures": {
-        "all": "blocks/black_concrete_powder"
+        "all": "block/black_concrete_powder"
     }
 }

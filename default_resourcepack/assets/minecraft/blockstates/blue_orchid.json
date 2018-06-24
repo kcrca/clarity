@@ -1,5 +1,5 @@
 {
     "variants": {
-        "normal": { "model": "blue_orchid" }
+        "": { "model": "block/blue_orchid" }
     }
 }

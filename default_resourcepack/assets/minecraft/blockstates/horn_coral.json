@@ -1,5 +1,5 @@
 {
     "variants": {
-        "normal": { "model": "horn_coral" }
+        "": { "model": "block/horn_coral" }
     }
 }

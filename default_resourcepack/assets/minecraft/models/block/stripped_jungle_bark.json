@@ -1,7 +1,7 @@
 {
     "parent": "block/cube_column",
     "textures": {
-        "end": "blocks/stripped_jungle_log",
-        "side": "blocks/stripped_jungle_log"
+        "end": "block/stripped_jungle_log",
+        "side": "block/stripped_jungle_log"
     }
 }

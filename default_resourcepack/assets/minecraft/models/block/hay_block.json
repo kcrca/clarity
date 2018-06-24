@@ -1,7 +1,7 @@
 {
     "parent": "block/cube_column",
     "textures": {
-        "end": "blocks/hay_block_top",
-        "side": "blocks/hay_block_side"
+        "end": "block/hay_block_top",
+        "side": "block/hay_block_side"
     }
 }

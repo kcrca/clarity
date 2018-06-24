@@ -1,5 +1,5 @@
 {
     "variants": {
-        "normal": { "model": "potted_brown_mushroom" }
+        "": { "model": "block/potted_brown_mushroom" }
     }
 }

@@ -1,5 +1,5 @@
 {
     "variants": {
-        "normal": { "model": "potted_allium" }
+        "": { "model": "block/potted_allium" }
     }
 }

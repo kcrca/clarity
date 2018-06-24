@@ -1,6 +1,6 @@
 {
     "variants": {
-        "half=lower": { "model": "lilac_bottom" },
-        "half=upper": { "model": "lilac_top" }
+        "half=lower": { "model": "block/lilac_bottom" },
+        "half=upper": { "model": "block/lilac_top" }
     }
 }

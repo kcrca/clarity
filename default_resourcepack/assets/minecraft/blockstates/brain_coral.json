@@ -1,5 +1,5 @@
 {
     "variants": {
-        "normal": { "model": "brain_coral" }
+        "": { "model": "block/brain_coral" }
     }
 }

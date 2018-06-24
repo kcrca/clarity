@@ -1,5 +1,5 @@
 {
     "variants": {
-        "normal": { "model": "pink_stained_glass" }
+        "": { "model": "block/pink_stained_glass" }
     }
 }

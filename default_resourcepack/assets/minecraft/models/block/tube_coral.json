@@ -1,6 +1,6 @@
 {
     "parent": "block/cross",
     "textures": {
-        "cross": "blocks/tube_coral"
+        "cross": "block/tube_coral"
     }
 }

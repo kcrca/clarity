@@ -1,5 +1,5 @@
 {
     "variants": {
-        "normal": { "model": "wet_sponge" }
+        "": { "model": "block/wet_sponge" }
     }
 }

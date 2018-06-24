@@ -1,5 +1,5 @@
 {
     "variants": {
-        "normal": { "model": "dead_bubble_coral_block" }
+        "": { "model": "block/dead_bubble_coral_block" }
     }
 }

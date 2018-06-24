@@ -1,6 +1,6 @@
 {
     "parent": "block/cube_all",
     "textures": {
-        "all": "blocks/dead_fire_coral_block"
+        "all": "block/dead_fire_coral_block"
     }
 }

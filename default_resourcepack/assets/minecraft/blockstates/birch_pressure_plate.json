@@ -1,6 +1,6 @@
 {
     "variants": {
-        "powered=false": { "model": "birch_pressure_plate" },
-        "powered=true": { "model": "birch_pressure_plate_down" }
+        "powered=false": { "model": "block/birch_pressure_plate" },
+        "powered=true": { "model": "block/birch_pressure_plate_down" }
     }
 }

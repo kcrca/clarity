@@ -8,7 +8,7 @@
         }
     },
     "textures": {
-        "end": "blocks/pumpkin_top",
-        "side": "blocks/pumpkin_side"
+        "end": "block/pumpkin_top",
+        "side": "block/pumpkin_side"
     }
 }

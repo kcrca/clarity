@@ -1,5 +1,5 @@
 {
     "variants": {
-        "normal": { "model": "smooth_quartz" }
+        "": { "model": "block/smooth_quartz" }
     }
 }

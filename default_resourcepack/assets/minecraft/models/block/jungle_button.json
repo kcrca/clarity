@@ -1,6 +1,6 @@
 {
     "parent": "block/button",
     "textures": {
-        "texture": "blocks/jungle_planks"
+        "texture": "block/jungle_planks"
     }
 }

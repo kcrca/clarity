@@ -1,7 +1,7 @@
 {
     "parent": "block/two_turtle_eggs",
     "textures": {
-        "particle":"blocks/turtle_egg_very_cracked",
-        "all": "blocks/turtle_egg_very_cracked"
+        "particle":"block/turtle_egg_very_cracked",
+        "all": "block/turtle_egg_very_cracked"
     }
 }

@@ -1,5 +1,5 @@
 {
     "variants": {
-        "normal": { "model": "potted_red_tulip" }
+        "": { "model": "block/potted_red_tulip" }
     }
 }

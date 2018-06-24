@@ -1,6 +1,6 @@
 {
     "parent": "block/cube_all",
     "textures": {
-        "all": "blocks/yellow_stained_glass"
+        "all": "block/yellow_stained_glass"
     }
 }

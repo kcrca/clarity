@@ -1,7 +1,7 @@
 {
     "variants": {
-        "type=bottom": { "model": "spruce_slab" },
-        "type=top": { "model": "spruce_slab_top" },
-        "type=double": { "model": "spruce_planks" }
+        "type=bottom": { "model": "block/spruce_slab" },
+        "type=top": { "model": "block/spruce_slab_top" },
+        "type=double": { "model": "block/spruce_planks" }
     }
 }

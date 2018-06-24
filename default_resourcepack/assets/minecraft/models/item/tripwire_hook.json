@@ -1,6 +1,6 @@
 {
     "parent": "item/generated",
     "textures": {
-        "layer0": "blocks/tripwire_hook"
+        "layer0": "block/tripwire_hook"
     }
 }

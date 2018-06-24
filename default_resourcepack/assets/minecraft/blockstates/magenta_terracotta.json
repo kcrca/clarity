@@ -1,5 +1,5 @@
 {
     "variants": {
-        "normal": { "model": "magenta_terracotta" }
+        "": { "model": "block/magenta_terracotta" }
     }
 }

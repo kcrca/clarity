@@ -1,6 +1,6 @@
 {
     "parent": "block/cube_all",
     "textures": {
-        "all": "blocks/white_terracotta"
+        "all": "block/white_terracotta"
     }
 }

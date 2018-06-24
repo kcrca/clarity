@@ -1,6 +1,6 @@
 {
     "parent": "item/generated",
     "textures": {
-        "layer0": "items/music_disc_13"
+        "layer0": "item/music_disc_13"
     }
 }

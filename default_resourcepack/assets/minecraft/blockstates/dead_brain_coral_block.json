@@ -1,5 +1,5 @@
 {
     "variants": {
-        "normal": { "model": "dead_brain_coral_block" }
+        "": { "model": "block/dead_brain_coral_block" }
     }
 }

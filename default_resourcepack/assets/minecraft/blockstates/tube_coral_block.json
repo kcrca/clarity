@@ -1,5 +1,5 @@
 {
     "variants": {
-        "normal": { "model": "tube_coral_block" }
+        "": { "model": "block/tube_coral_block" }
     }
 }

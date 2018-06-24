@@ -1,6 +1,6 @@
 {
     "parent": "block/wall_inventory",
     "textures": {
-        "wall": "blocks/mossy_cobblestone"
+        "wall": "block/mossy_cobblestone"
     }
 }

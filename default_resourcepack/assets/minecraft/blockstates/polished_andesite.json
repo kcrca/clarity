@@ -1,5 +1,5 @@
 {
     "variants": {
-        "normal": { "model": "polished_andesite" }
+        "": { "model": "block/polished_andesite" }
     }
 }

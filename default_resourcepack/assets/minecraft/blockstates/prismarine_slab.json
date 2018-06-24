@@ -1,7 +1,7 @@
 {
     "variants": {
-        "type=bottom": { "model": "prismarine_slab" },
-        "type=top": { "model": "prismarine_slab_top" },
-        "type=double": { "model": "prismarine" }
+        "type=bottom": { "model": "block/prismarine_slab" },
+        "type=top": { "model": "block/prismarine_slab_top" },
+        "type=double": { "model": "block/prismarine" }
     }
 }

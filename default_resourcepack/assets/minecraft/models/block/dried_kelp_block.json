@@ -1,13 +1,13 @@
 {
     "parent": "block/block",
     "textures": {
-        "particle": "blocks/dried_kelp_side",
-        "down": "blocks/dried_kelp_bottom",
-        "up": "blocks/dried_kelp_top",
-        "north": "blocks/dried_kelp_side",
-        "east": "blocks/dried_kelp_side",
-        "south": "blocks/dried_kelp_side",
-        "west": "blocks/dried_kelp_side"
+        "particle": "block/dried_kelp_side",
+        "down": "block/dried_kelp_bottom",
+        "up": "block/dried_kelp_top",
+        "north": "block/dried_kelp_side",
+        "east": "block/dried_kelp_side",
+        "south": "block/dried_kelp_side",
+        "west": "block/dried_kelp_side"
     },
     "elements": [
         {   "from": [ 0, 0, 0 ],

@@ -1,5 +1,5 @@
 {
     "variants": {
-        "normal": { "model": "magma_block" }
+        "": { "model": "block/magma_block" }
     }
 }

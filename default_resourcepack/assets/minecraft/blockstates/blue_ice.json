@@ -1,5 +1,5 @@
 {
     "variants": {
-        "normal": { "model": "blue_ice" }
+        "": { "model": "block/blue_ice" }
     }
 }

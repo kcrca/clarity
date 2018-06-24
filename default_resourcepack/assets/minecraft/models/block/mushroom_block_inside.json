@@ -1,8 +1,8 @@
 {
     "ambientocclusion": false,
     "textures": {
-        "texture": "blocks/mushroom_block_inside",
-        "particle": "blocks/mushroom_block_inside"
+        "texture": "block/mushroom_block_inside",
+        "particle": "block/mushroom_block_inside"
     },
     "elements": [
         {   "from": [ 0, 0, 0 ],

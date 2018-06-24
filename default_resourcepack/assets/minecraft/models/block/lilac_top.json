@@ -1,6 +1,6 @@
 {
     "parent": "block/cross",
     "textures": {
-        "cross": "blocks/lilac_top"
+        "cross": "block/lilac_top"
     }
 }

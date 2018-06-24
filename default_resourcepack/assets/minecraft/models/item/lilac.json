@@ -1,6 +1,6 @@
 {
     "parent": "item/generated",
     "textures": {
-        "layer0": "blocks/lilac_top"
+        "layer0": "block/lilac_top"
     }
 }

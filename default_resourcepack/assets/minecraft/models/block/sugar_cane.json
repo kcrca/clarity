@@ -1,6 +1,6 @@
 {
     "parent": "block/tinted_cross",
     "textures": {
-        "cross": "blocks/sugar_cane"
+        "cross": "block/sugar_cane"
     }
 }

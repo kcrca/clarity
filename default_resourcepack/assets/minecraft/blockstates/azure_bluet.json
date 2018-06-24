@@ -1,5 +1,5 @@
 {
     "variants": {
-        "normal": { "model": "azure_bluet" }
+        "": { "model": "block/azure_bluet" }
     }
 }

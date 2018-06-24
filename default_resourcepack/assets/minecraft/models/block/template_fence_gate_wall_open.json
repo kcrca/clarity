@@ -1,7 +1,7 @@
 {
     "ambientocclusion": false,
     "textures": {
-        "particle" : "#texture"
+        "particle": "#texture"
     },
     "elements": [
         {   "__comment": "Left-hand post",
@@ -44,7 +44,7 @@
             "from": [ 14, 3, 13 ],
             "to": [ 16, 12, 15 ],
             "faces": {
-                "down":  { "uv": [ 14, 13, 16, 15 ], "texture": "#texture"  },
+                "down":  { "uv": [ 14, 13, 16, 15 ], "texture": "#texture" },
                 "up":    { "uv": [ 14, 13, 16, 15 ], "texture": "#texture" },
                 "north": { "uv": [ 14,  1, 16, 10 ], "texture": "#texture" },
                 "south": { "uv": [ 14,  1, 16, 10 ], "texture": "#texture" },

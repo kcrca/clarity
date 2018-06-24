@@ -1,5 +1,5 @@
 {
     "variants": {
-        "normal": { "model": "potted_oxeye_daisy" }
+        "": { "model": "block/potted_oxeye_daisy" }
     }
 }

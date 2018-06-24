@@ -1,5 +1,5 @@
 {
     "variants": {
-        "normal": { "model": "cobweb" }
+        "": { "model": "block/cobweb" }
     }
 }
