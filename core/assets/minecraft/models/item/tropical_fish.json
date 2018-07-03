@@ -1,7 +1,7 @@
 {
     "parent": "item/fortyfive",
     "textures": {
-        "layer0": "item/clownfish"
+        "layer0": "item/tropical_fish"
     },
     "display": {
         "head": {
