@@ -19,12 +19,15 @@
 §7Game Developers
 §f          Agnes Larsson
 §f          Bartosz Bok
+§f          Cory Scheviak
 §f          Daniel Wustenhoff
 §f          Erik Broes
 §f          Georgii Gavrichev
+§f          Josh Letellier
 §f          Maria Lemón
 §f          Michael Stoyke
 §f          Mikael Hedberg
+§f          Petr Mrázek
 §f          Thomas Guimbretière
 
 §7Realms Developers

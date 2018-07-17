@@ -1,8 +1,5 @@
 {
     "variants": {
-        "facing=east": { "model": "block/bubble_coral_fan", "y": 90 },
-        "facing=south": { "model": "block/bubble_coral_fan", "y": 180 },
-        "facing=west": { "model": "block/bubble_coral_fan", "y": 270 },
-        "facing=north": { "model": "block/bubble_coral_fan", "y": 0 }
+        "": { "model": "block/bubble_coral_fan" }
     }
 }
