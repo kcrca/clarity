@@ -1,0 +1,7 @@
+mid_brown
+grey
+albino
+black
+blond
+dark_brown
+red

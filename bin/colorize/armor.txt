@@ -1,0 +1,14 @@
+diamond
+crystal_green
+gold
+crystal_black
+light
+emerald
+crystal_light_blue
+crystal_blue
+crystal_red
+quartz
+iron
+obsidian
+empty_armor_slot
+crystal_white

@@ -1,0 +1,8 @@
+diamond
+gold
+lapis
+nether_quartz
+coal
+iron
+emerald
+redstone

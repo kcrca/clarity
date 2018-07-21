@@ -1,0 +1,6 @@
+oak
+jungle
+birch
+spruce
+dark_oak
+acacia

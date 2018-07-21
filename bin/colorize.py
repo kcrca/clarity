@@ -1,12 +1,12 @@
 #!/usr/bin/env python
-
+import glob
 import os
 import shutil
 import sys
 import getopt
 import ConfigParser
 import re
-from PIL import Image
+from PIL import Image, ImageDraw
 from bs4 import BeautifulSoup
 import clip
 
@@ -18,6 +18,7 @@ directory = '/tmp'
 
 color_re = re.compile(r'\(?\s*(\d+),\s*(\d+),\s*(\d+),?\s*(\d+)?\s*\)?')
 rgba_re = re.compile(r'rgba\((\d+),\s*(\d+),\s*(\d+)\s*,(\d+\.\d+)\)')
+color_set_re = re.compile(r'([^/]+)\.png')
 file_opt_re = re.compile(r'\?$')
 color_spec_re = re.compile(r'^([a-z]+)@([^:]+):(.*)')
 assets_re = re.compile('/assets/[^/]+')
@@ -102,8 +103,10 @@ def list_colors(color_name, file_name, exclude_colors):
             sys.stdout.write(' %-13s' % ('(%d,%d,%d)' % c[:]))
     print ''
 
+
 def to_camel_case(m):
     return m.group(1).upper()
+
 
 def file_from_color(file_patterns, color_name):
     try:
@@ -192,27 +195,52 @@ def color_for(cell):
         return clip.hex_to_rgba(cell.attrs['bgcolor'])[0:3]
 
 
+def find_rows(img):
+    data = img.load()
+    bg_color = data[0, 0]
+    rows = ()
+    for y in xrange(img.size[1]):
+        color = data[0, y]
+        if color != bg_color:
+            rows += (y + 1,)
+    return rows
+
+
+def find_cols(img):
+    data = img.load()
+    bg_color = data[0, 0]
+    cols = ()
+    for x in xrange(img.size[0]):
+        color = data[x, 0]
+        if color != bg_color:
+            cols += (x + 1,)
+    return cols
+
+
 def parse_colors():
-    with open(clip.directory('config', 'colorize.html')) as fp:
-        doc = BeautifulSoup(fp, 'html.parser')
-        for table in doc.find_all('table'):
-            section = {}
-            which = str(table.caption.contents[0]).strip()
-            for row in table.find_all('tr'):
-                colors = ()
-                try:
-                    if row.attrs['class'][0] == u'Note':
-                        continue
-                except KeyError:
-                    pass
-                row_name = ''
-                for cell in row.find_all('td'):
-                    if row_name == '':
-                        row_name = str(cell.contents[0]).strip()
-                    else:
-                        colors += (color_for(cell),)
-                section[row_name] = colors
-            color_config[which] = section
+    color_dir = clip.directory('config', 'colorize')
+    for color_file in glob.glob('%s/*.png' % color_dir):
+        img = Image.open(color_file)
+        rows = find_rows(img)
+        with open(color_file.replace('.png', '.txt')) as fp:
+            name_lines = fp.read()
+        names = name_lines.split('\n')[:-1]
+        if len(names) != len(rows):
+            raise Exception('%s: %d Names found for %d rows' % (color_file, len(names), len(rows)))
+        cols = find_cols(img)
+        data = img.load()
+
+        which = color_set_re.search(color_file).group(1)
+        i = 0
+        color_set = {}
+        for y in rows:
+            colors = ()
+            for x in cols:
+                colors += (data[x, y],)
+            color_set[names[i]] = colors
+            i += 1
+        color_config[which] = color_set
+    return
 
 
 def main(argv=None):

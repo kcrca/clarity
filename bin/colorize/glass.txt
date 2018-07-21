@@ -1,0 +1,16 @@
+light_gray
+pink
+brown
+gray
+purple
+blue
+yellow
+black
+light_blue
+green
+orange
+cyan
+white
+magenta
+red
+lime
