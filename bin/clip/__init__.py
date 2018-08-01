@@ -35,15 +35,23 @@ def directory(name, *args):
     :return: The full path of the named directory.
     """
     top = os.path.dirname(os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
-    path = {
+    dirs = {
         'bin': 'bin',
         'config': 'bin',
         'top': '',
         'textures': 'core/assets/minecraft/textures',
+        'blockstates': 'core/assets/minecraft/blockstates',
         'models': "core/assets/minecraft/models",
         'minecraft': "core/assets/minecraft",
         'site': 'site',
-    }[name]
+    }
+    is_defaults = name == 'defaults'
+    if is_defaults:
+        name = args[0]
+        args = args[1:]
+    path = dirs[name]
+    if is_defaults:
+        path = path.replace('core/', 'default_resourcepack/')
     path = os.path.join(top, path)
     for arg in args:
         for part in arg.split('/'):
