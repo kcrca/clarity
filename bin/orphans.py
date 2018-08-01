@@ -8,27 +8,35 @@ import clip
 import re
 
 
-def find_models(state):
-    if state is None:
+def find_models(data):
+    if data is None:
         return []
-
-    if isinstance(state, list):
+    if isinstance(data, list):
         models = []
-        for member in state:
+        for member in data:
             models += find_models(member)
         return models
-
-    if isinstance(state, dict):
+    if isinstance(data, dict):
         try:
-            return (state['model'],)
+            return (data['model'],)
         except KeyError:
             pass
         models = []
-        for key in state:
-            models += find_models(state[key])
+        for key in data:
+            models += find_models(data[key])
         return models
-
     return []
+
+
+def find_textures(data):
+    textures = []
+    try:
+        textures_block = data['textures']
+        for texture_name in textures_block:
+            textures.append(textures_block[texture_name])
+    except KeyError:
+        pass
+    return textures
 
 
 def models_for(state):
@@ -58,34 +66,10 @@ def models_under(variants):
     return models
 
 
-subpath_re = re.compile(r'([^/]+/[^/]+)\.json$')
-
-blockstates = {}
-
-for file in glob.glob('%s/*.json' % clip.directory('defaults', 'blockstates')):
-    with open(file) as fp:
-        blockstates[os.path.basename(file)] = json.load(fp)
-
-for file in glob.glob('%s/*.json' % clip.directory('blockstates')):
-    with open(file) as fp:
-        blockstates[os.path.basename(file)] = json.load(fp)
-
-# Item models have nothing that refers to them. One of our item models is unused if there is no
-# corresponding item model in the defaults
-
-models = {}
-unused_models = {}
-
-default_models = clip.directory('defaults', 'models')
-
-# Find all of our own models, and store them as possibly unused
-for file in glob.glob('%s/block/*.json' % clip.directory('models')):
-    model_file = subpath_re.search(file).group(1)
-    unused_models[model_file] = True
-
-
 def import_model(model_name):
     if model_name in models:
+        return
+    if model_name.startswith('builtin/'):
         return
     try:
         with open(os.path.join(clip.directory('models'), model_name + '.json')) as fp:
@@ -105,6 +89,29 @@ def import_model(model_name):
         pass
 
 
+subpath_re = re.compile(r'([^/]+/[^/]+)\.[a-z]+$')
+
+blockstates = {}
+models = {}
+unused_models = {}
+
+# First we pull in all the models for the blocks, using the blockstates files as the roots of the tree.
+
+for file in glob.glob('%s/*.json' % clip.directory('defaults', 'blockstates')):
+    with open(file) as fp:
+        blockstates[os.path.basename(file)] = json.load(fp)
+
+for file in glob.glob('%s/*.json' % clip.directory('blockstates')):
+    with open(file) as fp:
+        blockstates[os.path.basename(file)] = json.load(fp)
+
+default_models = clip.directory('defaults', 'models')
+
+# Find all of our own models, and store them as possibly unused
+for file in glob.glob('%s/block/*.json' % clip.directory('models')):
+    model_name = subpath_re.search(file).group(1)
+    unused_models[model_name] = True
+
 for state_name in blockstates:
     state = blockstates[state_name]
     for model_name in models_for(state):
@@ -114,6 +121,60 @@ for state_name in blockstates:
             pass
         import_model(model_name)
 
-print len(models)
-print len(unused_models)
-print '\n'.join(unused_models)
+# Next we look at all the items
+
+for file in glob.glob('%s/item/*.json' % clip.directory('models')) + \
+            glob.glob('%s/item/*.json' % clip.directory('defaults', 'models')):
+    model_name = subpath_re.search(file).group(1)
+    import_model(model_name)
+
+print 'Models: %s' % len(models)
+if len(unused_models) > 0:
+    print 'UNUSED models:\n    ',
+    print '\n    '.join(sorted(unused_models))
+
+# Now lets look for unused textures
+textures = {}
+unused_textures = {}
+special_textures = (
+    # Textures that are not reachable by the regular techniques
+    'block/destroy_stage_0',
+    'block/destroy_stage_1',
+    'block/destroy_stage_2',
+    'block/destroy_stage_3',
+    'block/destroy_stage_4',
+    'block/destroy_stage_5',
+    'block/destroy_stage_6',
+    'block/destroy_stage_7',
+    'block/destroy_stage_8',
+    'block/destroy_stage_9',
+    'block/lava_flow',
+    'block/water_flow',
+    'item/clock_font',
+    'item/empty_armor_slot_boots',
+    'item/empty_armor_slot_chestplate',
+    'item/empty_armor_slot_helmet',
+    'item/empty_armor_slot_leggings',
+    'item/empty_armor_slot_shield',
+)
+
+for file in glob.glob('%s/item/*.png' % clip.directory('textures')) + glob.glob(
+        '%s/block/*.png' % clip.directory('textures')):
+    texture_name = subpath_re.search(file).group(1)
+    if texture_name not in special_textures:
+        unused_textures[texture_name] = True
+
+for model_name in models:
+    model = models[model_name]
+    for texture_name in find_textures(model):
+        # print '%s: %s' % (model_name, texture_name)
+        textures[texture_name] = True
+        try:
+            del unused_textures[texture_name]
+        except KeyError:
+            pass
+
+print 'Textures: %d' % len(textures)
+if len(unused_textures) > 0:
+    print 'UNUSED textures:\n   ',
+    print '\n    '.join(sorted(unused_textures))
