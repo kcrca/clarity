@@ -34,22 +34,6 @@ def find_models(state):
 def models_for(state):
     return find_models(state)
 
-    try:
-        variants = state['variants']
-        models += models_under(variants)[:]
-    except KeyError:
-        pass
-
-    try:
-        for part in state['multipart']:
-            v = part['apply']
-            models += models_under(v)[:]
-            print type(v)
-    except KeyError:
-        pass
-
-    return models
-
 
 def models_under(variants):
     models = []
@@ -94,18 +78,41 @@ unused_models = {}
 
 default_models = clip.directory('defaults', 'models')
 
+# Find all of our own models, and store them as possibly unused
 for file in glob.glob('%s/block/*.json' % clip.directory('models')):
     model_file = subpath_re.search(file).group(1)
     unused_models[model_file] = True
 
+
+def import_model(model_name):
+    if model_name in models:
+        return
+    try:
+        with open(os.path.join(clip.directory('models'), model_name + '.json')) as fp:
+            model = json.load(fp)
+    except IOError:
+        with open(os.path.join(clip.directory('defaults', 'models'), model_name + '.json')) as fp:
+            model = json.load(fp)
+    models[model_name] = model
+    try:
+        del unused_models[model_name]
+    except KeyError:
+        pass
+
+    try:
+        import_model(model['parent'])
+    except KeyError:
+        pass
+
+
 for state_name in blockstates:
     state = blockstates[state_name]
-    for model in models_for(state):
+    for model_name in models_for(state):
         try:
-            del unused_models[model]
+            del unused_models[model_name]
         except KeyError:
             pass
-        models[model] = True
+        import_model(model_name)
 
 print len(models)
 print len(unused_models)

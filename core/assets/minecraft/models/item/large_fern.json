@@ -1,5 +1,5 @@
 {
-    "parent": "block/double_height",
+    "parent": "item/double_height",
     "textures": {
         "top": "block/fern",
         "bottom": "block/large_fern_bottom"
