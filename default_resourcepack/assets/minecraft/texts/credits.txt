@@ -70,7 +70,7 @@
 §f          Oscar Nilsson
 
 §7User Experience Developers
-§f          Daria Vodopivec
+§f          Dario Vodopivec
 §f          Emelie Sidesiö
 §f          Michael Novén
 §f          Oleg Kozitsyn
