@@ -1,6 +1,6 @@
 {
     "parent": "item/dye",
     "textures": {
-        "layer0": "item/cactus_green"
+        "layer0": "item/red_dye"
     }
 }
