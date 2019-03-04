@@ -1,0 +1,10 @@
+{
+    "parent": "block/scaffolding_stable",
+    "textures": {
+        "particle": "block/scaffolding_top",
+        "top": "block/scaffolding_top",
+        "under": "block/scaffolding_under",
+        "side": "block/scaffolding_side",
+        "bottom": "block/scaffolding_bottom"
+    }
+}
