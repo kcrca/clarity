@@ -5,6 +5,7 @@
         "top": "block/scaffolding_top",
         "under": "block/scaffolding_under",
         "side": "block/scaffolding_side",
-        "bottom": "block/scaffolding_bottom"
+        "bottom": "block/scaffolding_bottom",
+        "bottom_up": "block/scaffolding_bottom"
     }
 }
