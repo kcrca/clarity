@@ -19,7 +19,6 @@
         {   "from": [ 6, 7, 6 ],
             "to": [ 10, 9, 10 ],
             "faces": {
-                "down":  { "uv": [  1, 10,  5, 14 ], "texture": "#all"},
                 "up":    { "uv": [  1, 10,  5, 14 ], "texture": "#all" },
                 "north": { "uv": [ 1, 0, 5,  2 ], "texture": "#all" },
                 "south": { "uv": [ 1, 0, 5,  2 ], "texture": "#all" },
