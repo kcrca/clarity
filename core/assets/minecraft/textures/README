@@ -133,6 +133,16 @@ block/acacia_log.png
 block/spruce_log_top.png
 block/dark_oak_log_top.png
 block/acacia_log_top.png
+entity/signs/spruce.png
+entity/signs/dark_oak.png
+entity/signs/acacia.png
+entity/signs/jungle.png
+entity/signs/birch.png
+item/spruce_sign.png
+item/dark_oak_sign.png
+item/acacia_sign.png
+item/jungle_sign.png
+item/birch_sign.png
 block/stripped_spruce_log_top.png
 block/stripped_dark_oak_log_top.png
 block/stripped_acacia_log_top.png
