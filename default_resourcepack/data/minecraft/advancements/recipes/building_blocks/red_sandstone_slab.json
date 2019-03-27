@@ -26,16 +26,6 @@
         ]
       }
     },
-    "has_cut_red_sandstone": {
-      "trigger": "minecraft:inventory_changed",
-      "conditions": {
-        "items": [
-          {
-            "item": "minecraft:cut_red_sandstone"
-          }
-        ]
-      }
-    },
     "has_the_recipe": {
       "trigger": "minecraft:recipe_unlocked",
       "conditions": {
@@ -47,7 +37,6 @@
     [
       "has_red_sandstone",
       "has_chiseled_red_sandstone",
-      "has_cut_red_sandstone",
       "has_the_recipe"
     ]
   ]
