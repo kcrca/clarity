@@ -1,13 +1,14 @@
 #!/usr/bin/env python
+import ConfigParser
+import getopt
 import glob
 import os
+import re
 import shutil
 import sys
-import getopt
-import ConfigParser
-import re
-from PIL import Image, ImageDraw
-from bs4 import BeautifulSoup
+
+from PIL import Image
+
 import clip
 
 __author__ = 'arnold'
