@@ -1,6 +1,7 @@
 {
     "parent": "block/orientable_cube",
     "textures": {
+        "particle": "block/jigsaw_top",
         "up": "block/jigsaw_top",
         "north": "block/jigsaw_side",
         "south": "block/jigsaw_side",
