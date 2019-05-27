@@ -33,10 +33,3 @@ for i in range(0, 10):
         for y in range(0, 8):
             if digit_pixels[x, y][0] > 0:
                 digit_pixels[x, y] = (0xea, 00, 00)
-
-for i in range(0, 16):
-    charge_img = Image.new('RGBA', (11, 7))
-    if i >= 10:
-        charge_img.paste(digit_imgs[i / 10], (0, 0))
-    charge_img.paste(digit_imgs[i % 10], (6, 0))
-    charge_img.save(os.path.join(texture_dir, 'charge_%02d.png' % i))
