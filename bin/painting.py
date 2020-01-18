@@ -4,6 +4,7 @@
 #
 #     (*) The animated item, which cycles through the individual paintings.
 #     (*) Broken-out images of each individual painting for the site.
+import glob
 
 __author__ = 'arnold'
 
@@ -17,51 +18,32 @@ import clip
 # just assuming the structure of the images.
 
 texture_dir = clip.directory('textures')
-paintings = os.path.join(texture_dir, 'painting', 'paintings_kristoffer_zetterstrand.png')
+paintings = os.path.join(texture_dir, 'painting')
 texture = os.path.join(texture_dir, 'item', 'painting.png')
 animation = os.path.join(texture_dir, 'item', 'painting.png.mcmeta')
 breakout_dir = clip.directory('site', 'paintings')
 
-paintings_img = Image.open(paintings).convert('RGBA')
-assert paintings_img.size[0] == paintings_img.size[1]
-img_size = paintings_img.size[0]
-img_scale = img_size / 256
-pixel_scale = 16 * img_scale
-max_size = 4 * pixel_scale
-min_size = 1 * pixel_scale
-
-images = []
-for x in range(0, 7):
-    images.append((x, 0, 1, 1))
-for x in range(0, 5):
-    images.append((x * 2, 2, 2, 1))
-for x in range(0, 2):
-    images.append((x, 4, 1, 2))
-images.append((0, 6, 4, 2))
-for x in range(0, 6):
-    images.append((x * 2, 8, 2, 2))
-for x in range(0, 3):
-    images.append((x * 4, 12, 4, 4))
-for y in range(0, 2):
-    images.append((12, 4 + y * 3, 4, 3))
+images = list(glob.glob(os.path.join(paintings, '*.png')))
+images.remove(os.path.join(paintings, 'back.png'))
 
 # Set the seed to prevent the png changing each time this is run. Otherwise we end up checking a new png file each time
 # we run the script.
 random.seed(13)
 random.shuffle(images)
 
-assert len(images) == 26
-
-item_img = Image.new('RGBA', (max_size, max_size * len(images)), (0, 0, 0, 0))
 thumb_scale = 4
 
 frames = []
+max_size = 0
+for img_file in images:
+    art_img = Image.open(img_file)
+    w, h = art_img.size
+    max_size = max(w, h, max_size)
+
+item_img = Image.new('RGBA', (max_size, max_size * len(images)), (0, 0, 0, 0))
 for i in range(0, len(images)):
-    art_desc = images[i]
-    x, y, w, h = [v * pixel_scale for v in art_desc]
-    art_img = paintings_img.crop((x, y, x + w, y + h))
-    art_thumb_img = art_img.copy().resize((w * thumb_scale, h * thumb_scale))
-    art_thumb_img.save(os.path.join(breakout_dir, "painting_%02d.png" % i))
+    art_img = Image.open(images[i])
+    w, h = art_img.size
     # scale image up to fix in max size
     art_scale = min(max_size / w, max_size / h)
     if art_scale > 1:

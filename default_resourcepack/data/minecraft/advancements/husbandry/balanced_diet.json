@@ -306,6 +306,30 @@
           "item": "minecraft:dried_kelp"
         }
       }
+    },
+    "suspicious_stew": {
+      "trigger": "minecraft:consume_item",
+      "conditions": {
+        "item": {
+          "item": "minecraft:suspicious_stew"
+        }
+      }
+    },
+    "sweet_berries": {
+      "trigger": "minecraft:consume_item",
+      "conditions": {
+        "item": {
+          "item": "minecraft:sweet_berries"
+        }
+      }
+    },
+    "honey_bottle": {
+      "trigger": "minecraft:consume_item",
+      "conditions": {
+        "item": {
+          "item": "minecraft:honey_bottle"
+        }
+      }
     }
   },
   "requirements": [
@@ -416,6 +440,15 @@
     ],
     [
       "dried_kelp"
+    ],
+    [
+      "suspicious_stew"
+    ],
+    [
+      "sweet_berries"
+    ],
+    [
+      "honey_bottle"
     ]
   ]
 }

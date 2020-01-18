@@ -1,0 +1,16 @@
+{
+    "multipart": [
+        {   "when": { "age": "0" },
+            "apply": { "model": "block/bamboo1_age0" }
+        },
+        {   "when": { "age": "1" },
+            "apply": { "model": "block/bamboo1_age1" }
+        },
+        {   "when": { "leaves": "small" },
+            "apply": { "model": "block/bamboo_small_leaves" }
+        },
+        {   "when": { "leaves": "large" },
+            "apply": { "model": "block/bamboo_large_leaves" }
+        }
+    ]
+}

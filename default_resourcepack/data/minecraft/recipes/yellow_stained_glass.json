@@ -1,5 +1,5 @@
 {
-  "type": "crafting_shaped",
+  "type": "minecraft:crafting_shaped",
   "group": "stained_glass",
   "pattern": [
     "###",
@@ -11,7 +11,7 @@
       "item": "minecraft:glass"
     },
     "X": {
-      "item": "minecraft:dandelion_yellow"
+      "item": "minecraft:yellow_dye"
     }
   },
   "result": {

@@ -1,9 +1,9 @@
 {
-  "type": "crafting_shapeless",
+  "type": "minecraft:crafting_shapeless",
   "group": "wool",
   "ingredients": [
     {
-      "item": "minecraft:rose_red"
+      "item": "minecraft:red_dye"
     },
     {
       "item": "minecraft:white_wool"

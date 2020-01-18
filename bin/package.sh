@@ -155,5 +155,3 @@ for f in `find site -name build.sh`; do
 done
 echo ... site/update_version.sh $version
 site/update_version.sh $version
-echo ... site/split_paintings.sh
-site/split_paintings.sh $top/clarity/assets/minecraft/textures/painting/paintings_kristoffer_zetterstrand.png

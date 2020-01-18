@@ -1,5 +1,5 @@
 {
-  "type": "crafting_shaped",
+  "type": "minecraft:crafting_shaped",
   "pattern": [
     "///",
     " / ",
@@ -10,7 +10,7 @@
       "item": "minecraft:stick"
     },
     "_": {
-      "item": "minecraft:stone_slab"
+      "item": "minecraft:smooth_stone_slab"
     }
   },
   "result": {

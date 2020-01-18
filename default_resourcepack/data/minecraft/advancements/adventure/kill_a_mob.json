@@ -2,7 +2,8 @@
   "parent": "minecraft:adventure/root",
   "display": {
     "icon": {
-      "item": "minecraft:iron_sword"
+      "item": "minecraft:iron_sword",
+      "nbt": "{Damage:0}"
     },
     "title": {
       "translate": "advancements.adventure.kill_a_mob.title"
@@ -45,14 +46,6 @@
       "conditions": {
         "entity": {
           "type": "minecraft:enderman"
-        }
-      }
-    },
-    "minecraft:polar_bear": {
-      "trigger": "minecraft:player_killed_entity",
-      "conditions": {
-        "entity": {
-          "type": "minecraft:polar_bear"
         }
       }
     },
@@ -207,6 +200,22 @@
           "type": "minecraft:drowned"
         }
       }
+    },
+    "minecraft:pillager": {
+      "trigger": "minecraft:player_killed_entity",
+      "conditions": {
+        "entity": {
+          "type": "minecraft:pillager"
+        }
+      }
+    },
+    "minecraft:ravager": {
+      "trigger": "minecraft:player_killed_entity",
+      "conditions": {
+        "entity": {
+          "type": "minecraft:ravager"
+        }
+      }
     }
   },
   "requirements": [
@@ -215,7 +224,6 @@
       "minecraft:spider",
       "minecraft:zombie_pigman",
       "minecraft:enderman",
-      "minecraft:polar_bear",
       "minecraft:blaze",
       "minecraft:creeper",
       "minecraft:evoker",
@@ -234,7 +242,9 @@
       "minecraft:zombie",
       "minecraft:zombie_villager",
       "minecraft:phantom",
-      "minecraft:drowned"
+      "minecraft:drowned",
+      "minecraft:pillager",
+      "minecraft:ravager"
     ]
   ]
 }

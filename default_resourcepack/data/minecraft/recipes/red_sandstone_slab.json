@@ -1,5 +1,5 @@
 {
-  "type": "crafting_shaped",
+  "type": "minecraft:crafting_shaped",
   "pattern": [
     "###"
   ],
@@ -10,9 +10,6 @@
       },
       {
         "item": "minecraft:chiseled_red_sandstone"
-      },
-      {
-        "item": "minecraft:cut_red_sandstone"
       }
     ]
   },

@@ -1,0 +1,6 @@
+{
+    "parent": "item/dye",
+    "textures": {
+        "layer0": "item/black_dye"
+    }
+}
