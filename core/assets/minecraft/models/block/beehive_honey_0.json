@@ -4,7 +4,7 @@
         "particle": "block/beehive_side",
         "bottom": "block/beehive_end",
         "top": "block/beehive_end",
-        "front": "block/beehive_front",
+        "front": "block/beehive_front_honey_0",
         "side": "block/beehive_side"
     }
 }
