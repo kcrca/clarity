@@ -155,3 +155,5 @@ for f in `find site -name build.sh`; do
 done
 echo ... site/update_version.sh $version
 site/update_version.sh $version
+echo ... site/favicon.sh $version
+site/favicon.sh $version
