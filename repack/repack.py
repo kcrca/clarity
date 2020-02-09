@@ -627,7 +627,8 @@ for output_dir in (continuity, connectivity):
 clarity_pass = Pass(core, clarity)
 connectivity_pass = ConnectivityPass()
 continuity_pass = ContinuityPass(connectivity_pass)
-passes = (clarity_pass, continuity_pass, connectivity_pass)
+# connectivity pass currently disabled because that's only up to 1.14
+passes = (clarity_pass, continuity_pass)
 
 passes[0].default_change = CopyChange()
 

@@ -2,7 +2,8 @@
 rm -f *.gif
 top=../../..
 set -e
-for c in clarity connectivity continuity; do
+# Disabled connectivity beause it is only up to 1.14
+for c in clarity continuity; do
     uc=$(echo "$(tr a-z A-Z <<< ${c:0:1})${c:1}")
     convert -composite \
 	${c}_example.png \

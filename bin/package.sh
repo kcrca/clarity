@@ -13,7 +13,7 @@ top="$PWD"
 packs=$top/site/packs
 version=`cat core/pack_version.txt`
 
-dirs=(clarity continuity connectivity changes beguile)
+dirs=(clarity continuity changes beguile)
 rm -rf $packs $dirs
 
 # Create the packs dir
