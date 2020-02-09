@@ -14,5 +14,5 @@ for s in spring summer fall winter; do
 	$g
     files=("${files[@]}" "$g")
 done
-convert -delay 210 "${files[@]}" -loop 0 ../../changes_anim.gif
+convert -delay 210 "${files[@]}" -loop 0 -resize 750x483 ../../changes_anim.gif
 rm -f *.gif

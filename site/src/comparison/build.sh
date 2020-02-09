@@ -11,5 +11,5 @@ for c in clarity continuity; do
 	-fill white -font Verdana -pointsize 24 -gravity SouthWest -annotate +84+6 ${uc} \
 	${c}_frame.gif
 done
-convert -delay 100 *.gif -loop 0 ../../comparison_anim.gif
+convert -delay 100 *.gif -resize 750x483 -loop 0 ../../comparison_anim.gif
 rm -f *.gif
