@@ -1,8 +1,5 @@
 #!/bin/sh
 set -e
 cd `dirname $0`
-dst_dir="site"
-if [ x"$1" == x"-f" ]; then
-    dst_dir="."
-fi
+dst_dir="."
 rsync -c -avz --delete --delete-excluded --exclude=src --exclude='.??*' --exclude='*'.sh --exclude='?' --exclude='.?' . kcrca_claritypack@ssh.phx.nearlyfreespeech.net:$dst_dir/
