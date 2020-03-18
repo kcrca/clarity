@@ -1,7 +1,6 @@
 {
     "parent": "block/template_glass_pane_bend",
     "textures": {
-        "edge": "block/blue_stained_glass_pane_top",
         "pane": "block/blue_stained_glass"
     }
 }

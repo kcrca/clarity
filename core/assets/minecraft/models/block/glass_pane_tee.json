@@ -1,7 +1,6 @@
 {
     "parent": "block/template_glass_pane_tee",
     "textures": {
-        "edge": "block/glass_pane_top",
         "pane": "block/glass"
     }
 }
