@@ -147,7 +147,7 @@ for panels_desc, part_str in panels:
                             for y in range(0, part_img.size[1]):
                                 c = pixels[x, y]
                                 if c[3] != 0:
-                                    pixels[x, y] = (c[0], c[1], c[2], int(round(c[3] * 0.2)))
+                                    pixels[x, y] = (c[0], c[1], c[2], int(round(c[3] * 0.4)))
                         alpha_composite(output, part_img, (x_pos, y_pos), rotation)
                     else:
                         part_img = Image.open('parts/%s' % part).convert("RGBA")
