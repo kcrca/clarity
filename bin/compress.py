@@ -30,10 +30,14 @@ for f in sys.argv[1:]:
     orig_data = img1.getdata()
     new_data = []
     for data in orig_data:
+        if len(data) == 4 and data[3] > 0 and data[3] < 10:
+            print f
+            break
         if len(data) == 4 and data[3] == 0:
             new_data.append((0, 0, 0, 0))
         else:
             new_data.append(data)
+    continue
     img1.putdata(new_data)
     img1.save(f)
     size2 = os.stat(f).st_size
