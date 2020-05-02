@@ -1,6 +1,6 @@
 diamond
 crystal_green
-gold
+golden
 crystal_black
 light
 emerald

@@ -1,13 +1,13 @@
 stone
 diamond
 crystal_green
-gold
+golden
 crystal_black
 emerald
 crystal_light_blue
 crystal_blue
 crystal_red
-wood
+wooden
 quartz
 iron
 obsidian
