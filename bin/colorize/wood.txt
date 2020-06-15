@@ -4,3 +4,4 @@ birch
 spruce
 dark_oak
 acacia
+warped log=stem

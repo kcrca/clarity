@@ -27,6 +27,7 @@ camel_caps_re = re.compile('_([a-z])')
 
 aliases = {}
 color_config = {}
+name_fixes = {}
 camel_caps = False
 
 
@@ -128,6 +129,9 @@ def file_from_color(file_patterns, color_name):
             if camel_caps:
                 n = camel_caps_re.sub(to_camel_case, n[0].capitalize() + n[1:])
             cpath = file_pat.replace('COLOR', n)
+            if n in name_fixes:
+                for pat in name_fixes[n]:
+                    cpath = cpath.replace(pat[0], pat[1])
             if os.path.isfile(cpath):
                 return color_name, cpath
 
@@ -218,6 +222,16 @@ def find_cols(img):
     return cols
 
 
+def build_name_fixes(fix_specs):
+    if len(fix_specs) == 0:
+        return None
+    fixes = []
+    for f in fix_specs:
+        rhs, lhs = f.split('=')
+        fixes.append([rhs, lhs])
+    return fixes
+
+
 def parse_colors():
     color_dir = clip.directory('config', 'colorize')
     for color_file in glob.glob('%s/*.png' % color_dir):
@@ -238,7 +252,12 @@ def parse_colors():
             colors = ()
             for x in cols:
                 colors += (data[x, y],)
-            color_set[names[i]] = colors
+            name = names[i]
+            name_split = name.split()
+            if len(name_split) > 1:
+                name = name_split[0]
+                name_fixes[name] = build_name_fixes(name_split[1:])
+            color_set[name] = colors
             i += 1
         color_config[which] = color_set
     return
