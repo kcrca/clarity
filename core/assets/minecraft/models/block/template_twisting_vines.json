@@ -1,0 +1,27 @@
+{
+    "parent": "block/block",
+    "ambientocclusion": false,
+    "textures": {
+        "particle": "#vine"
+    },
+    "elements": [
+        {   "from": [ -0.25, -0.25, 8 ],
+            "to": [ 16.25, 16.25, 8 ],
+            "rotation": { "origin": [ 8, 8, 8 ], "axis": "z", "angle": 45, "rescale": false },
+            "shade": false,
+            "faces": {
+                "north": { "uv": [ 0, 0, 16, 16 ], "texture": "#vine" },
+                "south": { "uv": [ 0, 0, 16, 16 ], "texture": "#vine", "rotation": 90 }
+            }
+        },
+        {   "from": [ 8, -0.25, -0.25 ],
+            "to": [ 8, 16.25, 16.25 ],
+            "rotation": { "origin": [ 8, 8, 8 ], "axis": "x", "angle": 45, "rescale": false },
+            "shade": false,
+            "faces": {
+                "west": { "uv": [ 0, 0, 16, 16 ], "texture": "#vine" },
+                "east": { "uv": [ 0, 0, 16, 16 ], "texture": "#vine", "rotation": 90 }
+            }
+        }
+    ]
+}
