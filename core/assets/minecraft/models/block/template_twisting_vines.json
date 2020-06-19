@@ -1,5 +1,5 @@
 {
-    "parent": "block/block",
+    "parent": "block/bloc",
     "ambientocclusion": false,
     "textures": {
         "particle": "#vine"
