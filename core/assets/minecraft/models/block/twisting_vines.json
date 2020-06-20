@@ -1,5 +1,5 @@
 {
-    "parent": "block/template_twisting_vines",
+    "parent": "block/template_vines",
     "textures": {
 	"vine": "block/twisting_vines"
     }
