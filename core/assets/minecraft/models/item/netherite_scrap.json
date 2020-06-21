@@ -1,0 +1,6 @@
+{
+    "parent": "item/scraps",
+    "textures": {
+        "sides": "block/netherite_block"
+    }
+}
