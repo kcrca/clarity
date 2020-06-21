@@ -24,26 +24,24 @@ c=$top/core
 cd $c
 for f in `find . -type d`; do
     o=$d/$f
-    [ -d $o ] && echo ln -s $o $f/.d && ln -s $o $f/.d
+    [ -d $o ] && ln -s $o $f/.d
 done
 
 for d in $top/*.repack/override; do
-    echo cd $d
     cd $d
     for f in `find . -type d`; do
         o=$c/$f
-        [ -d $o ] && echo ln -s $o $f/.c && ln -s $o $f/.c
+        [ -d $o ] && ln -s $o $f/.c
     done
 done
 
 c=$top/core/assets/minecraft
 for d in $top/core/assets/*; do
     if [[ -d $d && ! $d =~ 'minecraft' ]]; then
-	echo cd $d
 	cd $d
 	for f in `find . -type d`; do
 	    o=$c/$f
-	    [ -d $o ] && echo ln -s $o $f/.c && ln -s $o $f/.c
+	    [ -d $o ] && ln -s $o $f/.c
 	done
     fi
 done
