@@ -1,6 +1,7 @@
 diamond
 crystal_green
 golden
+netherite
 crystal_black
 light
 emerald

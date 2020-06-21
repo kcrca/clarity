@@ -13,3 +13,4 @@ iron
 obsidian
 crystal_white
 bone
+netherite

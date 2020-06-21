@@ -1,0 +1,6 @@
+{
+    "parent": "item/cuboid",
+    "textures": {
+        "sides": "block/netherite_block"
+    }
+}
