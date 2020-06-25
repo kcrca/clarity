@@ -1,0 +1,6 @@
+{
+  "parent": "block/template_target_10",
+  "textures": {
+    "power": "minecraft:block/target_15"
+  }
+}
