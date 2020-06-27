@@ -18,7 +18,7 @@ html=/tmp/overaly.html
 cp /dev/null $html
 skipped=""
 
-for new in $(find "${dirs[@]}" -name '*.png'); do
+for new in $(find "${dirs[@]}" -name parts -prune -o -name '*.png'); do
     echo $new
     new="$(cd "$(dirname $new)" ; pwd)/$(basename $new)"
     old="${new/core/default_resourcepack}"
