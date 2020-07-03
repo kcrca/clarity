@@ -1,6 +1,7 @@
 {
   "parent": "minecraft:block/cube",
   "textures": {
+    "particle": "minecraft:block/basalt_top",
     "down": "minecraft:block/basalt_top",
     "up": "minecraft:block/basalt_top",
     "north": "minecraft:block/basalt_side1",
