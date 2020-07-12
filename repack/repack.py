@@ -2,14 +2,13 @@
 # coding=utf-8
 
 import ConfigParser
+import copy
+import errno
 import os
 import re
 import shutil
-import copy
 
 from PIL import Image
-import errno
-
 from PIL import ImageDraw
 
 __author__ = 'arnold'
@@ -91,35 +90,38 @@ class EraseEdgeChange(SimpleChange):
         dst_img.paste(src_img)
 
         w, h = src_img.size
-        b = h - 1  # index of bottom row
-        e = w - 1  # index of end column
-        copy_start = 0
+        anim_count = h / w
+        for a in range(0, anim_count):
+            b = w - 1  # index of bottom row
+            e = w - 1  # index of end column
+            copy_start = 0
 
-        dup_size = self.dup_size
-        if dup_size is not None:
-            copy_start = (src_img.size[0] - dup_size) / 2
-            copy_width = dup_size
-        else:
-            copy_start = 1
-            copy_width = src_img.size[0] - 2
+            dup_size = self.dup_size
+            if dup_size is not None:
+                copy_start = (w - dup_size) / 2
+                copy_width = dup_size
+            else:
+                copy_start = 1
+                copy_width = w - 2
 
-        copy_end = copy_start + copy_width
+            copy_end = copy_start + copy_width
 
-        def copy_row(row_from, row_to):
-            t = src_img.crop((copy_start, row_from, copy_end, row_from + 1))
-            if dup_size is None:
-                dst_img.paste(t, (0, row_to))  # set the leftmost pixel
-                dst_img.paste(t, (2, row_to))  # set the rightmost pixel
-            dst_img.paste(t, (copy_start, row_to))
+            def copy_row(row_from, row_to):
+                t = src_img.crop((copy_start, row_from, copy_end, row_from + 1))
+                if dup_size is None:
+                    dst_img.paste(t, (0, row_to))  # set the leftmost pixel
+                    dst_img.paste(t, (2, row_to))  # set the rightmost pixel
+                dst_img.paste(t, (copy_start, row_to))
 
-        def copy_col(col_from, col_to):
-            t = src_img.crop((col_from, copy_start, col_from + 1, copy_end))
-            dst_img.paste(t, (col_to, copy_start))
+            def copy_col(col_from, col_to):
+                t = src_img.crop((col_from, y + copy_start, col_from + 1, y + copy_end))
+                dst_img.paste(t, (col_to, y + copy_start))
 
-        copy_row(1, 0)  # set the top row from its neighbor
-        copy_row(b - 1, b)  # set the bottom row from its neighbor
-        copy_col(1, 0)  # set the left row from its neighbor
-        copy_col(e - 1, e)  # set the right row form its neighbor
+            y = a * w
+            copy_row(y + 1, y)  # set the top row from its neighbor
+            copy_row(y + b - 1, y + b)  # set the bottom row from its neighbor
+            copy_col(1, 0)  # set the left row from its neighbor
+            copy_col(e - 1, e)  # set the right row form its neighbor
 
 
 class TileOverEdge(SimpleChange):
