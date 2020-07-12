@@ -96,7 +96,8 @@ function do_create() {
 }
 
 echo ... Repacking
-python repack/repack.py $f >> $out || ( cat $out ; exit 1)
+echo ... python repack/repack.py $f
+echo ... python repack/repack.py $f >> $out || ( cat $out ; exit 1)
 
 rm -f home
 # Works for a mac, should check for other configurations

@@ -1,5 +1,4 @@
 lapis_lazuli
 diamond
-ruby
-quartz
 emerald
+quartz

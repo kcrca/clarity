@@ -33,7 +33,7 @@ def find_textures(data):
     try:
         textures_block = data['textures']
         for texture_name in textures_block:
-            textures.append(textures_block[texture_name])
+            textures.append(path_part(textures_block[texture_name]))
     except KeyError:
         pass
     return textures
@@ -66,7 +66,12 @@ def models_under(variants):
     return models
 
 
+def path_part(model_name):
+    return model_name.replace('minecraft:', '')
+
+
 def import_model(model_name):
+    model_name = path_part(model_name)
     if model_name in models:
         return
     if model_name.startswith('builtin/'):
@@ -112,9 +117,10 @@ for file in glob.glob('%s/block/*.json' % clip.directory('models')):
     model_name = subpath_re.search(file).group(1)
     unused_models[model_name] = True
 
-for state_name in blockstates:
-    state = blockstates[state_name]
-    for model_name in models_for(state):
+for block_name in blockstates:
+    block = blockstates[block_name]
+    for model_name in models_for(block):
+        model_name = path_part(model_name)
         try:
             del unused_models[model_name]
         except KeyError:
@@ -130,14 +136,14 @@ for file in glob.glob('%s/item/*.json' % clip.directory('models')) + \
 
 print 'Models: %s' % len(models)
 if len(unused_models) > 0:
-    print 'UNUSED models:\n    ',
+    print 'UNUSED models:\n   ',
     print '\n    '.join(sorted(unused_models))
 
 # Now lets look for unused textures
 textures = {}
 unused_textures = {}
+# Textures that are not reachable by the regular techniques
 special_textures = (
-    # Textures that are not reachable by the regular techniques
     'block/destroy_stage_0',
     'block/destroy_stage_1',
     'block/destroy_stage_2',
@@ -148,14 +154,20 @@ special_textures = (
     'block/destroy_stage_7',
     'block/destroy_stage_8',
     'block/destroy_stage_9',
+    'block/portal', # animation for the nether portal
     'block/lava_flow',
     'block/water_flow',
     'item/clock_font',
+
+    # Used in generating UI places where things are to be put
     'item/empty_armor_slot_boots',
     'item/empty_armor_slot_chestplate',
     'item/empty_armor_slot_helmet',
     'item/empty_armor_slot_leggings',
     'item/empty_armor_slot_shield',
+    'item/blank_banner_pattern',
+    'item/carpet_for_llama',
+    'item/netherite_ingot',
 )
 
 for file in glob.glob('%s/item/*.png' % clip.directory('textures')) + glob.glob(
@@ -178,3 +190,4 @@ print 'Textures: %d' % len(textures)
 if len(unused_textures) > 0:
     print 'UNUSED textures:\n   ',
     print '\n    '.join(sorted(unused_textures))
+    os.sys.exit(1)
