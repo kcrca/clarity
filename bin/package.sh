@@ -47,11 +47,11 @@ done
 echo ... python gui_arrows.py $a 2>&1 | tee -a $out
 python bin/gui_arrows.py >> $out
 
-function to_title() {
+to_title() {
     echo "$(tr a-z A-Z <<< ${1:0:1})${1:1}"
 }
 
-function license() {
+license() {
     name=$1
     ucname=$2
     (echo "<p>${ucname}: Part of the Clarity Resource Pack Family for Minecraft.<br>" && cat License.html) > $name/License.html
@@ -59,7 +59,7 @@ function license() {
 }
 
 # This function will build a single zip file
-function do_zip() {
+do_zip() {
     (
 	name=$1
 	ucname=`to_title $name`
@@ -85,7 +85,7 @@ function do_zip() {
 }
 
 # Creates special subparts of the resource pack set as a standalone pack
-function do_create() {
+do_create() {
     name=$1
     shift
     mkdir -p $name
@@ -96,8 +96,7 @@ function do_create() {
 }
 
 echo ... Repacking
-echo ... python repack/repack.py $f
-echo ... python repack/repack.py $f >> $out || ( cat $out ; exit 1)
+python repack/repack.py >> $out || ( cat $out ; exit 1)
 
 rm -f home
 # Works for a mac, should check for other configurations
