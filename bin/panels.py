@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 # Generate the panels for the containers.
+from bin import clip
 
 __author__ = 'arnold'
 
@@ -34,21 +35,6 @@ font_size = config.getint('basic', 'font_size')
 basic = dict(config.items('basic'))
 
 panels = config.items('panels')
-
-
-# This composites an image onto another merging the alpha properly. This should
-# be part of PIL, but I can't find it.
-# From http://stackoverflow.com/questions/3374878/with-the-python-imaging
-# -library-pil-how-does-one-compose-an-image-with-an-alp
-def alpha_composite(output, image, pos, rotation):
-    if rotation:
-        size = image.size
-        image = image.rotate(rotation, expand=1).resize(size, Image.ANTIALIAS)
-    r, g, b, a = image.split()
-    rgb = Image.merge("RGB", (r, g, b))
-    mask = Image.merge("L", (a,))
-    output.paste(rgb, pos, mask)
-
 
 digits = {}
 chars = Image.open('parts/digits.png').convert('RGBA')
@@ -131,7 +117,8 @@ for panels_desc, part_str in panels:
                             slot_x = x_pos + x * slot_width
                             for y in range(0, y_count):
                                 slot_y = y_pos + y * slot_width
-                                alpha_composite(output, slot, (slot_x, slot_y), rotation)
+                                pos = (slot_x, slot_y)
+                                clip.alpha_composite(output, slot, pos, rotation)
                         used_part_files.append('slot.png')
                     elif part == 'numbers':
                         draw = ImageDraw.Draw(output)
@@ -148,10 +135,12 @@ for panels_desc, part_str in panels:
                                 c = pixels[x, y]
                                 if c[3] != 0:
                                     pixels[x, y] = (c[0], c[1], c[2], int(round(c[3] * 0.4)))
-                        alpha_composite(output, part_img, (x_pos, y_pos), rotation)
+                        pos1 = (x_pos, y_pos)
+                        clip.alpha_composite(output, part_img, pos1, rotation)
                     else:
                         part_img = Image.open('parts/%s' % part).convert("RGBA")
-                        alpha_composite(output, part_img, (x_pos, y_pos), rotation)
+                        pos2 = (x_pos, y_pos)
+                        clip.alpha_composite(output, part_img, pos2, rotation)
                         used_part_files.append(part)
 
 
