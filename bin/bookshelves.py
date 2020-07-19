@@ -83,7 +83,7 @@ shelf_nums = range(0, len(shelves))
 
 remove_all(os.path.join(models, 'bookshelf_[0-9]*.json'))
 blockstate = {'variants': {'': []}}
-for i in range(0, 19):
+for i in range(0, 19):  
     model = {
         'parent': 'minecraft:block/cube',
         'textures': {

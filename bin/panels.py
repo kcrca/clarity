@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 
 # Generate the panels for the containers.
-from bin import clip
 
 __author__ = 'arnold'
 

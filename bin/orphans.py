@@ -144,6 +144,7 @@ textures = {}
 unused_textures = {}
 # Textures that are not reachable by the regular techniques
 special_textures = (
+    'block/books',
     'block/destroy_stage_0',
     'block/destroy_stage_1',
     'block/destroy_stage_2',
