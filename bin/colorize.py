@@ -1,5 +1,5 @@
-#!/usr/bin/env python
-import ConfigParser
+#!/usr/bin/env python3
+import configparser
 import getopt
 import glob
 import os
@@ -13,7 +13,7 @@ import clip
 
 __author__ = 'arnold'
 
-config = ConfigParser.SafeConfigParser()
+config = configparser.ConfigParser()
 
 directory = '/tmp'
 
@@ -38,7 +38,7 @@ def configure_aliases():
             names = others.split() + [one]
             for n in names:
                 aliases[n] = names
-    except ConfigParser.NoSectionError:
+    except configparser.NoSectionError:
         pass
 
 
@@ -67,11 +67,11 @@ def map_for(map_name, key_color, has_alpha):
         colors_config = color_config[map_name][color_name]
         l = color_list(colors_config, has_alpha)
         if len(l) != num_colors:
-            print('Mismatch: %s: %s: expected %d colors, found %d' % (
-                map_name, color_name, num_colors, len(l)))
+            print(('Mismatch: %s: %s: expected %d colors, found %d' % (
+                map_name, color_name, num_colors, len(l))))
         else:
             m = {}
-            for i in xrange(num_colors):
+            for i in range(num_colors):
                 m[key_list[i]] = l[i]
             color_map[color_name] = m
     return color_map
@@ -94,8 +94,8 @@ def list_colors(color_name, file_name, exclude_colors):
     img = Image.open(file_name).convert('RGB')
     data = img.load()
     colors = set()
-    for x in xrange(img.size[0]):
-        for y in xrange(img.size[1]):
+    for x in range(img.size[0]):
+        for y in range(img.size[1]):
             r, g, b = data[x, y]
             colors.add((r, g, b))
     sys.stdout.write('%-13s' % (color_name + ':'))
@@ -103,7 +103,7 @@ def list_colors(color_name, file_name, exclude_colors):
         if not c in exclude_colors:
             # noinspection PyStringFormat
             sys.stdout.write(' %-13s' % ('(%d,%d,%d)' % c[:]))
-    print ''
+    print('')
 
 
 def to_camel_case(m):
@@ -166,8 +166,8 @@ def list_coloring(coloring, exclude_colors):
     # For listing, nothing is required, so remove the options
     file_pat = re.sub(file_opt_re, file_pat, '')
     key_file = file_from_color(re.sub(file_opt_re, file_pat, ''), key_color)
-    print '[%s]' % coloring
-    print ''
+    print('[%s]' % coloring)
+    print('')
     list_colors(key_color, key_file, exclude_colors)
     file_re = re.compile(file_from_color(os.path.basename(file_pat), r'(.*)'))
     file_dir = os.path.dirname(file_pat)
@@ -183,12 +183,12 @@ def list_image_colors(files):
         src_img = Image.open(f)
         src_data = src_img.load()
         colors = set()
-        for x in xrange(src_img.size[0]):
-            for y in xrange(src_img.size[1]):
+        for x in range(src_img.size[0]):
+            for y in range(src_img.size[1]):
                 colors.add(src_data[x, y])
-        print '%s:' % f
+        print('%s:' % f)
         for c in sorted(colors):
-            print '  %s' % str(c)
+            print('  %s' % str(c))
 
 
 def color_for(cell):
@@ -204,7 +204,7 @@ def find_rows(img):
     data = img.load()
     bg_color = data[0, 0]
     rows = ()
-    for y in xrange(img.size[1]):
+    for y in range(img.size[1]):
         color = data[0, y]
         if color != bg_color:
             rows += (y + 1,)
@@ -215,7 +215,7 @@ def find_cols(img):
     data = img.load()
     bg_color = data[0, 0]
     cols = ()
-    for x in xrange(img.size[0]):
+    for x in range(img.size[0]):
         color = data[x, 0]
         if color != bg_color:
             cols += (x + 1,)
@@ -272,7 +272,7 @@ def main(argv=None):
         try:
             opts, args = getopt.getopt(argv[1:], 'hl:x:d',
                                        ['help', 'list', 'exclude', 'dump'])
-        except getopt.error, msg:
+        except getopt.error as msg:
             raise Usage(msg)
             # more code, unchanged
         if len(args) != 1:
@@ -280,16 +280,16 @@ def main(argv=None):
         global directory
         directory = args[0]
         os.chdir(directory)
-    except Usage, err:
-        print >> sys.stderr, err.msg
-        print >> sys.stderr, 'for help use --help'
+    except Usage as err:
+        print(err.msg, file=sys.stderr)
+        print('for help use --help', file=sys.stderr)
         return 2
 
     parse_colors()
     config.read(['colorize.cfg', clip.directory('config', 'colorize.cfg')])
     try:
         camel_caps = config.getboolean('settings', 'camel_caps')
-    except ConfigParser.NoSectionError:
+    except configparser.NoSectionError:
         pass
 
     list_colorings = []
@@ -297,7 +297,7 @@ def main(argv=None):
     # process options
     for o, a in opts:
         if o in ('-h', '--help'):
-            print __doc__
+            print(__doc__)
             return 0
         if o in ('-d', '--dump'):
             list_image_colors(args)
@@ -316,7 +316,7 @@ def main(argv=None):
     configure_aliases()
     try:
         colorings = config.items('colorings')
-    except ConfigParser.NoSectionError:
+    except configparser.NoSectionError:
         return 0
 
     warnf = open('README', 'w+')
@@ -326,7 +326,7 @@ def main(argv=None):
         ignores = ignore_spec.split(',') if ignore_spec else ()
         # The key file is always required, so remove any options
         key_color, key_file = file_from_color(file_opt_re.sub('', file_pat), key_color)
-        print '%s: reading %s' % (coloring, key_file)
+        print('%s: reading %s' % (coloring, key_file))
         src_img = Image.open(key_file)
         if src_img.mode == 'P':
             src_img = src_img.convert('RGB')
@@ -335,20 +335,20 @@ def main(argv=None):
         has_alpha = num_channels > 3
 
         color_maps = map_for(map_name, key_color, has_alpha)
-        for color_name, color_map in color_maps.iteritems():
+        for color_name, color_map in color_maps.items():
             if color_name in ignores:
                 continue
             _, dst_file = file_from_color(file_pat, color_name)
             if dst_file == '':
                 continue
-            print ('    %s' % dst_file)
+            print(('    %s' % dst_file))
             mode = 'RGB'
             if has_alpha:
                 mode = 'RGBA'
             dst_img = Image.new(mode, src_img.size, color=None)
             dst_data = dst_img.load()
-            for x in xrange(src_img.size[0]):
-                for y in xrange(src_img.size[1]):
+            for x in range(src_img.size[0]):
+                for y in range(src_img.size[1]):
                     data = src_data[x, y][:num_channels]
                     try:
                         data = color_map[data]
@@ -371,7 +371,7 @@ def main(argv=None):
                 shutil.copy2(path, target)
             if action == 'move':
                 os.remove(path)
-    except ConfigParser.NoSectionError:
+    except configparser.NoSectionError:
         pass
 
 

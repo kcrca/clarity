@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 import random
 from PIL import Image, ImageDraw
@@ -35,8 +35,8 @@ for frame_num in range(0, FRAMES):
         for x_pos in (-1, 0, 1):
             for y_pos in (-1, 0, 1):
                 pos1 = (iround(sq.center_x + x + x_pos * DIM), iround(sq.center_y + y + y_pos * DIM))
-                pos2 = (pos1[0] + sq.size + size_adjust, pos1[1] + sq.size + size_adjust)
-                draw.rectangle(pos1 + pos2, outline=sq.color + (ALPHA + alpha_adjust,))
+                pos2 = (int(pos1[0] + sq.size + size_adjust), int(pos1[1] + sq.size + size_adjust))
+                draw.rectangle(pos1 + pos2, outline=sq.color + (int(ALPHA + alpha_adjust),))
     img.paste(frame, (0, frame_num * DIM))
 
 img.save(directory('textures', 'block/water_still.png'))

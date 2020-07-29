@@ -32,20 +32,20 @@ for f in bin/*.py; do
 	colorize.py)
 	    for cfg in `find $top -name colorize.cfg`; do
 		d=`dirname $cfg`
-		echo ... python $script $d 2>&1 | tee -a $out
-		python $f $d
+		echo ... python3 $script $d 2>&1 | tee -a $out3
+		python3 $f $d
 	    done
 	    ;;
 	gui_arrows.py)
 	    ;;
 	*)
-	    echo ... python $script $a 2>&1 | tee -a $out
-	    python $f >> $out
+	    echo ... python3 $script $a 2>&1 | tee -a $out
+	    python3 $f >> $out
 	    ;;
     esac
 done
-echo ... python gui_arrows.py $a 2>&1 | tee -a $out
-python bin/gui_arrows.py >> $out
+echo ... python3 gui_arrows.py $a 2>&1 | tee -a $out
+python3 bin/gui_arrows.py >> $out
 
 to_title() {
     echo "$(tr a-z A-Z <<< ${1:0:1})${1:1}"
@@ -96,7 +96,7 @@ do_create() {
 }
 
 echo ... Repacking
-python repack/repack.py >> $out || ( cat $out ; exit 1)
+python3 repack/repack.py >> $out || ( cat $out ; exit 1)
 
 rm -f home
 # Works for a mac, should check for other configurations

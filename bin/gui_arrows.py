@@ -1,8 +1,8 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 __author__ = 'arnold'
 
-import ConfigParser
+import configparser
 import os
 import re
 import shutil
@@ -92,7 +92,7 @@ def debug_image(panel_name, panel):
         panel.save('%s/%s%d.png' % (tmpdir, os.path.basename(panel_name), debug_nums[panel_name]))
 
 
-config = ConfigParser.SafeConfigParser()
+config = configparser.ConfigParser()
 config.read(clip.directory('config', 'gui_arrows.cfg'))
 
 barred_arrows = config.getboolean('settings', 'barred_arrows')
@@ -116,16 +116,16 @@ for panel_name, part_str in panels:
     for desc in parts:
         m = dim_re.match(desc)
         if m:
-            space = map(lambda s: int(s), m.groups())
+            space = [int(s) for s in m.groups()]
             continue
         m = desc_re.match(desc)
         if not m:
-            print '%s: cannot parse desc: %s' % (panel_name, desc)
+            print('%s: cannot parse desc: %s' % (panel_name, desc))
             continue
         size, towards, which, x_pos_str, y_pos_str = m.groups()
         if not size:
             size = 'small'
-        x, y = map(lambda s: int(s), (x_pos_str, y_pos_str))
+        x, y = [int(s) for s in (x_pos_str, y_pos_str)]
         bg = panel.getpixel((x, y))
         types = (which,)
         if which == 'all':
@@ -136,7 +136,7 @@ for panel_name, part_str in panels:
             draw.rectangle((x, y, x + space[0], y + space[1]), fill=bg)
             arrow = arrows[size][towards][type]
             dim = arrow.size
-            delta = map(lambda i: int((space[i] - dim[i]) / 2), range(0, len(space)))
+            delta = [int((space[i] - dim[i]) / 2) for i in range(0, len(space))]
             clip.alpha_composite(panel, arrow, (x + delta[0], y + delta[1]))
             debug_image(panel_name, panel)
             x += space[0]

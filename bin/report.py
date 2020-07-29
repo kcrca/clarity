@@ -1,11 +1,11 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 # Generates a report comparing two packs.
 
 import os
 import re
 import subprocess
-import ConfigParser
+import configparser
 import sys
 
 from PIL import Image
@@ -55,7 +55,7 @@ class FileStatus(object):
             pats = set(to_ignore.split())
             self.ignore = [re.compile(pat) for pat in pats]
             self.unused_ignores |= pats
-        except ConfigParser.NoOptionError:
+        except configparser.NoOptionError:
             pass
         status_by_name[self.prefix] = self
 
@@ -69,13 +69,13 @@ class FileStatus(object):
 
     def dump(self):
         for f in sorted(self.files):
-            print '%s: %s' % (self.prefix, f)
+            print('%s: %s' % (self.prefix, f))
         if len(self.unused_ignores) > 0:
-            print '  UNUSED pattern:', ', '.join(sorted(self.unused_ignores))
+            print('  UNUSED pattern:', ', '.join(sorted(self.unused_ignores)))
         if len(self.multi_matches) > 0:
-            print '  MULTIPLE pattern matches for path:'
+            print('  MULTIPLE pattern matches for path:')
             for p in sorted(self.multi_matches):
-                print '    %s: %s' % (p, ', '.join(self.multi_matches[p]))
+                print('    %s: %s' % (p, ', '.join(self.multi_matches[p])))
 
     def add_path(self, groups, path):
         """
@@ -117,7 +117,7 @@ config_file = directory('config', 'report_default.cfg')
 if len(sys.argv) > 1:
     config_file = sys.argv[1]
 
-config = ConfigParser.SafeConfigParser()
+config = configparser.ConfigParser()
 config.read(config_file)
 
 other = config.get('basic', 'top')

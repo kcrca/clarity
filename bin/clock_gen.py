@@ -1,8 +1,8 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 __author__ = 'arnold'
 
-import ConfigParser
+import configparser
 import json
 import shutil
 import os
@@ -22,7 +22,7 @@ def clock_colors(config, section):
     )
 
 
-config = ConfigParser.SafeConfigParser()
+config = configparser.ConfigParser()
 config.read(clip.directory('config', 'clock_gen.cfg'))
 
 os.chdir(clip.directory('minecraft'))
@@ -30,9 +30,9 @@ os.chdir(clip.directory('minecraft'))
 # The 'clock_in' describes the input image that defines the clock font, etc.
 in_sec = 'clock_in'
 digits_path = config.get(in_sec, 'digits_path')
-digit_start = map(int, config.get(in_sec, 'digit_start').split())
+digit_start = list(map(int, config.get(in_sec, 'digit_start').split()))
 assert len(digit_start) == 2
-digit_size = map(int, config.get(in_sec, 'digit_size').split())
+digit_size = list(map(int, config.get(in_sec, 'digit_size').split()))
 assert len(digit_size) == 2
 colon_width = config.getint(in_sec, 'colon_width')
 in_colors = clock_colors(config, in_sec)
@@ -83,8 +83,8 @@ model_dir = clear_out_tree('models/item/clock')
 clock_width = 4 * digit_size[0] + colon_width
 
 digit_pos = {}
-x = (face_dim - clock_width) / 2
-y = (face_dim - digit_size[1]) / 2
+x = int((face_dim - clock_width) / 2)
+y = int((face_dim - digit_size[1]) / 2)
 digit_pos[0] = (x, y)
 x += digit_size[0]
 digit_pos[1] = (x, y)

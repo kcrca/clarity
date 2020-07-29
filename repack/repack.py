@@ -1,7 +1,7 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # coding=utf-8
 
-import ConfigParser
+import configparser
 import copy
 import errno
 import os
@@ -42,7 +42,7 @@ class Change(object):
         self.use_override = False
 
     def apply(self, src, dst, subpath):
-        print "%s -> %s" % (self.name(), subpath)
+        print("%s -> %s" % (self.name(), subpath))
         src_img = Image.open(src).convert('RGBA')
         self.do_change(dst, src_img)
 
@@ -90,7 +90,7 @@ class EraseEdgeChange(SimpleChange):
         dst_img.paste(src_img)
 
         w, h = src_img.size
-        anim_count = h / w
+        anim_count = int(h / w)
         for a in range(0, anim_count):
             b = w - 1  # index of bottom row
             e = w - 1  # index of end column
@@ -143,7 +143,7 @@ class TileOverEdge(SimpleChange):
             size = self.tile_size
             pos = self.tile_pos
         else:
-            size = tuple(((i - 2) / 4) * 4 for i in src_img.size)
+            size = tuple(int((i - 2) / 4) * 4 for i in src_img.size)
             pos = (1, 1)
 
         w, h = size
@@ -179,7 +179,7 @@ def to_box(coords):
 
 def deanimate(img):
     if img.size[0] < img.size[1]:
-        print '    Taking first frame of animation'
+        print('    Taking first frame of animation')
         return img.crop((0, 0, img.size[0], img.size[0]))
     return img
 
@@ -441,7 +441,7 @@ def test_is_on(mask, mx, my):
 def safe_mkdirs(dst_dir):
     try:
         os.makedirs(dst_dir)
-    except os.error, e:
+    except os.error as e:
         if e.errno != errno.EEXIST:
             raise
 
@@ -468,11 +468,11 @@ class Pass(object):
         self.src_block_dir = self.dst_block_dir.replace(self.dst_top, self.src_top)
         self.changes_for = {}
         self.re_changes = []
-        config = ConfigParser.SafeConfigParser()
+        config = configparser.ConfigParser()
         config.read(os.path.join(self.repack_dir, 'repack.cfg'))
         self.parse_config(config)
         self.unused_changes = set(
-            self.changes_for.keys() + [c[0].pattern for c in self.re_changes])
+            list(self.changes_for.keys()) + [c[0].pattern for c in self.re_changes])
 
     def parse_config(self, config):
         try:
@@ -480,7 +480,7 @@ class Pass(object):
                 change = change_by_name[change_name]
                 for target in targets.split():
                     self.set_changes(os.path.join('assets', 'minecraft', 'textures', 'block', target), change)
-        except ConfigParser.NoSectionError:
+        except configparser.NoSectionError:
             pass
 
     def record_change(self, subpath):
@@ -538,14 +538,14 @@ class Pass(object):
         return None
 
     def run(self):
-        print "=== %s" % self.src_top
+        print("=== %s" % self.src_top)
         for dir_name, subdir_list, file_list in os.walk(self.src_top, topdown=True):
             src_dir = dir_name
             dst_dir = dir_name.replace(self.src_top, self.dst_top)
             subdirs_to_skip = [d for d in subdir_list if skip_dirs_re.match(d)]
             for d in subdirs_to_skip:
                 subdir_list.remove(d)
-            print '-- %s' % (dst_dir)
+            print('-- %s' % (dst_dir))
             safe_mkdirs(dst_dir)
             file_list = [f for f in file_list if not do_not_copy_re.search(f)]
             for f in file_list:
@@ -580,12 +580,12 @@ class Pass(object):
         for change in changes:
             if os.path.isfile(override):
                 if change.use_override:
-                    print '%s: using overridden file: %s' % (
-                        change.name(), override)
+                    print('%s: using overridden file: %s' % (
+                        change.name(), override))
                     src = override
                 else:
                     shutil.copy(override, dst)
-                    print '%s: %s overridden' % (change.name(), subpath)
+                    print('%s: %s overridden' % (change.name(), subpath))
                     return
             change.apply(src, dst, subpath)
 
@@ -687,7 +687,7 @@ def copytree(src, dst, symlinks=False, ignore=None, copy_function=shutil.copy2,
         srcname = os.path.join(src, name)
         dstname = os.path.join(dst, name)
         if 'glass' in name:
-            print 'copytree %s -> %s' % (srcname, dstname)
+            print('copytree %s -> %s' % (srcname, dstname))
         try:
             if symlinks and os.path.islink(srcname):
                 linkto = os.readlink(srcname)
@@ -700,13 +700,13 @@ def copytree(src, dst, symlinks=False, ignore=None, copy_function=shutil.copy2,
                 copy_function(srcname, dstname)
         # catch the Error from the recursive copytree so that we can
         # continue with other files
-        except shutil.Error, err:
+        except shutil.Error as err:
             errors.extend(err.args[0])
-        except EnvironmentError, why:
+        except EnvironmentError as why:
             errors.append((srcname, dstname, str(why)))
     try:
         shutil.copystat(src, dst)
-    except OSError, why:
+    except OSError as why:
         if shutil.WindowsError is not None and isinstance(why,
                                                           shutil.WindowsError):
             # Copying file access times may fail on Windows
@@ -714,7 +714,7 @@ def copytree(src, dst, symlinks=False, ignore=None, copy_function=shutil.copy2,
         else:
             errors.extend((src, dst, str(why)))
     if errors:
-        raise shutil.Error, errors
+        raise shutil.Error(errors)
 
 
 # noinspection PyUnusedLocal
@@ -726,4 +726,4 @@ for p in passes:
     p.run()
 
 if len(warnings):
-    print '\n'.join(warnings)
+    print('\n'.join(warnings))

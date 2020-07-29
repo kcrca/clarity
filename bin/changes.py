@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 # Generate the animations and images needed to provide the "changes" texture pack.
 

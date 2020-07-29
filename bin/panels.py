@@ -1,17 +1,17 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 # Generate the panels for the containers.
 
 __author__ = 'arnold'
 
-import ConfigParser
+import configparser
 import os
 import re
 from PIL import Image
 from PIL import ImageDraw
 import clip
 
-config = ConfigParser.SafeConfigParser()
+config = configparser.ConfigParser()
 config.read(clip.directory('config', 'panels.cfg'))
 
 desc_re = re.compile(r'(.*)@(?:(\d+),(\d+)(?:~(-?\d+))?|(right|bottom))')
@@ -55,7 +55,7 @@ for panels_desc, part_str in panels:
     for panel in panels_desc.split(','):
         output_path = '%s.png' % panel
         if re.match(r'^\.\./', output_path):
-            print output_path
+            print(output_path)
         # We remove any leading "../"s to make it possible to rework a file above
         # the 'container' dir.
         blank = os.path.join('parts', re.sub(r'^(\.\./)+', '', output_path))
@@ -77,12 +77,12 @@ for panels_desc, part_str in panels:
 
         parts = part_str.split()
 
-        print "Generating %s" % panel
+        print("Generating %s" % panel)
 
         for desc in parts:
             m = desc_re.match(desc)
             if not m:
-                print '%s: cannot parse desc: %s' % (panel, desc)
+                print('%s: cannot parse desc: %s' % (panel, desc))
             else:
                 part, x_pos_str, y_pos_str, rotation_str, relative = m.groups()
 
@@ -147,8 +147,8 @@ for panels_desc, part_str in panels:
 
         output.save(output_path, 'PNG')
 
-parts_files = filter(lambda x: x[-4:] == '.png', os.listdir('parts'))
+parts_files = [x for x in os.listdir('parts') if x[-4:] == '.png']
 unused = set(parts_files) - set(used_part_files) - set('slot.png')
 
 if len(unused) > 0:
-    print "unused parts: %s" % ', '.join(unused)
+    print("unused parts: %s" % ', '.join(unused))

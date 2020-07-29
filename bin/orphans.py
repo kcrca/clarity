@@ -47,7 +47,7 @@ def models_under(variants):
     models = []
     for variant_key in variants:
         v = variants[variant_key]
-        print type(v)
+        print(type(v))
         if isinstance(v, list):
             for variant in v:
                 try:
@@ -134,10 +134,10 @@ for file in glob.glob('%s/item/*.json' % clip.directory('models')) + \
     model_name = subpath_re.search(file).group(1)
     import_model(model_name)
 
-print 'Models: %s' % len(models)
+print('Models: %s' % len(models))
 if len(unused_models) > 0:
-    print 'UNUSED models:\n   ',
-    print '\n    '.join(sorted(unused_models))
+    print('UNUSED models:\n   ', end=' ')
+    print('\n    '.join(sorted(unused_models)))
 
 # Now lets look for unused textures
 textures = {}
@@ -187,8 +187,8 @@ for model_name in models:
         except KeyError:
             pass
 
-print 'Textures: %d' % len(textures)
+print('Textures: %d' % len(textures))
 if len(unused_textures) > 0:
-    print 'UNUSED textures:\n   ',
-    print '\n    '.join(sorted(unused_textures))
+    print('UNUSED textures:\n   ', end=' ')
+    print('\n    '.join(sorted(unused_textures)))
     os.sys.exit(1)

@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 # This program generates the item images for the daylight detector. It reads the model files
 # for each detector state, grabs its block image, and pastes that into the image file for the item. This creates an

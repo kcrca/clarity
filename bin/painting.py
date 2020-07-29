@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 # Generates derived files from the paintings. This includes:
 #
@@ -47,9 +47,9 @@ for i in range(0, len(images)):
     # scale image up to fix in max size
     art_scale = min(max_size / w, max_size / h)
     if art_scale > 1:
-        art_img = art_img.resize((w * art_scale, h * art_scale))
+        art_img = art_img.resize((int(w * art_scale), int(h * art_scale)))
     art_size = art_img.size
-    placement = [(max_size - v) / 2 for v in art_size]
+    placement = [int((max_size - v) / 2) for v in art_size]
     item_img.paste(art_img, (placement[0], placement[1] + i * max_size))
     # put in the frame multiple time so animation interpolation only happens part of the time
     for j in range(0, 5):

@@ -1,36 +1,36 @@
 {
   "animation": {
+    "frametime": 84000.0,
     "frames": [
       {
-        "index": 0, 
-        "time": 4457
-      }, 
+        "index": 0,
+        "time": 6085
+      },
       {
-        "index": 0, 
-        "time": 252000
-      }, 
-      0, 
+        "index": 0,
+        "time": 252000.0
+      },
+      0,
       {
-        "index": 1, 
-        "time": 1260000
-      }, 
-      1, 
+        "index": 1,
+        "time": 1260000.0
+      },
+      1,
       {
-        "index": 2, 
-        "time": 252000
-      }, 
-      2, 
+        "index": 2,
+        "time": 252000.0
+      },
+      2,
       {
-        "index": 3, 
-        "time": 6636000
-      }, 
+        "index": 3,
+        "time": 6636000.0
+      },
       {
-        "index": 3, 
-        "time": 19543
-      }, 
+        "index": 3,
+        "time": 17915
+      },
       3
-    ], 
-    "frametime": 84000, 
+    ],
     "interpolate": true
   }
 }

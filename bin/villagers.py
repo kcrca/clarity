@@ -1,5 +1,5 @@
-#!/usr/bin/env python
-import ConfigParser
+#!/usr/bin/env python3
+import configparser
 import glob
 import os
 import re
@@ -7,7 +7,7 @@ import sys
 from PIL import Image
 import clip
 
-config = ConfigParser.SafeConfigParser()
+config = configparser.ConfigParser()
 config.read(clip.directory('config', 'villagers.cfg'))
 
 hair_re = re.compile(r'([^@]*)(?:@(\d+\.?\d*))?')
@@ -49,33 +49,33 @@ all_desc = config.get('people', 'all')
 all_hairs = all_desc.split()
 
 only_listed = set()
-only_listed_desc = config.get('settings', 'only_listed', None)
+only_listed_desc = config.get('settings', 'only_listed')
 if only_listed_desc:
     only_listed = set(only_listed_desc.split())
 
 eyebrows = ()
-eyebrows_desc = config.get('settings', 'eyebrows', None)
+eyebrows_desc = config.get('settings', 'eyebrows')
 if eyebrows_desc:
     for brow_desc in eyebrows_desc.split():
         m = brows_re.match(brow_desc)
         brow_width, x, y = m.groups()
         eyebrows += (tuple((int(v) for v in m.groups()), ),)
 
-no_eyebrows = set(config.get('settings', 'no_eyebrows', '').split())
+no_eyebrows = set(config.get('settings', 'no_eyebrows').split())
 
 hair_color_pos = []
-hair_color_desc = config.get('settings', 'hair_color', None).split()
+hair_color_desc = config.get('settings', 'hair_color').split()
 if hair_color_desc:
     for i in range(0, len(hair_color_desc)):
         m = hair_color_re.match(hair_color_desc[i])
         hair_color_pos.append(tuple(int(v) for v in m.groups()))
 
 if (len(eyebrows) > 0) != (len(hair_color_pos) > 0):
-    print "Must specify both eyebrows and hair_color pos, or neither."
+    print("Must specify both eyebrows and hair_color pos, or neither.")
     sys.exit(1)
 
 hair_styles = []
-hair_style_desc = config.get('settings', 'styles', None).split()
+hair_style_desc = config.get('settings', 'styles').split()
 if hair_style_desc:
     for i in range(0, len(hair_style_desc)):
         m = hair_re.match(hair_style_desc[i])
@@ -172,7 +172,7 @@ def build_avatars(career):
                 avatar_num += 1
                 if career in canonical and canonical[career] == [skin, hair]:
                     img.save('%s.png' % career)
-                    print 'Canonical %s: %s' % (career, genotype)
+                    print('Canonical %s: %s' % (career, genotype))
                 if style == 'shaved':
                     break
 

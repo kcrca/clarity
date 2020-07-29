@@ -19,7 +19,7 @@ for frame_num in range(0, FRAMES):
     draw = ImageDraw.Draw(frame)
     for sq in squares:
         angle = RADIANS_PER_FRAME * frame_num * sq.direction
-        size_adjust = int(round(((sq.center_x + frame_num) % FRAMES) / (FRAMES / 2)))
+        size_adjust = iround(((sq.center_x + frame_num) % FRAMES) / (FRAMES / 2))
         if sq.direction > 0:
             x = 0
             y = math.cos(angle) * sq.radius

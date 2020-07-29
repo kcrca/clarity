@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 # Generate the model files for the compass. There is an individual prop file for each displayed angle variation, and a
 # primary model file that lists all those and when to show them. The variation in each file is how much to rotate the

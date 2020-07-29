@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 import glob
 import os
 import sys
@@ -13,7 +13,7 @@ from PIL import Image
 from PIL import ImageDraw
 
 if len(sys.argv) == 1:
-    print "Not regenerating without an argument"
+    print("Not regenerating without an argument")
     sys.exit(0)
 
 
@@ -52,10 +52,10 @@ for i in range(0, 20):
     left = 14
     chosen = []
     while left > 0:
-        choices = filter(lambda x: x.size[0] <= left, avail)
+        choices = [x for x in avail if x.size[0] <= left]
         if len(choices) == 0:
             # better to repeat than have no choices (but avoid what's already in)
-            choices = filter(lambda x: x.size[0] <= left, set(avoid) - set(chosen))
+            choices = [x for x in set(avoid) - set(chosen) if x.size[0] <= left]
         b = choices[random.randint(0, len(choices) - 1)]
         chosen.append(b)
         left -= b.size[0]
@@ -79,7 +79,7 @@ for i in range(0, 20):
     shelf.save(os.path.join(textures, 'bookshelf_%02d.png' % i))
 
 dirs = ('north', 'east', 'west', 'south')
-shelf_nums = range(0, len(shelves))
+shelf_nums = list(range(0, len(shelves)))
 
 remove_all(os.path.join(models, 'bookshelf_[0-9]*.json'))
 blockstate = {'variants': {'': []}}
