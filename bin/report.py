@@ -129,7 +129,7 @@ statuses = (
     same_checker,
     ChangedFileStatus('Changed', r'^Files (?:\./)?(.*) and ([^\s]*) differ', same_checker),
     FileStatus('Missing', r'^Only in ' + other_esc + '/?(.*): (.*)', path_from_groups=path_from_only),
-    FileStatus('Added', r'^Only in \./?(.*): (.*)', path_from_groups=path_from_only)
+    FileStatus('Added', r'^Only in \./?(.*): (.*)', path_from_groups=path_from_only),
 )
 
 diff = subprocess.Popen(['diff', '-rsq', '.', other], stdout=subprocess.PIPE)
@@ -137,6 +137,7 @@ diff = subprocess.Popen(['diff', '-rsq', '.', other], stdout=subprocess.PIPE)
 irrelevant_re = re.compile(r'^[0-9<>-]')
 
 for line in diff.stdout:
+    line = line.decode('utf-8')
     if not irrelevant_re.search(line):
         for status in statuses:
             if status.status_match(line):
