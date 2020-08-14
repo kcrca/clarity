@@ -2,14 +2,13 @@
 
 # Generates a report comparing two packs.
 
+import configparser
 import os
 import re
 import subprocess
-import configparser
 import sys
 
 from PIL import Image
-from PIL import ImageChops
 from clip import *
 
 __author__ = 'arnold'
@@ -92,11 +91,23 @@ class FileStatus(object):
             elif len(patterns) > 1:
                 self.multi_matches[path] = patterns
 
-
             # This does an extra check for changed PNG files to see if they are really different
 
 
 class ChangedFileStatus(FileStatus):
+    def image_compare(self, groups):
+        img1 = Image.open(groups[0])
+        img2 = Image.open(groups[1])
+        if img1.size != img2.size:
+            return False
+        pixels1 = img1.convert('RGBA').load()
+        pixels2 = img2.convert('RGBA').load()
+        for x in range(0, img1.size[0]):
+            for y in range(0, img1.size[1]):
+                if pixels1[(x, y)] != pixels2[(x, y)]:
+                    return False
+        return True
+
     def __init__(self, prefix, pattern, same_file_status, ignore_pats=()):
         super(ChangedFileStatus, self).__init__(prefix, pattern, first_group)
         self.same_file_status = same_file_status
@@ -104,10 +115,7 @@ class ChangedFileStatus(FileStatus):
     def add_path(self, groups, path):
         if path.endswith('.png'):
             # Check if they are equivalent images, just encoded differently.
-            img1 = Image.open(groups[0])
-            img2 = Image.open(groups[1])
-            if img1.size == img2.size and ImageChops.difference(img1.convert('RGBA'),
-                                                                img2.convert('RGBA')).getbbox() is None:
+            if self.image_compare(groups):
                 self.same_file_status.add_path(groups, path)
                 return
         super(ChangedFileStatus, self).add_path(groups, path)
