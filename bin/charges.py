@@ -44,9 +44,16 @@ w = charges_digits.size[0]
 h = charges_digits.size[1] / 16
 for i in range(0, 16):
     digit_img = charges_digits.crop((0, i * h, w, (i + 1) * h))
-    full_digit = Image.new('RGBA', (16, 16), (0, 0, 0, 0))
+    full_digit = Image.new('RGBA', (16, 32), (0, 0, 0, 0))
     full_digit.paste(digit_img, (0, 0))
+    pixels = full_digit.load()
+    for x in range(0, 16):
+        for y in range(0, 16):
+            if pixels[x, y] == (213, 53, 53, 255):
+                pixels[x, y] = (93, 0, 0, 255)
+    full_digit.paste(digit_img, (0, 16))
     full_digit.save('%s/charges_%02d.png' % (charge_textures, i))
+    dump('%s/charges_%02d.png.mcmeta' % (charge_textures, i), {'animation': {'interpolate': True, 'frametime': 60}})
 
 charges_cfg = config.items('default')
 for model, args in charges_cfg:
