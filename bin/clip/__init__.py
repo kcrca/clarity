@@ -1,6 +1,7 @@
+import json
+import math
 import os
 import shutil
-import math
 
 from PIL import Image
 
@@ -101,6 +102,12 @@ def darker(c, steps=1):
 
 def lighter(c, steps=1):
     return adjust(c, steps, 1.15)
+
+
+def dump(path, src):
+    with open(path, 'w') as fp:
+        json.dump(src, fp, indent=4)
+        fp.write('\n')
 
 
 # This composites an image onto another merging the alpha properly. This should be part of PIL, but I can't find it.

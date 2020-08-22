@@ -1,3 +1,8 @@
+#!/usr/bin/env python3
+
+# This program generates a small texture pack that adds redstone power numbers where
+# they can be added.
+
 import configparser
 import json
 import os
@@ -8,12 +13,6 @@ from PIL import Image
 from clip import *
 
 scale = 0.75
-
-
-def dump(path, src):
-    with open(path, 'w') as fp:
-        json.dump(src, fp, indent=4)
-        fp.write('\n')
 
 
 top = directory('top')
