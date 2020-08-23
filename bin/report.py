@@ -125,6 +125,8 @@ config_file = directory('config', 'report_default.cfg')
 if len(sys.argv) > 1:
     config_file = sys.argv[1]
 
+os.chdir(directory('minecraft'))
+
 config = configparser.ConfigParser()
 config.read(config_file)
 
