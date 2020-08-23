@@ -145,6 +145,7 @@ unused_textures = {}
 # Textures that are not reachable by the regular techniques
 special_textures = (
     'block/books',
+    'block/current',
     'block/destroy_stage_0',
     'block/destroy_stage_1',
     'block/destroy_stage_2',
@@ -157,6 +158,7 @@ special_textures = (
     'block/destroy_stage_9',
     'block/portal', # animation for the nether portal
     'block/lava_flow',
+    'block/note_block_notes',
     'block/water_flow',
     'item/clock_font',
 
@@ -169,6 +171,8 @@ special_textures = (
     'item/blank_banner_pattern',
     'item/carpet_for_llama',
     'item/netherite_ingot',
+
+    #
 )
 
 for file in glob.glob('%s/item/*.png' % clip.directory('textures')) + glob.glob(

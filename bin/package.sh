@@ -13,12 +13,13 @@ top="$PWD"
 packs=$top/site/packs
 version=`cat core/pack_version.txt`
 
-dirs=(clarity continuity changes beguile)
+dirs=(clarity continuity changes current beguile)
 rm -rf $packs $dirs
 
 # Create the packs dir
 test -d $packs || mkdir -p $packs
 out=$top/repack.out
+echo Output in "$out"
 rm -rf $out
 cp /dev/null $out
 
@@ -27,7 +28,7 @@ for f in bin/*.py; do
     dir=`dirname $f`
     script=`basename $f`
     case $script in
-	report.py)
+	report.py|gui_arrows.py)
 	    ;;
 	colorize.py)
 	    for cfg in `find $top -name colorize.cfg`; do
@@ -35,8 +36,6 @@ for f in bin/*.py; do
 		echo ... python3 $script $d 2>&1 | tee -a $out3
 		python3 $f $d
 	    done
-	    ;;
-	gui_arrows.py)
 	    ;;
 	*)
 	    echo ... python3 $script $a 2>&1 | tee -a $out
@@ -63,7 +62,7 @@ do_zip() {
     (
 	name=$1
 	ucname=`to_title $name`
-	zipname="$ucname $version.zip"
+	zipname="${ucname}_$version.zip"
 	cd $name
 
 	echo Building $zipname
@@ -123,6 +122,10 @@ for name in "${dirs[@]}"; do
 	# Now delete all the empty dirs we left behind
 	find -d connectivity -type d -empty -exec rmdir '{}' \;
 	;;
+    "current")
+        # This pack is nearly entirely built by current.py, but this is not.
+	cp $name.repack/override/pack*.png $name/
+	;;
     *)
 	;;
     esac
@@ -135,10 +138,10 @@ for name in "${dirs[@]}"; do
     )
 done
 
-echo Building "ClarityFamily $version.zip"
+echo Building "ClarityFamily_$version.zip"
 (
     cd $packs
-    zip -q "ClarityFamily $version.zip" *.zip
+    zip -q "ClarityFamily_$version.zip" *.zip
 )
 
 echo Building site

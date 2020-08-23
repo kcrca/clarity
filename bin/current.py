@@ -18,31 +18,31 @@ scale = 0.75
 top = directory('top')
 os.chdir(top)
 
-config_file = directory('config', 'charges.cfg')
+config_file = directory('config', 'current.cfg')
 config = configparser.ConfigParser()
 config.read(config_file)
 
-charge_states = 'charges/assets/minecraft/blockstates'
-charge_models = 'charges/assets/minecraft/models/block'
-charge_textures = 'charges/assets/minecraft/textures/block'
-if (os.path.exists('charges')):
-    shutil.rmtree('charges')
-os.makedirs(charge_states)
-os.makedirs(charge_models)
-os.makedirs(charge_textures)
+current_states = 'current/assets/minecraft/blockstates'
+current_models = 'current/assets/minecraft/models/block'
+current_textures = 'current/assets/minecraft/textures/block'
+if (os.path.exists('current')):
+    shutil.rmtree('current')
+os.makedirs(current_states)
+os.makedirs(current_models)
+os.makedirs(current_textures)
 
 pack = json.load(open('core/pack.mcmeta'))
-pack['pack']['description'] = "Clarity's chargess showing"
-dump('charges/pack.mcmeta', pack)
+pack['pack']['description'] = "Clarity texture showing power levels."
+dump('current/pack.mcmeta', pack)
 
 c_blockstates = directory('blockstates')
 d_blockstates = directory('defaults', 'blockstates')
 
-charges_digits = Image.open('%s/block/charges.png' % directory('textures')).convert('RGBA')
-w = charges_digits.size[0]
-h = charges_digits.size[1] / 16
+current_digits = Image.open('%s/block/current.png' % directory('textures')).convert('RGBA')
+w = current_digits.size[0]
+h = current_digits.size[1] / 16
 for i in range(0, 16):
-    digit_img = charges_digits.crop((0, i * h, w, (i + 1) * h))
+    digit_img = current_digits.crop((0, i * h, w, (i + 1) * h))
     full_digit = Image.new('RGBA', (16, 32), (0, 0, 0, 0))
     full_digit.paste(digit_img, (0, 0))
     pixels = full_digit.load()
@@ -51,11 +51,11 @@ for i in range(0, 16):
             if pixels[x, y] == (213, 53, 53, 255):
                 pixels[x, y] = (93, 0, 0, 255)
     full_digit.paste(digit_img, (0, 16))
-    full_digit.save('%s/charges_%02d.png' % (charge_textures, i))
-    dump('%s/charges_%02d.png.mcmeta' % (charge_textures, i), {'animation': {'interpolate': True, 'frametime': 60}})
+    full_digit.save('%s/current_%02d.png' % (current_textures, i))
+    dump('%s/current_%02d.png.mcmeta' % (current_textures, i), {'animation': {'interpolate': True, 'frametime': 60}})
 
-charges_cfg = config.items('default')
-for model, args in charges_cfg:
+current_cfg = config.items('default')
+for model, args in current_cfg:
     values = args.split()
     y = float(values[0])
     h_off = h
@@ -65,10 +65,10 @@ for model, args in charges_cfg:
     scaled_w = scale * w
     scaled_h = scale * h_off
     blocks = values[1:]
-    parent_model = '%s/charges_%s.json' % (charge_models, model)
+    parent_model = '%s/current_%s.json' % (current_models, model)
     face = {
         'uv': [0, 0, w, h_off],
-        'texture': '#charges'
+        'texture': '#current'
     }
     dump(parent_model, {'ambientocclusion': False,
                         'elements': [
@@ -93,9 +93,9 @@ for model, args in charges_cfg:
                         ]
                         })
     for i in range(1, 16):
-        dump('%s/charges_%s_%02d.json' % (charge_models, model, i),
-             {'parent': 'block/charges_%s' % model, 'textures':
-                 {'charges': 'block/charges_%02d' % i}
+        dump('%s/current_%s_%02d.json' % (current_models, model, i),
+             {'parent': 'block/current_%s' % model, 'textures':
+                 {'current': 'block/current_%02d' % i}
               })
     for block in blocks:
         state = None
@@ -123,5 +123,5 @@ for model, args in charges_cfg:
                     clauses.append({name: value})
                 multipart.append({'when': {'AND': clauses}, 'apply': v})
         for i in range(1, 16):
-            multipart.append({'when': {'power': i}, 'apply': {'model': 'block/charges_%s_%02d' % (model, i)}})
-        dump('%s/%s.json' % (charge_states, block), state)
+            multipart.append({'when': {'power': i}, 'apply': {'model': 'block/current_%s_%02d' % (model, i)}})
+        dump('%s/%s.json' % (current_states, block), state)
