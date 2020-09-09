@@ -1,0 +1,84 @@
+Biome,Color,Renders,,,,,,
+,,Grass Block,Grass,Tall Grass,Fern,Large Fern,Potted Fern,Sugar Cane
+"Badlands
+Badlands Plateau
+Eroded Badlands
+Modified Badlands Plateau
+Modified Wooded Badlands Plateau
+Wooded Badlands Plateau",#90814d,,,,,,,
+"Desert
+Desert Hills
+Desert Lakes
+Savanna
+Savanna Plateau
+Shattered Savanna
+Shattered Savanna Plateau
+Nether Wastes
+Soul Sand Valley
+Crimson Forest
+Warped Forest
+Basalt Deltas",#bfb755,,,,,,,
+"Jungle
+Jungle Hills
+Modified Jungle
+Bamboo Jungle
+Bamboo Jungle Hills",#59c93c,,,,,,,
+"Jungle Edge
+Modified Jungle Edge",#64c73f,,,,,,,
+"Forest
+Flower Forest
+Wooded Hills",#79c05a,,,,,,,
+"Birch Forest
+Birch Forest Hills
+Tall Birch Forest
+Tall Birch Hills",#88bb67,,,,,,,
+"Dark Forest
+Dark Forest Hills",#507a32,,,,,,,
+"Swamp
+Swamp Hills",#6a7039,,,,,,,
+"Swamp
+Swamp Hills
+when temp < 0.1",#4c763c,,,,,,,
+"Plains
+Sunflower Plains
+Beach",#91bd59,,,,,,,
+"Ocean
+Deep Ocean
+Warm Ocean
+Deep Warm Ocean
+Lukewarm Ocean
+Deep Lukewarm Ocean
+Cold Ocean
+Deep Cold Ocean
+Deep Frozen Ocean
+River
+The End
+Small End Islands
+End Barrens
+End Midlands
+End Highlands
+The Void",#8eb971,,,,,,,
+"Mushroom Fields
+Mushroom Field Shore",#55c93f,,,,,,,
+"Mountains
+Mountain Edge
+Gravelly Mountains
+Gravelly Mountains+
+Wooded Mountains
+Stone Shore",#8ab689,,,,,,,
+Snowy Beach,#83b593,,,,,,,
+"Giant Tree Taiga
+Giant Tree Taiga Hills",#86b87f,,,,,,,
+"Taiga
+Taiga Hills
+Taiga Mountains
+Giant Spruce Taiga
+Giant Spruce Taiga Hills",#86b783,,,,,,,
+"Snowy Tundra
+Snowy Mountains
+Ice Spikes
+Snowy Taiga
+Snowy Taiga Hills
+Snowy Taiga Mountains
+Frozen Ocean
+Frozen River",#80b497,,,,,,,
