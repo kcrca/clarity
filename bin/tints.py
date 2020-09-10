@@ -5,9 +5,9 @@ import sys
 from PIL import ImageColor, Image
 from PIL import ImageDraw
 
-if len(sys.argv) == 0:
+if len(sys.argv) == 1:
     sys.exit(0)
-
+print('argv: %s' % sys.argv)
 biomes = {}
 all = []
 for f in sys.argv[1:]:
