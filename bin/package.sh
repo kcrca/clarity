@@ -23,9 +23,10 @@ echo Output in "$out"
 rm -rf $out
 cp /dev/null $out
 
+which -a python3
+
 echo Regenerating derived files
 for f in bin/*.py; do
-    dir=`dirname $f`
     script=`basename $f`
     case $script in
 	report.py|gui_arrows.py)
