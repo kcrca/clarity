@@ -1,4 +1,5 @@
 #!/bin/sh
+set -e
 
 bin=`dirname $0`
 
@@ -24,7 +25,7 @@ c=$top/core
 cd $c
 for f in `find . -type d`; do
     o=$d/$f
-    [ -d $o ] && ln -s $o $f/.d
+    [ -d $o ] && ln -s $o $f/.d && echo ln -s $o $f/.d
 done
 
 for d in $top/*.repack/override; do
