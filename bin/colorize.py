@@ -58,7 +58,24 @@ def color_list(colors_config, has_alpha):
 
 
 def map_for(map_name, key_color, has_alpha):
-    key_list = color_list(color_config[map_name][key_color], has_alpha)
+    possible_keys = [key_color,]
+    try:
+        possible_keys+=  aliases[key_color]
+    except KeyError:
+        pass
+
+    first_key_error = None
+    key_list = None
+    for key in possible_keys:
+        try:
+            key_list = color_list(color_config[map_name][key], has_alpha)
+            break
+        except KeyError as e:
+            if not first_key_error:
+                first_key_error = e
+    if not key_list:
+        raise first_key_error
+
     num_colors = len(key_list)
     color_map = {}
     for color_name in color_config[map_name]:
