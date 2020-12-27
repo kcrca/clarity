@@ -2,3 +2,6 @@ The blockstate of a hopper allows you to see if it is enabled or not. I could
 texture the hopper to look differently. Although minecraft doesn't seem to
 update the model to use properly when this state changes, so for now, not doing this.
 (Bug: https://bugs.mojang.com/browse/MC-209658?filter=-2)
+
+Show unstable TNT differently? It may be like infested things, which *should* be the
+same. Or maybe not.
