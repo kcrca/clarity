@@ -2,7 +2,7 @@
     "parent": "block/cube",
     "textures": {
         "particle": "block/fletching_table_top",
-        "down": "block/birch_planks",
+        "down": "block/fletching_table_top",
         "up": "block/fletching_table_top",
         "north": "block/fletching_table_side",
         "east": "block/fletching_table_side",
