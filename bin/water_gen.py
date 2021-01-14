@@ -9,7 +9,7 @@ DIM = 16
 FRAMES = 32
 RADIANS_PER_FRAME = 2 * math.pi / FRAMES
 
-bg_color = (42, 63, 255)
+bg_color = (175, 175, 175)
 squares = (
     Square((4, 5), lighter(bg_color, 1), 7, 5, FRAMES),
     Square((9, 10), lighter(bg_color, 1), 4, 7, FRAMES),
