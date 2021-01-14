@@ -1,3 +1,7 @@
+#!/usr/bin/env python3
+
+__author__ = 'arnold'
+
 import random
 from PIL import Image, ImageDraw
 from clip import *
@@ -8,8 +12,8 @@ RADIANS_PER_FRAME = 2 * math.pi / FRAMES
 
 bg_color = (212, 90, 18)
 squares = (
-    Square((4, 5), lighter(bg_color, 2), 7, 5, FRAMES),
-    Square((9, 10), lighter(bg_color, 1), 4, 7, FRAMES),
+    Square((4, 5), lighter(bg_color, 4), 7, 5, FRAMES),
+    Square((9, 10), lighter(bg_color, 2), 4, 7, FRAMES),
 )
 
 img = Image.new('RGB', (DIM, FRAMES * DIM), color=bg_color)
@@ -45,7 +49,7 @@ stagger = []
 for x in range(0, DIM):
     stagger += (random.randint(0, 7),)
 
-color = lighter(bg_color, 1)
+color = lighter(bg_color, 2)
 for frame_num in range(0, FRAMES):
     frame = Image.new('RGB', (DIM, DIM), color=bg_color)
     draw = ImageDraw.Draw(frame)
