@@ -111,8 +111,10 @@ item/emerald.png
 item/quartz.png
 block/andesite.png
 block/diorite.png
+block/blackstone.png
 block/polished_andesite.png
 block/polished_diorite.png
+block/polished_blackstone.png
 block/red_sand.png
 item/gunpowder.png
 item/glowstone_dust.png
