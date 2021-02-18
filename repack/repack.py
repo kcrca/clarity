@@ -235,14 +235,8 @@ class ConnectedTextureChange(Change):
             shutil.copytree(override_path, ctm_dir)
             return
 
-        self.overview_img = Image.new('RGBA', (12 * src_img.size[0], 4 * src_img.size[1]))
-        self.overview_pos = [0, 0]
-
         def connected_images(src_path, dst_path):
             self._mask_block(src_path, dst_path, src_img, edgeless_img)
-            dst_img = Image.open(dst_path)
-            pos = int(re.search(r'(\d+)\.png$', dst_path).group(1))
-            self.overview_img.paste(dst_img, (pos % 12 * src_img.size[0], int(pos / 12) * src_img.size[1]))
 
         edgeless_img = self.edgeless_image(base)
 
@@ -251,7 +245,6 @@ class ConnectedTextureChange(Change):
         edgeless_img = deanimate(edgeless_img)
 
         copytree(self.template_dir, ctm_dir, ignore=only_png, overlay=True, copy_function=connected_images)
-        self.overview_img.save(os.path.join(ctm_dir, 'overview.png'))
 
         template_prop_file = os.path.join(self.template_dir, 'block.properties')
         with open(template_prop_file) as t:
