@@ -8,6 +8,7 @@ import os
 import re
 import shutil
 
+import javaproperties
 from PIL import Image
 from PIL import ImageDraw
 
@@ -17,8 +18,8 @@ re_re = re.compile(r'[][?*()\\+|]')
 target_opt_re = re.compile(r'([^:]*):(.*)')
 tile_spec_re = re.compile(r'(\d+)x(\d+)(?:@(\d+),(\d+))?')
 block_id_re = re.compile(r'(\d+):?([\d&-]*)')
-ctm_opt_re = re.compile(r'([A-Z]*):?([\d:&,-]+)@?([\d]*)')
-skip_dirs_re = re.compile(r'^\.|^(no|alternates|parts)$')
+ctm_opt_re = re.compile(r'^(T:|T$)?([|a-z0-9_]*):?@?([0-9]+)?$')
+skip_dirs_re = re.compile(r'^\.|^(no|alternates|parts|variants)$')
 solid_prop_re = re.compile(r'\nsolid=(\d+)\n')
 
 # Keep the support file list (.bak, .psd, ...) consistent with report_default.cfg
@@ -207,21 +208,23 @@ class ConnectedTextureChange(Change):
         return 'CTM(%s)' % self.template_name
 
     def set_options(self, label, opt_str):
-        opts, id_specs, edge_width_spec = ctm_opt_re.match(opt_str).groups()
+        m = ctm_opt_re.match(opt_str or '')
+        opts, id_specs, edge_width_spec = m.groups()
+        self.id_specs = (label,)
         if len(id_specs):
-            self.id_specs = id_specs.split(',')
-        else:
-            raise SyntaxError('No data specified for %s' % label)
-        self.do_tile_source = 'T' in opts
+            self.id_specs += tuple(id_specs.split('|'))
+        print('...: %s' % ' '.join(self.id_specs))
+        self.do_tile_source = opts and 'T' in opts
         if edge_width_spec:
             self.edge_width = int(edge_width_spec)
 
     def apply(self, src, dst, subpath):
         CopyChange().apply(src, dst, subpath)
-        super(ConnectedTextureChange, self).apply(src, dst, subpath)
+        if 'textures/block' in src:
+            super(ConnectedTextureChange, self).apply(src, dst, subpath)
 
     def do_change(self, dst, src_img):
-        ctm_top_dir = os.path.join(self.ctm_pass.dst_assets_dir, 'mcpatcher', 'ctm')
+        ctm_top_dir = os.path.join(self.ctm_pass.dst_assets_dir, 'optifine', 'ctm')
         safe_mkdirs(ctm_top_dir)
 
         base = os.path.basename(dst)[:-4]
@@ -232,8 +235,14 @@ class ConnectedTextureChange(Change):
             shutil.copytree(override_path, ctm_dir)
             return
 
+        self.overview_img = Image.new('RGBA', (12 * src_img.size[0], 4 * src_img.size[1]))
+        self.overview_pos = [0, 0]
+
         def connected_images(src_path, dst_path):
             self._mask_block(src_path, dst_path, src_img, edgeless_img)
+            dst_img = Image.open(dst_path)
+            pos = int(re.search(r'(\d+)\.png$', dst_path).group(1))
+            self.overview_img.paste(dst_img, (pos % 12 * src_img.size[0], int(pos / 12) * src_img.size[1]))
 
         edgeless_img = self.edgeless_image(base)
 
@@ -242,27 +251,22 @@ class ConnectedTextureChange(Change):
         edgeless_img = deanimate(edgeless_img)
 
         copytree(self.template_dir, ctm_dir, ignore=only_png, overlay=True, copy_function=connected_images)
+        self.overview_img.save(os.path.join(ctm_dir, 'overview.png'))
 
         template_prop_file = os.path.join(self.template_dir, 'block.properties')
         with open(template_prop_file) as t:
-            props = t.read()
+            props = javaproperties.load(t)
 
         # For these blocks, the right default block is the one with solid borders, which matters for getting the item
         # right
-        solid_spec = solid_prop_re.search(props)
-        if solid_spec:
-            solid_src = os.path.join(ctm_dir, '%s.png' % solid_spec.group(1))
+        if 'solid' in props:
+            solid_src = os.path.join(ctm_dir, '%s.png' % props['solid'])
             shutil.copy(solid_src, dst)
 
-        for id_spec in self.id_specs:
-            block_id, block_dmg = block_id_re.match(id_spec).groups()
-            if not block_id:
-                raise SyntaxError('%s: Invalid block ID spec: "%s"' % (base, id_spec))
-            prop_file = os.path.join(ctm_dir, 'block%s.properties' % block_id)
-            with open(prop_file, mode='w') as o:
-                if len(block_dmg):
-                    o.write('metadata=%s\n' % block_dmg.replace('&', ' '))
-                o.write(props)
+        prop_file = os.path.join(ctm_dir, '%s.properties' % self.id_specs[0])
+        props['matchBlocks'] = ' '.join(self.id_specs)
+        with open(prop_file, mode='w') as o:
+            javaproperties.dump(props, o)
 
     def edgeless_image(self, base):
         if self.do_tile_source:
@@ -270,7 +274,7 @@ class ConnectedTextureChange(Change):
             # I see some other case.
             edged = os.path.join(self.ctm_pass.src_block_dir, base + '.png')
             img = Image.open(edged).convert('RGBA')
-            tile_size = img.size[0] / 2
+            tile_size = int(img.size[0] / 2)
             tile_img = img.crop((1, 1, 1 + tile_size, 1 + tile_size))
             for x in range(1 - tile_size, img.size[0], tile_size):
                 for y in range(1 - tile_size, img.size[0], tile_size):
@@ -315,7 +319,7 @@ class ConnectedTextureChange(Change):
         n_mask = o_mask.resize(img_size)
         o_size = o_mask.size[0]
         n_size = img_size[0]
-        scale = n_size / o_size
+        scale = int(n_size / o_size)
 
         draw = ImageDraw.Draw(n_mask)
 
@@ -324,7 +328,7 @@ class ConnectedTextureChange(Change):
             bar = n_mask.crop((scale, 0, 2 * scale - 1, n_size))
             n_mask.paste(bar, (1, 0))
             n_mask.paste(bar, (n_size - scale, 0))
-            bar = n_mask.crop((0, scale, n_size, 2 * scale - 1))
+            bar = n_mask.crop((0, scale, n_size, 2 * int(scale) - 1))
             n_mask.paste(bar, (0, 1))
             n_mask.paste(bar, (0, n_size - scale))
 
@@ -448,14 +452,12 @@ def safe_mkdirs(dst_dir):
 
 def _target_re(target):
     if re_re.search(target):
-        return re.compile(target + '.png')
+        return re.compile('(?:%s).png' % target)
     return None
 
 
 class Pass(object):
     def __init__(self, src_name, dst_name):
-        self.changes_for = {}
-        self.re_changes = []
         self.default_change = CopyChange()
         self.src_top = normpath(src_name)
         self.dst_top = normpath(dst_name)
@@ -490,7 +492,9 @@ class Pass(object):
         m = target_opt_re.match(target)
         if m:
             target, opt_str = m.groups()
-            change = change.modified(target, opt_str)
+        else:
+            target, opt_str = target, ''
+        change = change.modified(target, opt_str)
         regexp = _target_re(target)
         if regexp:
             self.re_changes.append((regexp, change))
@@ -538,7 +542,7 @@ class Pass(object):
         return None
 
     def run(self):
-        print("=== %s" % self.src_top)
+        print("=== %s" % self.dst_top)
         for dir_name, subdir_list, file_list in os.walk(self.src_top, topdown=True):
             src_dir = dir_name
             dst_dir = dir_name.replace(self.src_top, self.dst_top)
@@ -630,7 +634,7 @@ clarity_pass = Pass(core, clarity)
 connectivity_pass = ConnectivityPass()
 continuity_pass = ContinuityPass(connectivity_pass)
 # connectivity pass currently disabled because that's only up to 1.14
-passes = (clarity_pass, continuity_pass)
+passes = (clarity_pass, continuity_pass, connectivity_pass)
 
 passes[0].default_change = CopyChange()
 
