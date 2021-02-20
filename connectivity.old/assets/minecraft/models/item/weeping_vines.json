@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/vines",
+  "textures": {
+    "layer0": "minecraft:block/weeping_vines_plant"
+  }
+}

@@ -1,0 +1,6 @@
+{
+    "parent": "item/gem",
+    "textures": {
+        "layer0": "item/end_crystal"
+    }
+}

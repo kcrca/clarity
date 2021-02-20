@@ -1,0 +1,6 @@
+{
+    "parent": "block/hopper",
+    "textures": {
+        "layer0": "item/hopper"
+    }
+}

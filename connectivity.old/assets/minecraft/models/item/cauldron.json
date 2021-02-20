@@ -1,0 +1,6 @@
+{
+    "parent": "block/cauldron",
+    "textures": {
+        "layer0": "item/cauldron"
+    }
+}

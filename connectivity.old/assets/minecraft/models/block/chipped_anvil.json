@@ -1,0 +1,7 @@
+{
+    "parent": "block/anvil",
+    "textures": {
+        "top": "block/chipped_anvil_top",
+        "side": "block/chipped_anvil_top"
+    }
+}

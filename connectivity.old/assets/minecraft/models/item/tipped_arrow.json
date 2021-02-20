@@ -1,0 +1,7 @@
+{
+    "parent": "item/fortyfive",
+    "textures": {
+        "layer0": "item/tipped_arrow_head",
+        "layer1": "item/tipped_arrow_base"
+    }
+}

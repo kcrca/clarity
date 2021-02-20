@@ -1,0 +1,19 @@
+{
+    "parent": "item/cuboid",
+    "elements": [
+        {   "from": [ 4, 0, 1 ],
+            "to": [ 12, 1, 15 ],
+            "faces": {
+                "down":  { "uv": [ 1, 1, 15, 15 ], "texture": "#sides" },
+                "up":    { "uv": [ 1, 1, 15, 15 ], "texture": "#sides" }
+	    }
+        },
+        {   "from": [ 4, 5, 1 ],
+            "to": [ 12, 6, 15 ],
+            "faces": {
+                "down":  { "uv": [ 1, 1, 15, 15 ], "texture": "#sides" },
+                "up":    { "uv": [ 1, 1, 15, 15 ], "texture": "#sides" }
+	    }
+        }
+    ]
+}

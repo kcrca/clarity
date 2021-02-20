@@ -1,0 +1,6 @@
+{
+    "parent": "block/template_vines",
+    "textures": {
+	"vine": "block/twisting_vines_plant"
+    }
+}

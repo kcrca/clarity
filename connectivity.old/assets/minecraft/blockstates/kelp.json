@@ -1,0 +1,16 @@
+{
+    "multipart": [
+	{
+	    "apply": [
+		{"model": "block/kelp"},
+		{"model": "block/kelp_2"},
+		{"model": "block/kelp_3"},
+		{"model": "block/kelp_4"}
+	    ]
+	},
+	{
+	    "when": { "age": 25 },
+	    "apply": {"model": "block/kelp_top" }
+	}
+    ]
+}

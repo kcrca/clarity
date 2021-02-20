@@ -1,0 +1,6 @@
+{
+    "parent": "item/fortyfive",
+    "textures": {
+        "layer0": "item/rabbit"
+    }
+}

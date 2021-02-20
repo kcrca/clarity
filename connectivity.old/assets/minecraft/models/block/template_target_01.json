@@ -1,0 +1,57 @@
+{
+  "parent": "block/block",
+  "textures": {
+    "target": "minecraft:block/target",
+    "particle": "minecraft:block/target",
+    "power": "minecraft:block/target_03"
+  },
+  "elements": [
+      {   "from": [ 0, 0, 0 ],
+	  "to": [ 16, 16, 16 ],
+	  "faces": {
+	      "down":  { "texture": "#target", "cullface": "down" },
+	      "up":    { "texture": "#target", "cullface": "up" },
+	      "north": { "texture": "#target", "cullface": "north" },
+	      "south": { "texture": "#target", "cullface": "south" },
+	      "west":  { "texture": "#target", "cullface": "west" },
+	      "east":  { "texture": "#target", "cullface": "east" }
+	  }
+      },
+      {   "from": [ 5.5, -0.01, 6.5 ],
+	  "to": [ 10.5, -0.01, 9.5 ],
+	  "faces": {
+	      "down":  { "texture": "#power", "uv": [ 10, 8, 13, 13 ], "rotation": 90 }
+	  }
+      },
+      {   "from": [ 5.5, 16.01, 6.5 ],
+	  "to": [ 10.5, 16.01, 9.5 ],
+	  "faces": {
+	      "up":  { "texture": "#power", "uv": [ 10, 8, 13, 13 ], "rotation": 90 }
+	  }
+      },
+      {   "from": [ -0.01, 5.5, 6.5 ],
+	  "to": [ -0.01, 10.5, 9.5 ],
+	  "faces": {
+	      "west":  { "texture": "#power", "uv": [ 10, 8, 13, 13 ] }
+	  }
+      },
+      {   "from": [ 16.01, 5.5, 6.5 ],
+	  "to": [ 16.01, 10.5, 9.5 ],
+	  "faces": {
+	      "east":  { "texture": "#power", "uv": [ 10, 8, 13, 13 ] }
+	  }
+      },
+      {   "from": [ 6.5, 5.5, -0.01 ],
+	  "to": [ 9.5, 10.5, -0.01 ],
+	  "faces": {
+	      "north":  { "texture": "#power", "uv": [ 10, 8, 13, 13 ] }
+	  }
+      },
+      {   "from": [ 6.5, 5.5, 16.01 ],
+	  "to": [ 9.5, 10.5, 16.01 ],
+	  "faces": {
+	      "south":  { "texture": "#power", "uv": [ 10, 8, 13, 13 ] }
+	  }
+      }
+  ]
+}

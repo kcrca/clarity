@@ -1,0 +1,6 @@
+{
+    "parent": "item/sword",
+    "textures": {
+        "layer0": "item/diamond_sword"
+    }
+}

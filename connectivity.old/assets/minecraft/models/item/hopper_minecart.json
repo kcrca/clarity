@@ -1,0 +1,90 @@
+{
+    "parent": "block/block",
+    "textures": {
+        "sides": "item/minecart_sides",
+        "top": "item/minecart_top",
+        "htop": "block/hopper_top",
+        "side": "block/hopper_outside",
+        "inside": "block/hopper_inside"
+    },
+    "elements": [
+        {   "from": [ -2, 0, 0 ],
+            "to": [ 18, 2, 16 ],
+            "faces": {
+                "down":  { "uv": [ 0, 0, 10, 8 ], "texture": "#top" },
+                "up":    { "uv": [ 0, 8, 10, 16 ], "texture": "#top" },
+                "north": { "uv": [ 0, 9, 10, 10 ], "texture": "#sides" },
+                "south": { "uv": [ 0, 8, 10, 9 ], "texture": "#sides" },
+                "west":  { "uv": [ 0, 10, 8, 11 ], "texture": "#sides" },
+                "east":  { "uv": [ 0, 11, 8, 12 ], "texture": "#sides" }
+	    }
+        },
+	{   "from": [ -2, 2, 0 ],
+            "to": [ 0, 10, 16 ],
+            "faces": {
+                "down":  { "uv": [ 0, 0, 10, 8 ], "texture": "#sides" },
+                "up":    { "uv": [ 10, 0, 11, 8 ], "texture": "#sides" },
+                "north": { "uv": [ 8, 0, 9, 4 ], "texture": "#sides" },
+                "south": { "uv": [ 9, 0, 10, 4 ], "texture": "#sides" },
+                "west":  { "uv": [ 0, 4, 8, 8 ], "texture": "#sides" },
+                "east":  { "uv": [ 0, 0, 8, 4 ], "texture": "#sides" }
+	    }
+        },
+	{   "from": [ 16, 2, 0 ],
+            "to": [ 18, 10, 16 ],
+            "faces": {
+                "down":  { "uv": [ 0, 0, 10, 8 ], "texture": "#sides" },
+                "up":    { "uv": [ 11, 0, 12, 8 ], "texture": "#sides" },
+                "south": { "uv": [ 8, 0, 9, 4 ], "texture": "#sides" },
+                "north": { "uv": [ 9, 0, 10, 4 ], "texture": "#sides" },
+                "east":  { "uv": [ 0, 4, 8, 8 ], "texture": "#sides" },
+                "west":  { "uv": [ 0, 0, 8, 4 ], "texture": "#sides" }
+	    }
+        },
+	{   "from": [ 0, 2, 0 ],
+            "to": [ 16, 10, 2 ],
+            "faces": {
+                "down":  { "uv": [ 0, 0, 10, 8 ], "texture": "#sides" },
+                "up":    { "uv": [ 0, 12, 8, 13 ], "texture": "#sides" },
+                "west":  { "uv": [ 8, 0, 9, 4 ], "texture": "#sides" },
+                "east":	 { "uv": [ 9, 0, 10, 4 ], "texture": "#sides" },
+                "north": { "uv": [ 0, 4, 8, 8 ], "texture": "#sides" },
+                "south": { "uv": [ 0, 0, 8, 4 ], "texture": "#sides" }
+	    }
+        },
+	{   "from": [ 0, 2, 14 ],
+            "to": [ 16, 10, 16 ],
+            "faces": {
+                "down":  { "uv": [ 0, 0, 10, 8 ], "texture": "#sides" },
+                "up":    { "uv": [ 0, 13, 8, 14 ], "texture": "#sides" },
+                "east":  { "uv": [ 8, 0, 9, 4 ], "texture": "#sides" },
+                "west":  { "uv": [ 9, 0, 10, 4 ], "texture": "#sides" },
+                "south": { "uv": [ 0, 4, 8, 8 ], "texture": "#sides" },
+                "north": { "uv": [ 0, 0, 8, 4 ], "texture": "#sides" }
+	    }
+        },
+	{   "from": [ 2, 7, 2 ],
+            "to": [ 14, 13, 14 ],
+            "faces": {
+                "down":  { "uv": [ 0, 0, 16, 16 ], "texture": "#side" },
+                "up":    { "uv": [ 0, 0, 16, 16 ], "texture": "#htop" },
+                "east":  { "uv": [ 0, 0, 16, 6 ], "texture": "#side" },
+                "west":  { "uv": [ 0, 0, 16, 6 ], "texture": "#side" },
+                "south": { "uv": [ 0, 0, 16, 6 ], "texture": "#side" },
+                "north": { "uv": [ 0, 0, 16, 6 ], "texture": "#side" }
+	    }
+        },
+	{   "from": [ 12.50, 13, 12.50 ],
+            "to": [ 3.50, 8, 3.50 ],
+            "faces": {
+                "down":  { "uv": [ 0, 0, 16, 16 ], "texture": "#side" },
+                "up":    { "uv": [ 2, 2, 14, 14 ], "texture": "#inside" },
+                "east":  { "uv": [ 0, 0, 16, 6 ], "texture": "#side" },
+                "west":  { "uv": [ 0, 0, 16, 6 ], "texture": "#side" },
+                "south": { "uv": [ 0, 0, 16, 6 ], "texture": "#side" },
+                "north": { "uv": [ 0, 0, 16, 6 ], "texture": "#side" }
+	    }
+        }
+    ]
+}
+

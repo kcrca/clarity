@@ -1,0 +1,6 @@
+{
+    "parent": "item/tiny",
+    "textures": {
+        "layer0": "block/brown_mushroom"
+    }
+}

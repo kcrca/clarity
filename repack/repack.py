@@ -213,15 +213,14 @@ class ConnectedTextureChange(Change):
         self.id_specs = (label,)
         if len(id_specs):
             self.id_specs += tuple(id_specs.split('|'))
-        print('...: %s' % ' '.join(self.id_specs))
         self.do_tile_source = opts and 'T' in opts
         if edge_width_spec:
             self.edge_width = int(edge_width_spec)
 
     def apply(self, src, dst, subpath):
         CopyChange().apply(src, dst, subpath)
-        if 'textures/block' in src:
-            super(ConnectedTextureChange, self).apply(src, dst, subpath)
+        # if 'textures/block' in src:
+        super(ConnectedTextureChange, self).apply(src, dst, subpath)
 
     def do_change(self, dst, src_img):
         ctm_top_dir = os.path.join(self.ctm_pass.dst_assets_dir, 'optifine', 'ctm')
@@ -257,22 +256,12 @@ class ConnectedTextureChange(Change):
             shutil.copy(solid_src, dst)
 
         prop_file = os.path.join(ctm_dir, '%s.properties' % self.id_specs[0])
-        props['matchBlocks'] = ' '.join(self.id_specs)
+        match = 'matchTiles' if self.do_tile_source else 'matchBlocks'
+        props[match] = ' '.join(self.id_specs)
         with open(prop_file, mode='w') as o:
             javaproperties.dump(props, o)
 
     def edgeless_image(self, base):
-        if self.do_tile_source:
-            # This is pretty hard-coded, but then this is the only case I've seen, so I'll wait to generalize it until
-            # I see some other case.
-            edged = os.path.join(self.ctm_pass.src_block_dir, base + '.png')
-            img = Image.open(edged).convert('RGBA')
-            tile_size = int(img.size[0] / 2)
-            tile_img = img.crop((1, 1, 1 + tile_size, 1 + tile_size))
-            for x in range(1 - tile_size, img.size[0], tile_size):
-                for y in range(1 - tile_size, img.size[0], tile_size):
-                    img.paste(tile_img, (x, y))
-            return img
         edgeless = os.path.join(self.ctm_pass.edgeless_block_dir, base + '.png')
         return Image.open(edgeless).convert('RGBA')
 
@@ -494,11 +483,7 @@ class Pass(object):
         else:
             path = target + '.png'
             if path in self.changes_for:
-                # existing = self.changes_for[path]
-                # print 'Duplicate change for %s: %s and %s' % (
-                #     target, change.name(), existing.name())
                 self.changes_for[path] += (change,)
-                # os.sys.exit(1)
             else:
                 self.changes_for[path] = (change,)
 

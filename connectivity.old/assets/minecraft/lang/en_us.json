@@ -1,0 +1,7 @@
+{
+  "gui.recipebook.toggleRecipes.all": "Show all",
+  "gui.recipebook.toggleRecipes.blastable": "Show Blastable",
+  "gui.recipebook.toggleRecipes.craftable": "Show Craftable",
+  "gui.recipebook.toggleRecipes.smeltable": "Show Smeltable",
+  "gui.recipebook.toggleRecipes.smokable": "Show Smokable"
+}
