@@ -15,7 +15,7 @@ from PIL import ImageDraw
 __author__ = 'arnold'
 
 re_re = re.compile(r'[][?*()\\+|]')
-target_opt_re = re.compile(r'([^:]*):(.*)')
+target_opt_re = re.compile(r'([^:@]*):?(.*)')
 tile_spec_re = re.compile(r'(\d+)x(\d+)(?:@(\d+),(\d+))?')
 block_id_re = re.compile(r'(\d+):?([\d&-]*)')
 ctm_opt_re = re.compile(r'^(T:|T$)?([|a-z0-9_]*):?@?([0-9]+)?$')
@@ -325,7 +325,7 @@ class ConnectedTextureChange(Change):
 
     def corner_edge(self, corner, scale, mask, edged_img, dst_img):
         """
-        Given a mask, figure out how to handle the edge in the given corner. When the edge width is one, this is trival
+        Given a mask, figure out how to handle the edge in the given corner. When the edge width is one, this is trivial
         and so this code is not used (although it should work).
 
         There are the following possible cases:
@@ -333,7 +333,7 @@ class ConnectedTextureChange(Change):
         (*) The corner is "on" in the mask and connected along both x and y axes. In this case, the edge on the image is
             already correct, so do nothing.
         (*) The corner is not "on" in the mask. This also means that no line runs to the corner. In this case, fill the
-            corner of the image with the nearst color from the center.
+            corner of the image with the nearest color from the center.
         (*) The corner is "on" in the mask, and is connected to along one axis. In this case, smear the end of the edge
             closest along that axis through the corner, extending the edge along that axis out to the edge of the image.
         (*) The corner is "on" in the mask, but no line runs to it. In this case, the corner will be attached to edges
@@ -344,14 +344,14 @@ class ConnectedTextureChange(Change):
         :param mask: The mask
         :param edged_img: The image that contains the edge
         :param dst_img: The final image, which at this stage has been de-edged
-        :return: The incoming image
+        :return: The incoming image, modified
         """
 
         w = self.edge_width
         # The corner pixel in question (in the edged and block images)
         cx, cy = corner
         # Mask x,y that contains the corner pixel
-        mx, my = cx / scale, cy / scale
+        mx, my = int(cx / scale), int(cy / scale)
 
         # The direction away from the pixel towards the middle
         x_dir, y_dir = 1 if cx == 0 else -1, 1 if cy == 0 else -1
@@ -419,7 +419,7 @@ class ConnectedTextureChange(Change):
 
 
 def test_is_on(mask, mx, my):
-    return mask.getpixel((mx, my)) != (0, 0, 0, 0)
+    return mask.getpixel((mx, my))[3] != 0
 
 
 def safe_mkdirs(dst_dir):
