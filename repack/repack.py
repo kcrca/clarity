@@ -219,7 +219,6 @@ class ConnectedTextureChange(Change):
 
     def apply(self, src, dst, subpath):
         CopyChange().apply(src, dst, subpath)
-        # if 'textures/block' in src:
         super(ConnectedTextureChange, self).apply(src, dst, subpath)
 
     def do_change(self, dst, src_img):
@@ -292,7 +291,6 @@ class ConnectedTextureChange(Change):
         dst_img.paste(block_img, mask_img)
         edger(block_img, dst_img)
         save(dst_img, dst)
-        # dst_img.show()
         return
 
     def rescale_mask(self, o_mask, img_size):
