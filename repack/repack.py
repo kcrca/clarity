@@ -54,7 +54,8 @@ class Change(object):
         return self.__class__.__name__.replace('Change', '')
 
     def set_options(self, label, opt_str):
-        raise SyntaxError('%s: No options allowed' % self.name())
+        if opt_str:
+            raise SyntaxError('%s: No options allowed' % self.name())
 
     def modified(self, label, opt_str):
         m = copy.deepcopy(self)
@@ -164,6 +165,7 @@ class TileOverEdge(SimpleChange):
 
 
 change_by_name = {
+    'copy': CopyChange(),
     'erase_edge': EraseEdgeChange(),
     'tile_over_edge': TileOverEdge()}
 
