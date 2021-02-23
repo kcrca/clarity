@@ -114,15 +114,6 @@ for name in "${dirs[@]}"; do
 	find $name/assets/minecraft/textures/block -type d -depth 1 -print0 | xargs -0 rm -r
 	find $name \( -name '*.pxm' -o -name '*.psd' -o -name '*.py' -o -name '*.sh' \) -print0 | xargs -0 rm
 	;;
-    "connectivity")
-	# Strip out everything but the continuity info and pack stuff
-	# First remove files we don't need.
-	for f in $(find connectivity \( -name mcpatcher -o -name 'pack*' \) -prune -o -print); do
-	    test -f $f && rm $f
-	done
-	# Now delete all the empty dirs we left behind
-	find -d connectivity -type d -empty -exec rmdir '{}' \;
-	;;
     "current")
         # This pack is nearly entirely built by current.py, but this is not.
 	cp $name.repack/override/pack*.png $name/

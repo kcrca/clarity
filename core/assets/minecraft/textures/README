@@ -130,6 +130,13 @@ block/dark_oak_planks.png
 block/acacia_planks.png
 block/warped_planks.png
 block/crimson_planks.png
+block/jungle_pressure_plate.png
+block/birch_pressure_plate.png
+block/spruce_pressure_plate.png
+block/dark_oak_pressure_plate.png
+block/acacia_pressure_plate.png
+block/warped_pressure_plate.png
+block/crimson_pressure_plate.png
 block/spruce_log.png
 block/dark_oak_log.png
 block/acacia_log.png
