@@ -33,7 +33,6 @@ textures = clip.directory('textures', 'block')
 models = clip.directory('models', 'block')
 books_png = os.path.join(textures, 'books.png')
 continuity = clip.directory('top', 'continuity.repack', 'override', 'assets', 'minecraft', 'textures', 'block')
-connectivity = clip.directory('top', 'connectivity.repack', 'override', 'assets', 'minecraft', 'optifine', 'ctm', 'bookshelf')
 books_img = Image.open(books_png)
 books_pixel = books_img.load()
 
@@ -102,12 +101,6 @@ bookshelf_for_pack(1, 14, textures, 'bookshelf')
 # Do the continuity (unbordered) shelves.
 bookshelf_for_pack(0, 16, continuity, 'bookshelf')
 
-# Do the connectivity shelves.
-bookshelf_for_pack(1, 15, connectivity, '0')
-bookshelf_for_pack(0, 16, connectivity, '1')
-bookshelf_for_pack(0, 15, connectivity, '2')
-bookshelf_for_pack(1, 14, connectivity, '3')
-
 dirs = ('north', 'east', 'west', 'south')
 shelf_nums = list(range(0, NUM_BLOCKS))
 
@@ -132,13 +125,3 @@ for i in range(0, NUM_BLOCKS):
 
 with open(os.path.join(clip.directory('blockstates'), 'bookshelf.json'), 'w') as f:
     json.dump(blockstate, f, indent=2, sort_keys=True)
-
-ctm_props = {
-    'matchBlocks': 'bookshelf',
-    'method': 'horizontal',
-    'faces': 'sides',
-}
-for i in range(0, NUM_BLOCKS):
-    ctm_props['tiles'] = ' '.join(('%d_%02d' % (t, i)) for t in range(0, 4))
-    with open(os.path.join(connectivity, 'bookshelf_%02d.properties' % i), 'w') as fp:
-        javaproperties.dump(ctm_props, fp)
