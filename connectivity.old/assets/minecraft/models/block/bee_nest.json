@@ -1,6 +1,0 @@
-{
-    "parent": "block/bee_nest_template",
-    "textures": {
-        "front": "block/bee_nest_front_honey_0"
-    }
-}

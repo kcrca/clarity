@@ -1,6 +1,0 @@
-{
-    "parent": "block/odd_cross",
-    "textures": {
-        "cross": "block/bamboo_stage0"
-    }
-}

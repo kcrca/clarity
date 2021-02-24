@@ -1,6 +1,0 @@
-{
-    "parent": "item/cuboid",
-    "textures": {
-        "sides": "item/nether_brick"
-    }
-}

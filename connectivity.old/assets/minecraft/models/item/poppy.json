@@ -1,6 +1,0 @@
-{
-    "parent": "item/small",
-    "textures": {
-        "layer0": "block/poppy"
-    }
-}

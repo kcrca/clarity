@@ -1,8 +1,0 @@
-{
-    "parent": "block/daylight_detector",
-    "textures": {
-        "top": "block/daylight_detector_inverted_09",
-        "ns": "block/daylight_detector_inverted_02",
-        "ew": "block/daylight_detector_inverted_03"
-    }
-}

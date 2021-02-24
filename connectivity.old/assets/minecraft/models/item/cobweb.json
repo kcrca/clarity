@@ -1,6 +1,0 @@
-{
-    "parent": "item/fortyfive",
-    "textures": {
-        "layer0": "block/cobweb"
-    }
-}

@@ -1,9 +1,0 @@
-{
-    "parent": "block/cube_bottom_top",
-    "textures": {
-        "particle": "item/shulker_shell_side",
-        "top": "item/shulker_shell_top",
-        "bottom": "item/transparent",
-        "side": "item/shulker_shell_side"
-    }
-}

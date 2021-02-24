@@ -1,6 +1,0 @@
-{
-    "parent": "block/template_glass_pane_across",
-    "textures": {
-        "pane": "block/blue_stained_glass"
-    }
-}

@@ -1,6 +1,0 @@
-{
-    "parent": "item/sheet",
-    "textures": {
-        "layer0": "block/sugar_cane"
-    }
-}
