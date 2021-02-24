@@ -2,8 +2,7 @@
 rm -f *.gif
 top=../../..
 set -e
-# Disabled connectivity beause it is only up to 1.14
-for c in clarity continuity; do
+for c in clarity connectivity continuity; do
     uc=$(echo "$(tr a-z A-Z <<< ${c:0:1})${c:1}")
     convert -composite \
 	${c}_example.png \
@@ -11,5 +10,5 @@ for c in clarity continuity; do
 	-fill white -font Verdana -pointsize 24 -gravity SouthWest -annotate +84+6 ${uc} \
 	${c}_frame.gif
 done
-convert -delay 100 *.gif -resize 750x483 -loop 0 ../../comparison_anim.gif
+convert -delay 100 *.gif -loop 0 ../../comparison_anim.gif
 rm -f *.gif
