@@ -1,17 +1,16 @@
 #!/usr/bin/env python3
 import glob
-import os
-import sys
-import javaproperties
-
-__author__ = 'arnold'
-
-import random
 import json
-import clip
+import os
+import random
+import sys
 
 from PIL import Image
 from PIL import ImageDraw
+
+import clip
+
+__author__ = 'arnold'
 
 NUM_BLOCKS = 20
 
@@ -47,7 +46,6 @@ for x in range(0, w):
         books.append(book_img)
         start_x = x
         cur_color = books_pixel[start_x, h - 1]
-
 
 
 def create_shelf(start, width, avoid, avail):

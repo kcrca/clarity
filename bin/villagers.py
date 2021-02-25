@@ -3,9 +3,14 @@ import configparser
 import glob
 import os
 import re
+import shutil
 import sys
+
 from PIL import Image
+
 import clip
+
+__author__ = 'arnold'
 
 config = configparser.ConfigParser()
 config.read(clip.directory('config', 'villagers.cfg'))
@@ -13,7 +18,9 @@ config.read(clip.directory('config', 'villagers.cfg'))
 hair_re = re.compile(r'([^@]*)(?:@(\d+\.?\d*))?')
 brows_re = re.compile(r'(\d+)@(\d+),(\d+)')
 hair_color_re = re.compile(r'(\d+),(\d+)')
-avatar_dir = '../../../mcpatcher/mob/villager'
+avatar_dir = clip.directory('minecraft', 'optifine', 'random', 'entity', 'villager', 'profession')
+shutil.rmtree(avatar_dir, ignore_errors=True)
+os.makedirs(avatar_dir)
 
 for filename in glob.glob('%s/*' % avatar_dir):
     os.unlink(filename)
@@ -27,7 +34,7 @@ villager_imgs = {}
 career_imgs = {}
 skin_imgs = {}
 
-os.chdir(clip.directory('textures', 'entity/villager'))
+os.chdir(clip.directory('textures', 'entity', 'villager'))
 
 career_files = ()
 for file in glob.glob('parts/*.png'):
@@ -209,7 +216,7 @@ for career in career_imgs:
         props.write('# %2d: %6.7f %s\n' % (i, weight, genotypes[i]))
 
     props.write('#     %6.3f\n' % t)
+    props.write('professions.1=%s\n' % career)
     props.write('skins.1=1-%d\n' % num_avatars)
     props.write('weights.1=%s\n' % weights)
-    props.write('\nskins.2=1\n')  # should be changed to canonical texture
     props.close()
