@@ -72,6 +72,9 @@ if hair_color_desc:
         m = hair_color_re.match(hair_color_desc[i])
         hair_color_pos.append(tuple(int(v) for v in m.groups()))
 
+hat_rect_spec = re.split(r'[,\s]+', config.get('settings', 'hat'))
+hat_rect = tuple(int(x) for x in hat_rect_spec)
+
 if (len(eyebrows) > 0) != (len(hair_color_pos) > 0):
     print("Must specify both eyebrows and hair_color pos, or neither.")
     sys.exit(1)
@@ -167,6 +170,11 @@ def build_avatars(career):
                                 if need_eyebrows:
                                     img.putpixel((x + i, y), eyebrow_color)
                 img = Image.alpha_composite(img, hair_img)
+
+                # Finally, re-paste head-gear to cover up any hair properly
+                hat = career_img.crop(hat_rect)
+                img.paste(hat, hat_rect, mask=hat)
+                # img = Image.alpha_composite(img, hat)
 
                 avatar_path = '%s/%s%d.png' % (avatar_dir, career, avatar_num)
                 img.save(avatar_path)
