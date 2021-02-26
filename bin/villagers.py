@@ -26,7 +26,6 @@ for filename in glob.glob('%s/*' % avatar_dir):
     os.unlink(filename)
 
 people_config = config.items('people')
-canonical_config = config.items('canonical')
 
 style_imgs = {}
 hair_imgs = {}
@@ -47,10 +46,6 @@ for f in career_files:
     career = os.path.basename(f)[:-4]
     careers += (career,)
     career_imgs[career] = Image.open(f).convert("RGBA")
-
-canonical = {}
-for career, desc in canonical_config:
-    canonical[career] = desc.split()
 
 all_desc = config.get('people', 'all')
 all_hairs = all_desc.split()
@@ -173,13 +168,9 @@ def build_avatars(career):
                                     img.putpixel((x + i, y), eyebrow_color)
                 img = Image.alpha_composite(img, hair_img)
 
-                avatar_num_str = str(avatar_num)
-                avatar_path = '%s/%s%s.png' % (avatar_dir, career, avatar_num_str)
+                avatar_path = '%s/%s%d.png' % (avatar_dir, career, avatar_num)
                 img.save(avatar_path)
                 avatar_num += 1
-                if career in canonical and canonical[career] == [skin, hair]:
-                    img.save('%s.png' % career)
-                    print('Canonical %s: %s' % (career, genotype))
                 if style == 'shaved':
                     break
 
