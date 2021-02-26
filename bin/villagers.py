@@ -18,7 +18,8 @@ config.read(clip.directory('config', 'villagers.cfg'))
 hair_re = re.compile(r'([^@]*)(?:@(\d+\.?\d*))?')
 brows_re = re.compile(r'(\d+)@(\d+),(\d+)')
 hair_color_re = re.compile(r'(\d+),(\d+)')
-avatar_dir = clip.directory('minecraft', 'optifine', 'random', 'entity', 'villager', 'profession')
+villager_dir = clip.directory('minecraft', 'optifine', 'random', 'entity', 'villager')
+avatar_dir = os.path.join(villager_dir, 'profession')
 shutil.rmtree(avatar_dir, ignore_errors=True)
 os.makedirs(avatar_dir)
 
@@ -219,3 +220,6 @@ for career in career_imgs:
     props.write('skins.1=1-%d\n' % num_avatars)
     props.write('weights.1=%s\n' % weights)
     props.close()
+
+shutil.copy(os.path.join('parts', 'villager2.png'), villager_dir)
+shutil.copy(os.path.join('parts', 'villager.properties'), villager_dir)
