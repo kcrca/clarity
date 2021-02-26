@@ -129,7 +129,7 @@ def build_avatars(career):
                 if style == 'shaved':
                     hair_path = 'parts/hair_styles/hair_%s.png' % style
                 else:
-                    hair_path = 'parts/hair_styles/test_crap/hair_%s_%s.png' % (style, hair)
+                    hair_path = 'parts/hair_styles/hair_%s_%s.png' % (style, hair)
 
                 if (hair, style) in hair_imgs:
                     hair_img = hair_imgs[(hair, style)]
