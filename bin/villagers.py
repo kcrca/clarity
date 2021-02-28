@@ -148,18 +148,26 @@ props = open(prop_path, 'w')
 
 t = 0.0
 weights = []
+unemployed_textures = []
+unemployed_weights = []
 for i in range(0, len(avatars)):
     if avatars[i]:
-        weight = avatars[i][1] * 100
-        t += weight
-        weights.append("%d" % round(weight * 100_000))
-        props.write('# %2d: %6.7f %s\n' % (i, weight, avatars[i][0]))
+        odds = avatars[i][1] * 100
+        t += odds
+        weight = odds * 100_000
+        weights.append("%d" % round(weight))
+        genotype = avatars[i][0]
+        props.write('# %2d: %6.7f %s\n' % (i, odds, genotype))
+        if genotype.endswith('_dyed_default'):
+            unemployed_textures.append("%d" % i)
+            unemployed_weights.append("%d" % weight)
     else:
         assert i in (0, 1)
 
 props.write('#     %6.3f\n' % t)
 props.write('professions.1=none\n')
-props.write('textures.1=1\n')
+props.write('textures.1=1,%s\n' % ','.join(unemployed_textures))
+props.write('weights.1=1,%s\n' % ','.join(unemployed_weights))
 props.write('textures.2=1-%d\n' % (len(avatars) - 2))
 props.write('weights.2=0,%s\n' % ','.join(weights))
 props.close()
