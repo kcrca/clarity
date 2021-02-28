@@ -157,7 +157,6 @@ for i in range(0, len(avatars)):
     else:
         assert i in (0, 1)
 
-
 props.write('#     %6.3f\n' % t)
 props.write('professions.1=none\n')
 props.write('textures.1=1\n')
