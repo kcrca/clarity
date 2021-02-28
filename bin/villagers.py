@@ -19,7 +19,7 @@ hair_re = re.compile(r'([^@]*)(?:@(\d+\.?\d*))?')
 brows_re = re.compile(r'(\d+)@(\d+),(\d+)')
 hair_color_re = re.compile(r'(\d+),(\d+)')
 villager_dir = clip.directory('minecraft', 'optifine', 'random', 'entity', 'villager')
-avatar_dir = os.path.join(villager_dir, 'profession')
+avatar_dir = os.path.join(villager_dir)
 shutil.rmtree(avatar_dir, ignore_errors=True)
 os.makedirs(avatar_dir)
 
@@ -35,18 +35,6 @@ career_imgs = {}
 skin_imgs = {}
 
 os.chdir(clip.directory('textures', 'entity', 'villager'))
-
-career_files = ()
-for file in glob.glob('parts/*.png'):
-    name = os.path.basename(file)
-    if not name.startswith('skin') and not name.startswith('hair'):
-        career_files += (file,)
-
-careers = ()
-for f in career_files:
-    career = os.path.basename(f)[:-4]
-    careers += (career,)
-    career_imgs[career] = Image.open(f).convert("RGBA")
 
 all_desc = config.get('people', 'all')
 all_hairs = all_desc.split()
@@ -102,9 +90,9 @@ if hair_style_desc:
             hair_styles[i] = (cut, float(chance))
 
 
-def build_avatars(career):
-    avatar_num = 1
-    career_img = career_imgs[career]
+def build_avatars():
+    avatar_num = 2
+    villager_img = Image.open('parts/villager2.png')
     odds = {}
     genotypes = {}
     styles = {}
@@ -151,7 +139,7 @@ def build_avatars(career):
                         odds[avatar_num] = (float(percent) / 100) * (style_percent / 100) * 100
                     else:
                         odds[avatar_num] = style_percent
-                img = Image.alpha_composite(skin_img, career_img)
+                img = Image.alpha_composite(villager_img, skin_img)
 
                 # Special case for eyebrows
                 if hair not in no_eyebrows and eyebrows:
@@ -167,17 +155,12 @@ def build_avatars(career):
                             length, x, y = eyebrow
                             for i in range(0, length):
                                 # Need eyebrows only if the career image hasn't set the pixel
-                                need_eyebrows = career_img.getpixel((x, y))[3] == 0
+                                need_eyebrows = villager_img.getpixel((x, y))[3] == 0
                                 if need_eyebrows:
                                     img.putpixel((x + i, y), eyebrow_color)
                 img = Image.alpha_composite(img, hair_img)
 
-                # Finally, re-paste head-gear to cover up any hair properly
-                hat = career_img.crop(hat_rect)
-                img.paste(hat, hat_rect, mask=hat)
-                # img = Image.alpha_composite(img, hat)
-
-                avatar_path = '%s/%s%d.png' % (avatar_dir, career, avatar_num)
+                avatar_path = '%s/villager%d.png' % (avatar_dir, avatar_num)
                 img.save(avatar_path)
                 avatar_num += 1
                 if style == 'shaved':
@@ -192,34 +175,39 @@ def build_avatars(career):
     return avatar_num - 1, odds, genotypes, styles
 
 
-for career in career_imgs:
-    num_avatars, odds, genotypes, styles = build_avatars(career)
+num_avatars, odds, genotypes, styles = build_avatars()
 
-    prop_path = '%s/%s.properties' % (avatar_dir, career)
-    props = open(prop_path, 'w')
+prop_path = '%s/villager.properties' % avatar_dir
+props = open(prop_path, 'w')
 
-    odds_specified = sum(odds[i] for i in odds)
+odds_specified = sum(odds[i] for i in odds)
 
-    remaining = 100.0 - odds_specified
-    assert remaining > 0
-    default_odds = remaining / (num_avatars - len(odds))
-    weights = ''
-    t = 0.0
-    style_percentages = []
-    for i in range(1, num_avatars + 1):
-        weight = odds[i] if i in odds else default_odds
-        if len(weights) > 0:
-            weights += ','
-        t += weight
-        # use max to make sure nothing has zero chance.
-        weights += str(max(1, int(round(weight * 1000))))
-        props.write('# %2d: %6.7f %s\n' % (i, weight, genotypes[i]))
+remaining = 100.0 - odds_specified
+assert remaining > 0
+default_odds = remaining / (num_avatars - len(odds))
+weights = ''
+t = 0.0
+style_percentages = []
+for i in range(2, num_avatars + 1):
+    weight = odds[i] if i in odds else default_odds
+    if len(weights) > 0:
+        weights += ','
+    t += weight
+    # use max to make sure nothing has zero chance.
+    weights += str(max(1, int(round(weight * 1000))))
+    props.write('# %2d: %6.7f %s\n' % (i, weight, genotypes[i]))
 
-    props.write('#     %6.3f\n' % t)
-    props.write('professions.1=%s\n' % career)
-    props.write('skins.1=1-%d\n' % num_avatars)
-    props.write('weights.1=%s\n' % weights)
-    props.close()
+props.write('#     %6.3f\n' % t)
+props.write('professions.1=none\n')
+props.write('textures.1=1\n')
+props.write('textures.2=1-%d\n' % num_avatars)
+props.write('weights.2=0,%s\n' % weights)
+props.close()
 
-shutil.copy(os.path.join('parts', 'villager2.png'), villager_dir)
-shutil.copy(os.path.join('parts', 'villager.properties'), villager_dir)
+shutil.copytree('parts/profession', '%s/profession' % avatar_dir)
+for profession in glob.glob('parts/profession/*.png'):
+    career = os.path.basename(profession)[:-5]
+    with  open('%s/profession/%s.properties' % (avatar_dir, career), 'w') as props:
+        props.write('professions.1=%s\n' % career)
+        props.write('textures.1=1-2\n')
+        props.write('weights.1=0,100\n')
