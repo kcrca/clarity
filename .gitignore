@@ -17,6 +17,7 @@ home
 /site/packs
 *.zip
 core/assets/minecraft/report_default
+core/assets/minecraft/optifine
 *_diff.gif
 repack.out
 *.pyc
