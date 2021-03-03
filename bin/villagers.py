@@ -172,10 +172,18 @@ props.write('textures.2=1-%d\n' % (len(avatars) - 2))
 props.write('weights.2=0,%s\n' % ','.join(weights))
 props.close()
 
+profession_images = {}
 shutil.copytree('parts/profession', '%s/profession' % avatar_dir)
-for profession in glob.glob('parts/profession/*.png'):
-    career = os.path.basename(profession)[:-5]
-    with open('%s/profession/%s.properties' % (avatar_dir, career), 'w') as props:
-        props.write('professions.1=%s\n' % career)
-        props.write('textures.1=1-2\n')
-        props.write('weights.1=0,100\n')
+for file in sorted(glob.glob('parts/profession/*.png')):
+    profession = os.path.basename(file)[:-5]
+    if profession in profession_images:
+        profession_images[profession].append(file)
+    else:
+        profession_images[profession] = [file]
+
+for profession in profession_images:
+    files = profession_images[profession]
+    with open('%s/profession/%s.properties' % (avatar_dir, profession), 'w') as props:
+        props.write('professions.1=%s\n' % profession)
+        props.write('textures.1=1-%d\n' % (len(files) + 1))
+        props.write('weights.1=0,%s\n' % ','.join((["100"] * len(files))))
