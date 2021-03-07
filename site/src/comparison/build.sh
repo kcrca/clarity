@@ -2,7 +2,7 @@
 rm -f *.gif
 top=../../..
 set -e
-for c in clarity connectivity continuity; do
+for c in clarity continuity connectivity vanilla; do
     uc=$(echo "$(tr a-z A-Z <<< ${c:0:1})${c:1}")
     convert -composite \
 	${c}_example.png \
@@ -10,5 +10,5 @@ for c in clarity connectivity continuity; do
 	-fill white -font Verdana -pointsize 24 -gravity SouthWest -annotate +84+6 ${uc} \
 	${c}_frame.gif
 done
-convert -delay 100 *.gif -loop 0 ../../comparison_anim.gif
+convert -delay 100 *.gif -loop 0 ../../comparison.gif
 rm -f *.gif

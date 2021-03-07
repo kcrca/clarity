@@ -1,6 +1,5 @@
 #!/bin/sh
 cd $(dirname $0)
-convert -delay 200 *.png -loop 0 ../../changes_anim.gif
 set -e
 declare -a files
 files=()
@@ -14,5 +13,5 @@ for s in spring summer fall winter; do
 	$g
     files=("${files[@]}" "$g")
 done
-convert -delay 210 "${files[@]}" -loop 0 -resize 750x483 ../../changes_anim.gif
+convert -delay 210 "${files[@]}" -loop 0 -resize 750x483 ../../changes.gif
 rm -f *.gif

@@ -140,14 +140,10 @@ echo Building site
 for name in "${dirs[@]}"; do
     cp $name/pack_thumb.png site/${name}_thumb.png
 done
-for f in `find site -name build.sh`; do
-    (
-	echo ... $f
-	dir=`dirname $f`
-	cd $dir
-	build.sh
-    )
-done
+(
+    cd site
+    ./build.sh
+)
 echo ... site/update_version.sh $version
 site/update_version.sh $version
 echo ... site/favicon.sh $version
