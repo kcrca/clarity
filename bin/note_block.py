@@ -24,7 +24,7 @@ for i in range(0, 25):
     note_img = img_src.crop((1, i * 6, 12, (i + 1) * 6))
     img.paste(note_img, (0, 0))
     num = '%02d' % i
-    img.save(img_src_path.replace('_notes', '_' + num))
+    img.save(img_src_path.replace('_notes', '_' + num), optimize=True)
     model = copy.deepcopy(model_src.copy())
     textures = model['textures']
     for k in textures:

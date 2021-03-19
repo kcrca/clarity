@@ -113,7 +113,7 @@ def build_avatars():
                 img = Image.alpha_composite(img, hair_img)
 
                 avatar_path = '%s/villager%d.png' % (avatar_dir, avatar_num)
-                img.save(avatar_path)
+                img.save(avatar_path, optimize=True)
                 avatar_num += 1
 
     return genotypes

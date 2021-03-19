@@ -372,7 +372,7 @@ def main(argv=None):
                     except KeyError:
                         pass
                     dst_data[x, y] = data
-            dst_img.save(dst_file, 'png')
+            dst_img.save(dst_file, 'png', optimize=True)
             warnf.write('%s\n' % dst_file)
     warnf.write('\n')
     warnf.write('(The files are in git to help the script know which files should exist)\n')

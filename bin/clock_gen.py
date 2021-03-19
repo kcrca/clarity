@@ -129,7 +129,7 @@ for i in range(0, ticks + 1):
         tick_img = blank_img.copy()
         write_digits(tick_img, hrs, digit_pos[0], False)
         write_digits(tick_img, mins, digit_pos[2], True)
-        tick_img.save('textures/%s' % png_path)
+        tick_img.save('textures/%s' % png_path, optimize=True)
 
     with open('models/%s' % json_path, 'w') as f:
         json.dump({

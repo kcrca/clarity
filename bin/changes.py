@@ -88,5 +88,5 @@ for tree in ('oak', 'birch', 'jungle', 'big_oak', 'acacia'):
         animation['interpolate'] = False
     with open('branches_%s.png.mcmeta' % tree, 'w') as f:
         json.dump(wrapper, f, indent=2)
-    leaves_img.save('leaves_%s.png' % tree)
-    branches_img.save('branches_%s.png' % tree)
+    leaves_img.save('leaves_%s.png' % tree, optimize=True)
+    branches_img.save('branches_%s.png' % tree, optimize=True)

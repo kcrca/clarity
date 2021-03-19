@@ -90,7 +90,7 @@ def bookshelf_for_pack(start, width, dir, prefix=''):
     for i in range(0, NUM_BLOCKS):
         shelf = create_shelf(start, width, avoid, avail)
         shelves.append(shelf)
-        shelf.save(os.path.join(dir, '%s_%02d.png' % (prefix, i)))
+        shelf.save(os.path.join(dir, '%s_%02d.png' % (prefix, i)), optimize=True)
 
 
 # Do the clarity (bordered) shelves.

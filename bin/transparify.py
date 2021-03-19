@@ -26,4 +26,4 @@ for src_file in sys.argv[1:]:
             dst_data[x, y] = (255, 255, 255, level)
 
     os.rename(src_file, src_file.replace('.png', '_orig.png'))
-    dst_img.save(src_file, 'png')
+    dst_img.save(src_file, 'png', optimize=True)

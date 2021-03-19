@@ -55,7 +55,7 @@ for i in range(0, len(images)):
     for j in range(0, 5):
         frames.append(i)
 
-item_img.save(texture)
+item_img.save(texture, optimize=True)
 
 anim_json = {
     "animation": {

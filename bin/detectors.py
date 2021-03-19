@@ -45,4 +45,4 @@ for i in range(0, NUM_FRAMES):
             anim = anims[side] = Image.new("RGBA", (img.size[0], img.size[1] * NUM_FRAMES))
         anim.paste(img, (0, i * img.size[1]))
 for side in anims:
-    anims[side].save(os.path.join(item_dir, '%s_%s.png' % (detector, side)))
+    anims[side].save(os.path.join(item_dir, '%s_%s.png' % (detector, side)), optimize=True)

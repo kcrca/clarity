@@ -14,4 +14,4 @@ for src_file in glob.glob('entity/banner/*.png'):
     pattern = src_img.crop((8, 8, 168, 328))
     new_img = Image.new("RGBA", (1024, 1024), (0, 0, 0, 0))
     new_img.paste(pattern, (32, 32))
-    new_img.save(src_file.replace('banner', 'shield'))
+    new_img.save(src_file.replace('banner', 'shield'), optimize=True)

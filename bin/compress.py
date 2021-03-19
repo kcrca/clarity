@@ -39,7 +39,7 @@ for f in sys.argv[1:]:
             new_data.append(data)
     continue
     img1.putdata(new_data)
-    img1.save(f)
+    img1.save(f, optimize=True)
     size2 = os.stat(f).st_size
     raw2 = Image.open(f)
     img2 = raw2.convert(img1.mode)

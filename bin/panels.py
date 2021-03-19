@@ -69,7 +69,7 @@ for panels_desc, part_str in panels:
                 for y in range(0, input.size[1]):
                     if pixels[x, y] == bg_in:
                         pixels[x, y] = bg
-            input.save(blank)
+            input.save(blank, optimize=True)
 
         output = input.copy()
         draw = ImageDraw.Draw(output)

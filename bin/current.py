@@ -51,7 +51,7 @@ for i in range(0, 16):
             if pixels[x, y] == (213, 53, 53, 255):
                 pixels[x, y] = (93, 0, 0, 255)
     full_digit.paste(digit_img, (0, 16))
-    full_digit.save('%s/current_%02d.png' % (current_textures, i))
+    full_digit.save('%s/current_%02d.png' % (current_textures, i), optimize=True)
     dump('%s/current_%02d.png.mcmeta' % (current_textures, i), {'animation': {'interpolate': True, 'frametime': 60}})
 
 current_cfg = config.items('default')

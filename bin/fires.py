@@ -19,7 +19,7 @@ for prefix in ('', 'soul_', 'campfire_', 'soul_campfire_'):
                 new_height = int(2 * size / 3)
                 reduced = frame.resize((size, new_height))
                 dst.paste(reduced, (0, frame_y + size - new_height))
-            dst.save("%s/%s" % (dst_dir, file))
+            dst.save("%s/%s" % (dst_dir, file), optimize=True)
 
             mcmeta = json.load(open("%s/%s.mcmeta" % (src_dir, file)))
             mcmeta['animation']['frametime'] = 3

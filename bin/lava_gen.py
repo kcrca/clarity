@@ -37,7 +37,7 @@ for frame_num in range(0, FRAMES):
                 draw.rectangle(pos1 + pos2, outline=sq.color)
     img.paste(frame, (0, frame_num * DIM))
 
-img.save(directory('textures', 'block/lava_still.png'))
+img.save(directory('textures', 'block/lava_still.png'), optimize=True)
 
 DIM *= 2
 

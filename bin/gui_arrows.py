@@ -89,7 +89,7 @@ if DEBUG:
 def debug_image(panel_name, panel):
     if DEBUG:
         debug_nums[panel_name] += 1
-        panel.save('%s/%s%d.png' % (tmpdir, os.path.basename(panel_name), debug_nums[panel_name]))
+        panel.save('%s/%s%d.png' % (tmpdir, os.path.basename(panel_name), debug_nums[panel_name]), optimize=True)
 
 
 config = configparser.ConfigParser()
