@@ -6,3 +6,4 @@ coal
 iron
 emerald
 redstone
+copper
