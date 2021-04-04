@@ -1,0 +1,10 @@
+{
+    "parent": "block/template_candle",
+    "display": {
+	"gui": {
+            "rotation": [ 30, 225, 0 ],
+            "translation": [ 0, 8.5, 0],
+            "scale":[ 1.9, 1.9, 1.9 ]
+	}
+    }
+}
