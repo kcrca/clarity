@@ -1,0 +1,32 @@
+{
+  "parent": "block/block",
+  "textures": {
+    "particle": "block/azalea_leaves",
+    "leaves": "block/azalea_leaves",
+    "blossoms": "block/azalea_blossoms"
+  },
+  "elements": [
+      {   "from": [ 0, 0, 0 ],
+	  "to": [ 16, 16, 16 ],
+	  "faces": {
+	      "down":  { "texture": "#leaves", "cullface": "down" },
+	      "up":    { "texture": "#leaves", "cullface": "up" },
+	      "north": { "texture": "#leaves", "cullface": "north" },
+	      "south": { "texture": "#leaves", "cullface": "south" },
+	      "west":  { "texture": "#leaves", "cullface": "west" },
+	      "east":  { "texture": "#leaves", "cullface": "east" }
+	  }
+      },
+      {   "from": [ -0.1, -0.1, -0.1 ],
+	  "to": [ 16.1, 16.1, 16.1 ],
+	  "faces": {
+	      "down":  { "texture": "#blossoms", "cullface": "down" },
+	      "up":    { "texture": "#blossoms", "cullface": "up" },
+	      "north": { "texture": "#blossoms", "cullface": "north" },
+	      "south": { "texture": "#blossoms", "cullface": "south" },
+	      "west":  { "texture": "#blossoms", "cullface": "west" },
+	      "east":  { "texture": "#blossoms", "cullface": "east" }
+	  }
+      }
+  ]
+}
