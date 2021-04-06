@@ -1,0 +1,4 @@
+copper
+exposed
+weathered
+oxidized
