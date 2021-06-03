@@ -64,7 +64,6 @@
       {   "from": [ -0.1, 0, -0.1 ],
 	  "to": [ 16.1, 16.1, 16.1 ],
 	  "faces": {
-	      "down":  { "texture": "#blossoms", "cullface": "down" },
 	      "up":    { "texture": "#blossoms", "cullface": "up" },
 	      "north": { "texture": "#blossoms_upper", "cullface": "north" },
 	      "south": { "texture": "#blossoms_upper", "cullface": "south" },
