@@ -137,6 +137,8 @@ block/redstone_ore.png
 block/copper_ore.png
 item/raw_gold.png
 item/raw_iron.png
+block/raw_gold_block.png
+block/raw_iron_block.png
 item/lapis_lazuli.png
 item/emerald.png
 item/quartz.png
