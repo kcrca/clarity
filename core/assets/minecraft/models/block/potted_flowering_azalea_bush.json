@@ -8,6 +8,7 @@
 	"blossoms": "block/azalea_blossoms",
 	"blossoms_upper": "block/azalea_blossoms_upper",
         "flowerpot": "block/flower_pot",
+        "dirt": "block/dirt",
         "particle": "block/azalea_top"
     },
     "elements": [
