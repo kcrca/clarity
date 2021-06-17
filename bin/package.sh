@@ -54,40 +54,28 @@ to_title() {
 license() {
     name=$1
     ucname=$2
-    (echo "<p>${ucname}: Part of the Clarity Resource Pack Family for Minecraft.<br>" && cat License.html) > $name/License.html
-    (echo "${ucname}: Part of the Clarity Resource Pack Family for Minecraft." && cat License.txt) > $name/License.txt
+    (echo "<p>${ucname}: Part of the Clarity Resource Pack Family for Minecraft.<br>" && cat License.html) >! $name/License.html
+    (echo "${ucname}: Part of the Clarity Resource Pack Family for Minecraft." && cat License.txt) >! $name/License.txt
 }
 
+pack_format="$(grep pack_format core/pack.mcmeta)"
 # This function will build a single zip file
 do_zip() {
     (
 	name=$1
 	ucname=`to_title $name`
 	zipname="${ucname}_$version.zip"
-	cd $name
-
-	if false; then
-	    echo Stripping EXIF tags: $name
-	    echo ${name}: Before:' \c'
-	    du -sh .
-	    find . -name '*.png' -type f > k
-	    for f in `cat k`; do
-		exiv2 rm $f
-	    done
-	    #xargs -0 -L50 exiv2 rm < k
-	    echo ${name}: After:'  \c'
-	    du -sh .
-	fi
 	echo Building $zipname
-	if false; then
-	    # If enabled, this would use optipng to optimize the size of the
-	    # png files. This saves about 10% in the zip file sizes. Doesn't
-	    # seem worth it, especially since it would require some serious
-	    # testing to make sure that no bug in optipng changed the reults.
-	    echo ... optipng
-	    find . -name '*.png' -print0 | xargs -0 optipng -q -preserve
-	    echo ... zip
-	fi
+	cd $name
+	# Strip the EXIF and other text tags from images
+	# xargs isn't working directly here, so we use it to bunch up args only
+	find . -name '*.png' -type f | xargs | while read l; do; eval exiv2 rm "$l"; done
+	ed -s pack.mcmeta <<EOF
+/pack_format/c
+$pack_format
+.
+w
+EOF
 	# The "-o" flag says to make the mod time on the zip file the same
 	# as the most recent mod time on any of the files. This lets the
 	# zip file's mod time stand for the most recent change in the entire
@@ -108,14 +96,14 @@ do_create() {
 }
 
 echo ... Repacking
-python3 repack/repack.py >> $out || ( cat $out ; exit 1)
+python3 repack/repack.py >> $out || ( cat $out ; echo Exit: 1: read $out ; exit 1)
 
 rm -f home
 # Works for a mac, should check for other configurations
 ln -s $HOME/Library/Application\ Support/minecraft home
 for name in "${dirs[@]}"; do
     ucname=`to_title $name`
-    zipname="$ucname $version"
+    zipname="${ucname}_$version"
     case "$name" in
     "beguile")
 	do_create $name assets/minecraft/textures/gui
