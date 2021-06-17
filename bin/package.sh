@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/zsh
 
 # This script builds up the various packs from the source.
 #
@@ -66,6 +66,18 @@ do_zip() {
 	zipname="${ucname}_$version.zip"
 	cd $name
 
+	if false; then
+	    echo Stripping EXIF tags: $name
+	    echo ${name}: Before:' \c'
+	    du -sh .
+	    find . -name '*.png' -type f > k
+	    for f in `cat k`; do
+		exiv2 rm $f
+	    done
+	    #xargs -0 -L50 exiv2 rm < k
+	    echo ${name}: After:'  \c'
+	    du -sh .
+	fi
 	echo Building $zipname
 	if false; then
 	    # If enabled, this would use optipng to optimize the size of the
