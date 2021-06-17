@@ -169,7 +169,7 @@ props.write('professions.1=none\n')
 props.write('textures.1=1,%s\n' % ','.join(unemployed_textures))
 props.write('weights.1=1,%s\n' % ','.join(unemployed_weights))
 props.write('textures.2=1-%d\n' % (len(avatars) - 2))
-props.write('weights.2=0,%s\n' % ','.join(weights))
+props.write('weights.2=%s\n' % ','.join(weights))
 props.close()
 
 profession_images = {}

@@ -540,10 +540,6 @@ class Pass(object):
             global warnings
             warnings += (self.__class__.__name__ + 'Changes not done: Files not found: %s' % ', '.join(
                 self.unused_changes),)
-        pack_mcmeta = json.load(open('%s/pack.mcmeta' % self.dst_top))
-        core_pack_mcmeta = json.load(open('core/pack.mcmeta'))
-        pack_mcmeta['pack']['pack_format'] = core_pack_mcmeta['pack']['pack_format']
-        json.dump(pack_mcmeta, open('%s/pack.mcmeta' % self.dst_top, 'w'), indent=4)
 
     def subpath_for(self, dst):
         dst = normpath(dst)
