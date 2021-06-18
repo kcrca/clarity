@@ -655,9 +655,6 @@ class ContinuityPass(Pass):
         super(ContinuityPass, self).__init__(core, continuity)
         self.connectivity_pass = ctm_pass
 
-    def record_change(self, subpath):
-        self.connectivity_pass.add_known(subpath)
-
 
 class ConnectivityPass(Pass):
     """
@@ -681,15 +678,6 @@ class ConnectivityPass(Pass):
         if len(self.re_changes) > 0:
             SyntaxError('Cannot use RE\'s in %s (%s)' % (self.repack_dir, self.re_changes))
 
-    def add_known(self, subpath):
-        """
-        This is invoked by the Continuity path to tell us which block to use for the edgeless variant of the block. So
-        when this Connectivity pass is actually run, all the known edgless blocks have been stored for reference.
-        """
-        is_block = subpath.startswith(self.block_subpath)
-        if is_block and subpath not in self.changes_for:
-            SyntaxError('No Connectivity spec for %s' % subpath)
-
 
 # Remove the target output.
 # TODO: Why is this only two of them?
@@ -699,8 +687,8 @@ for output_dir in (continuity, connectivity):
 
 # Build the pass objects.
 clarity_pass = Pass(core, clarity)
+continuity_pass = Pass(core, continuity)
 connectivity_pass = ConnectivityPass()
-continuity_pass = ContinuityPass(connectivity_pass)
 passes = (clarity_pass, continuity_pass, connectivity_pass)
 
 passes[0].default_change = CopyChange()
