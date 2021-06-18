@@ -4,11 +4,9 @@
 import configparser
 import copy
 import errno
-import json
 import os
 import re
 import shutil
-from textwrap import indent
 
 import javaproperties
 from PIL import Image
@@ -41,6 +39,11 @@ connectivity = normpath('connectivity')
 
 
 class Change(object):
+    """
+    Base class for a single change operation. Options are specified after a ':', and are interpreted by the specific
+    subclass.
+    """
+
     def __init__(self):
         self.use_override = False
 
@@ -50,12 +53,14 @@ class Change(object):
         self.do_change(dst, src_img)
 
     def do_change(self, dst, src_img):
+        """Orveride to do the actual work."""
         pass
 
     def name(self):
         return self.__class__.__name__.replace('Change', '')
 
     def set_options(self, label, opt_str):
+        """Overide to add options for a specific kind of change."""
         if opt_str:
             raise SyntaxError('%s: No options allowed' % self.name())
 
@@ -66,13 +71,25 @@ class Change(object):
 
 
 class CopyChange(Change):
+    """A change that is a simply copy, that is, that actually doesn't change anything."""
+
     def apply(self, src, dst, subpath):
         if not do_not_copy_re.search(dst):
             shutil.copy2(src, dst)
 
 
 class SimpleChange(Change):
+    """
+    Base class for simple changes that only modify the image. This class takes care of reading and writing the
+    image, so the sublclass can just do the image work.
+    """
+
     def do_change(self, dst, src_img):
+        """
+        Creates the destination image and invokes self.simple_change to do the actual work on the image, and then
+        saves it under the same name in the destination.. This is good for basic things that only modify the contents
+        of the copied image.
+        """
         dst_img = Image.new('RGBA', src_img.size)
         self.simple_change(src_img, dst_img)
         save(dst_img, dst)
@@ -82,6 +99,10 @@ class SimpleChange(Change):
 
 
 class EraseEdgeChange(SimpleChange):
+    """
+    A simple change that overwrites the outer border with the pixles that are just inside it.
+    """
+
     def __init__(self, dup_size=None):
         super(SimpleChange, self).__init__()
         self.dup_size = dup_size
@@ -129,6 +150,11 @@ class EraseEdgeChange(SimpleChange):
 
 
 class TileOverEdge(SimpleChange):
+    """
+    A simple change that takes a subpart of the image and tiles it over the entire image. The options specify the
+    coordinates of the tile and its size.
+    """
+
     def __init__(self):
         super(SimpleChange, self).__init__()
         self.tile_size = None
@@ -166,15 +192,16 @@ class TileOverEdge(SimpleChange):
                 dst_img.paste(use_tile, box)
 
 
+# The change type based on a name, which is the key in the config, as in:
+#     copy: a, b, c
 change_by_name = {
     'copy': CopyChange(),
     'erase_edge': EraseEdgeChange(),
     'tile_over_edge': TileOverEdge()}
 
-mask_cache = {}
-
 
 def to_box(coords):
+    """Canonicalize a set of coords to ensure the are upper left corner to lower right."""
     if coords[0] > coords[2]:
         coords[0], coords[2] = coords[2], coords[0]
     if coords[1] > coords[3]:
@@ -183,6 +210,7 @@ def to_box(coords):
 
 
 def deanimate(img):
+    """Reduce an animation to its first frame."""
     if img.size[0] < img.size[1]:
         print('    Taking first frame of animation')
         return img.crop((0, 0, img.size[0], img.size[0]))
@@ -190,6 +218,7 @@ def deanimate(img):
 
 
 def save(dst_img, dst):
+    """Save an image to a file after remove any unused alpha channel."""
     if 'A' in dst_img.getbands():
         color_counts = dst_img.getcolors()
         if all(c[3] == 255 for _, c in color_counts):
@@ -198,6 +227,12 @@ def save(dst_img, dst):
 
 
 class ConnectedTextureChange(Change):
+    """
+    A change that builds the connected texture data for the block. This uses a set of named templates, and the config
+    file lists which template to use for any given file. Unlisted files are not connected.
+    """
+    mask_cache = {}
+
     def __init__(self, template_name, ctm_pass):
         super(Change, self).__init__()
         self.ctm_pass = ctm_pass
@@ -246,7 +281,7 @@ class ConnectedTextureChange(Change):
         src_img = deanimate(src_img)
         edgeless_img = deanimate(edgeless_img)
 
-        copytree(self.template_dir, ctm_dir, ignore=only_png, overlay=True, copy_function=connected_images)
+        shutil.copytree(self.template_dir, ctm_dir, ignore=only_png, copy_function=connected_images)
 
         template_prop_file = os.path.join(self.template_dir, 'block.properties')
         with open(template_prop_file) as t:
@@ -284,12 +319,12 @@ class ConnectedTextureChange(Change):
         # block_img.show()
         key = (mask, block_img.size[0], self.edge_width)
         try:
-            mask_img, edger = mask_cache[key]
+            mask_img, edger = ConnectedTextureChange.mask_cache[key]
         except KeyError:
             mask_img = Image.open(mask).convert('RGBA')
             # mask_img.show()
             mask_img, edger = self.rescale_mask(mask_img, block_img.size)
-            mask_cache[key] = (mask_img, edger)
+            ConnectedTextureChange.mask_cache[key] = (mask_img, edger)
 
         dst_img = edgeless_img.copy()
         dst_img.paste(block_img, mask_img)
@@ -423,6 +458,7 @@ class ConnectedTextureChange(Change):
 
 
 def test_is_on(mask, mx, my):
+    """Returns true if a pixel is set to 'on' in the mask"""
     return mask.getpixel((mx, my))[3] != 0
 
 
@@ -435,12 +471,18 @@ def safe_mkdirs(dst_dir):
 
 
 def _target_re(target):
+    """If the target is an regexp, returns the compiled pattern with a '.png' added, otherwise returns None."""
+    # TODO: Is this really needed? A pattern with no special chars still matches what it should.
     if re_re.search(target):
-        return re.compile('(?:%s).png' % target)
+        return re.compile(r'%s\.png' % target)
     return None
 
 
 class Pass(object):
+    """
+    A single pass of the repack process. This base class is used for each pack derived from the core.
+    """
+
     def __init__(self, src_name, dst_name):
         self.default_change = CopyChange()
         self.src_top = normpath(src_name)
@@ -461,6 +503,10 @@ class Pass(object):
             list(self.changes_for.keys()) + [c[0].pattern for c in self.re_changes])
 
     def parse_config(self, config):
+        """
+        Parses the 'changes' section in the config file. This reads file as a key, followed by a set of target (path)\
+        and option) specifications whose change is defined by that key.
+        """
         try:
             for change_name, targets in config.items('changes'):
                 change = change_by_name[change_name]
@@ -473,6 +519,9 @@ class Pass(object):
         pass
 
     def set_changes(self, target, change):
+        """
+        Sets the change that will be used for the given target, including handling when the target is a regexp.
+        """
         m = target_opt_re.match(target)
         if m:
             target, opt_str = m.groups()
@@ -490,6 +539,9 @@ class Pass(object):
                 self.changes_for[path] = (change,)
 
     def _find_changes(self, path_png):
+        """
+        Find which change(s) to use for the given path.
+        """
         if path_png.endswith('.png'):
             path = path_png[:-4]
         else:
@@ -522,6 +574,12 @@ class Pass(object):
         return None
 
     def run(self):
+        """
+        Run this pass. This recurisively descends the source resourcepack, deciding what to do with each individual
+        entity.  Each iteration in the loop goes through the files in a single directory, deciding what to do with
+        each and whether or not to descend into a given subdirectory. For each file in the dir, it execute the
+        appropriate changes during the copy.
+        """
         print("=== %s" % self.dst_top)
         for dir_name, subdir_list, file_list in os.walk(self.src_top, topdown=True):
             src_dir = dir_name
@@ -547,9 +605,21 @@ class Pass(object):
         return dst, subpath
 
     def changes(self, src, dst):
-        dst, subpath = self.subpath_for(dst)
+        """
+        Runs the change(s) for a given src and dst file. This is looked up in multiple ways. For a dst of
+            'clarity/assets/minecraft/textures/block/lime_stained_glass.png'
+        we search the following in order, stopping with the first match
+            'assets/minecraft/textures/block/lime_stained_glass.png'
+            'textures/block/lime_stained_glass.png'
+            'lime_stained_glass.png'
+        If nothing is found, we use the default change.
+
+        For input we use the files from the source unless there is a specific override under the 'overrides' directory.
+        """
+        dst, subpath = self.subpath_for(dst)  # the path from "assests/minecraft" on down.
         changes = self._find_changes(subpath)
         if not changes and dst[:self.dst_assets_dir_len] == self.dst_assets_dir:
+            # If the full path for the dst doesn't give us changes, try path from below "assets/minecraft".
             base = dst[self.dst_assets_dir_len + 1:]
             changes = self._find_changes(base)
         if not changes and dst[:self.dst_block_dir_len] == self.dst_block_dir:
@@ -557,10 +627,11 @@ class Pass(object):
             changes = self._find_changes(base)
         if not changes:
             changes = (self.default_change,)
-        if not changes:
-            return
+
         self.record_change(subpath)
         override = os.path.join(self.override_top, subpath)
+
+        # Apply all the changes
         for change in changes:
             if os.path.isfile(override):
                 if change.use_override:
@@ -575,6 +646,11 @@ class Pass(object):
 
 
 class ContinuityPass(Pass):
+    """
+    The pass for the Continuity pack. This remembers the CTM pass so it can tell it about files it processes, which
+    sets up the CTM pass for its work.
+    """
+
     def __init__(self, ctm_pass):
         super(ContinuityPass, self).__init__(core, continuity)
         self.connectivity_pass = ctm_pass
@@ -584,6 +660,11 @@ class ContinuityPass(Pass):
 
 
 class ConnectivityPass(Pass):
+    """
+    The pass for the Connectivity (CTM) pass. Each continuity texture requires both edged and edgeless blocks. The
+    edgless blocks are taken from the previously-generated Continuity pack.
+    """
+
     def __init__(self):
         super(ConnectivityPass, self).__init__(core, connectivity)
         self.edgeless_top = normpath('continuity')  # use the generated edgeless images
@@ -601,107 +682,30 @@ class ConnectivityPass(Pass):
             SyntaxError('Cannot use RE\'s in %s (%s)' % (self.repack_dir, self.re_changes))
 
     def add_known(self, subpath):
+        """
+        This is invoked by the Continuity path to tell us which block to use for the edgeless variant of the block. So
+        when this Connectivity pass is actually run, all the known edgless blocks have been stored for reference.
+        """
         is_block = subpath.startswith(self.block_subpath)
         if is_block and subpath not in self.changes_for:
             SyntaxError('No Connectivity spec for %s' % subpath)
 
 
+# Remove the target output.
+# TODO: Why is this only two of them?
 for output_dir in (continuity, connectivity):
     if os.path.isdir(output_dir):
         shutil.rmtree(output_dir)
 
+# Build the pass objects.
 clarity_pass = Pass(core, clarity)
 connectivity_pass = ConnectivityPass()
 continuity_pass = ContinuityPass(connectivity_pass)
-# connectivity pass currently disabled because that's only up to 1.14
 passes = (clarity_pass, continuity_pass, connectivity_pass)
 
 passes[0].default_change = CopyChange()
 
 
-# This is copied from shutil, because I need the copy_function option which
-# wasn't added until 3.3 or so. Sigh.
-
-# Also added option to overlay on target instead of removing it
-
-# noinspection SpellCheckingInspection
-def copytree(src, dst, symlinks=False, ignore=None, copy_function=shutil.copy2,
-             overlay=False):
-    """Recursively copy a directory tree using copy2().
-
-    The destination directory must not already exist.
-    If exception(s) occur, an Error is raised with a list of reasons.
-
-    If the optional symlinks flag is true, symbolic links in the
-    source tree result in symbolic links in the destination tree; if
-    it is false, the contents of the files pointed to by symbolic
-    links are copied.
-
-    The optional ignore argument is a callable. If given, it
-    is called with the `src` parameter, which is the directory
-    being visited by copytree(), and `names` which is the list of
-    `src` contents, as returned by os.listdir():
-
-        callable(src, names) -> ignored_names
-
-    Since copytree() is called recursively, the callable will be
-    called once for each directory that is copied. It returns a
-    list of names relative to the `src` directory that should
-    not be copied.
-
-    XXX Consider this example code rather than the ultimate tool.
-
-    """
-    names = os.listdir(src)
-    if ignore is not None:
-        ignored_names = ignore(src, names)
-    else:
-        ignored_names = set()
-
-    try:
-        os.makedirs(dst)
-    except OSError:
-        if not overlay:
-            raise
-
-    errors = []
-    for name in names:
-        if name in ignored_names:
-            continue
-        srcname = os.path.join(src, name)
-        dstname = os.path.join(dst, name)
-        if 'glass' in name:
-            print('copytree %s -> %s' % (srcname, dstname))
-        try:
-            if symlinks and os.path.islink(srcname):
-                linkto = os.readlink(srcname)
-                os.symlink(linkto, dstname)
-            elif os.path.isdir(srcname):
-                copytree(srcname, dstname, symlinks, ignore, copy_function,
-                         overlay)
-            else:
-                # Will raise a SpecialFileError for unsupported file types
-                copy_function(srcname, dstname)
-        # catch the Error from the recursive copytree so that we can
-        # continue with other files
-        except shutil.Error as err:
-            errors.extend(err.args[0])
-        except EnvironmentError as why:
-            errors.append((srcname, dstname, str(why)))
-    try:
-        shutil.copystat(src, dst)
-    except OSError as why:
-        if shutil.WindowsError is not None and isinstance(why,
-                                                          shutil.WindowsError):
-            # Copying file access times may fail on Windows
-            pass
-        else:
-            errors.extend((src, dst, str(why)))
-    if errors:
-        raise shutil.Error(errors)
-
-
-# noinspection PyUnusedLocal
 def only_png(directory, files):
     return [f for f in files if f[-4:] != '.png']
 
