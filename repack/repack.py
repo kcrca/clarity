@@ -297,7 +297,7 @@ class ConnectedTextureChange(Change):
         match = 'matchTiles' if self.do_tile_source else 'matchBlocks'
         props[match] = ' '.join(self.id_specs)
         with open(prop_file, mode='w') as o:
-            javaproperties.dump(props, o)
+            javaproperties.dump(props, o, timestamp=None)
 
     def edgeless_image(self, base):
         edgeless = os.path.join(self.ctm_pass.edgeless_block_dir, base + '.png')
@@ -581,6 +581,8 @@ class Pass(object):
         appropriate changes during the copy.
         """
         print("=== %s" % self.dst_top)
+        if os.path.isdir(self.dst_top):
+            shutil.rmtree(self.dst_top)
         for dir_name, subdir_list, file_list in os.walk(self.src_top, topdown=True):
             src_dir = dir_name
             dst_dir = dir_name.replace(self.src_top, self.dst_top)
@@ -679,11 +681,9 @@ class ConnectivityPass(Pass):
             SyntaxError('Cannot use RE\'s in %s (%s)' % (self.repack_dir, self.re_changes))
 
 
-# Remove the target output.
-# TODO: Why is this only two of them?
-for output_dir in (continuity, connectivity):
-    if os.path.isdir(output_dir):
-        shutil.rmtree(output_dir)
+def only_png(_, files):
+    return [f for f in files if f[-4:] != '.png']
+
 
 # Build the pass objects.
 clarity_pass = Pass(core, clarity)
@@ -692,11 +692,6 @@ connectivity_pass = ConnectivityPass()
 passes = (clarity_pass, continuity_pass, connectivity_pass)
 
 passes[0].default_change = CopyChange()
-
-
-def only_png(directory, files):
-    return [f for f in files if f[-4:] != '.png']
-
 
 for p in passes:
     p.run()
