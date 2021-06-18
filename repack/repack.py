@@ -249,7 +249,10 @@ class ConnectedTextureChange(Change):
     def set_options(self, label, opt_str):
         m = ctm_opt_re.match(opt_str or '')
         opts, id_specs, edge_width_spec = m.groups()
-        self.id_specs = (label,)
+        short_label = os.path.basename(label)
+        if short_label[:-4] == '.png':
+            short_label = short_label[0:-4]
+        self.id_specs = (short_label,)
         if len(id_specs):
             self.id_specs += tuple(id_specs.split('|'))
         self.do_tile_source = opts and 'T' in opts
@@ -293,9 +296,11 @@ class ConnectedTextureChange(Change):
             solid_src = os.path.join(ctm_dir, '%s.png' % props['solid'])
             shutil.copy(solid_src, dst)
 
-        prop_file = os.path.join(ctm_dir, '%s.properties' % self.id_specs[0])
+        id_specs = list(self.id_specs)
+        id_specs[0] = base
+        prop_file = os.path.join(ctm_dir, '%s.properties' % base)
         match = 'matchTiles' if self.do_tile_source else 'matchBlocks'
-        props[match] = ' '.join(self.id_specs)
+        props[match] = ' '.join(id_specs)
         with open(prop_file, mode='w') as o:
             javaproperties.dump(props, o, timestamp=None)
 
@@ -496,11 +501,6 @@ class Pass(object):
         self.src_block_dir = self.dst_block_dir.replace(self.dst_top, self.src_top)
         self.changes_for = {}
         self.re_changes = []
-        config = configparser.ConfigParser()
-        config.read(os.path.join(self.repack_dir, 'repack.cfg'))
-        self.parse_config(config)
-        self.unused_changes = set(
-            list(self.changes_for.keys()) + [c[0].pattern for c in self.re_changes])
 
     def parse_config(self, config):
         """
@@ -509,11 +509,14 @@ class Pass(object):
         """
         try:
             for change_name, targets in config.items('changes'):
-                change = change_by_name[change_name]
+                change = self.find_change(change_name)
                 for target in targets.split():
                     self.set_changes(os.path.join('assets', 'minecraft', 'textures', 'block', target), change)
         except configparser.NoSectionError:
             pass
+
+    def find_change(self, change_name):
+        return change_by_name[change_name]
 
     def record_change(self, subpath):
         pass
@@ -581,6 +584,13 @@ class Pass(object):
         appropriate changes during the copy.
         """
         print("=== %s" % self.dst_top)
+
+        config = configparser.ConfigParser()
+        config.read(os.path.join(self.repack_dir, 'repack.cfg'))
+        self.parse_config(config)
+        self.unused_changes = set(
+            list(self.changes_for.keys()) + [c[0].pattern for c in self.re_changes])
+
         if os.path.isdir(self.dst_top):
             shutil.rmtree(self.dst_top)
         for dir_name, subdir_list, file_list in os.walk(self.src_top, topdown=True):
@@ -669,16 +679,10 @@ class ConnectivityPass(Pass):
         self.edgeless_top = normpath('continuity')  # use the generated edgeless images
         self.edgeless_block_dir = self.src_block_dir.replace(core, continuity)
         self.block_subpath = self.dst_block_dir[len(self.dst_top) + 1:]
-
-    def parse_config(self, config):
-        # noinspection PyAttributeOutsideInit
         self.template_top = os.path.join(self.repack_dir, 'ctm_templates')
-        for template_name, targets in config.items('ctm'):
-            change = ConnectedTextureChange(template_name, self)
-            for target in targets.split():
-                self.set_changes(target, change)
-        if len(self.re_changes) > 0:
-            SyntaxError('Cannot use RE\'s in %s (%s)' % (self.repack_dir, self.re_changes))
+
+    def find_change(self, change_name):
+        return ConnectedTextureChange(change_name, self)
 
 
 def only_png(_, files):
@@ -690,6 +694,7 @@ clarity_pass = Pass(core, clarity)
 continuity_pass = Pass(core, continuity)
 connectivity_pass = ConnectivityPass()
 passes = (clarity_pass, continuity_pass, connectivity_pass)
+passes = (connectivity_pass,)
 
 passes[0].default_change = CopyChange()
 
