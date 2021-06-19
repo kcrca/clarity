@@ -694,7 +694,6 @@ clarity_pass = Pass(core, clarity)
 continuity_pass = Pass(core, continuity)
 connectivity_pass = ConnectivityPass()
 passes = (clarity_pass, continuity_pass, connectivity_pass)
-passes = (connectivity_pass,)
 
 passes[0].default_change = CopyChange()
 
