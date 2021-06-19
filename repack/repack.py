@@ -220,8 +220,8 @@ def deanimate(img):
 def save(dst_img, dst):
     """Save an image to a file after remove any unused alpha channel."""
     if 'A' in dst_img.getbands():
-        color_counts = dst_img.getcolors()
-        if all(c[3] == 255 for _, c in color_counts):
+        alpha = dst_img.split()[-1]
+        if all(c == 255 for c in alpha.getdata()):
             dst_img = dst_img.convert('RGB')
     dst_img.save(dst)
 
