@@ -72,7 +72,8 @@ figcaption {
 }
 
 .downloads img {
-    vertical-align:middle;
+    vertical-align: middle;
+    float: left;
 }
 
 .timestamp, .license {
