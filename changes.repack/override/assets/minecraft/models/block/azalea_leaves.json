@@ -1,0 +1,7 @@
+{
+    "parent": "block/changing_leaves",
+    "textures": {
+        "all": "block/leaves_azalea",
+        "branches": "block/branches_azalea"
+    }
+}
