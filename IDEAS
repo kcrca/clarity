@@ -1,4 +1,44 @@
 The blockstate of a hopper allows you to see if it is enabled or not. I could
 texture the hopper to look differently. Although minecraft doesn't seem to
-update the model to use properly when this state changes, so for now, not doing this.
-(Bug: https://bugs.mojang.com/browse/MC-209658?filter=-2)
+update the model to use properly when this state changes, so for now, not doing
+this.  (Bug: https://bugs.mojang.com/browse/MC-209658?filter=-2)
+
+Use squared-off pointed dripstone [CM]
+
+Put "can sleep" icon in clock? [RS]
+
+* Power level on Sculker Box. [RS]
+
+* On noteblock, put note on stalf on side of box. And/or reflect note color as
+shown in particle. [RS]
+
+On noteblock, show instrument, possibly via copying color from exemplar block. [RS]
+
+Put power numeric above things: pressure plates, sculker box, daylight
+detectors, cake. Make sure target is consistent (or compatible anyway). [RS]
+
+Put red tip on lever when powered. [RS]
+
+* Make subtraction mode on comparators more different. [RS]
+
+* Show powered fence gate/door/trap door (vs. one that's just open). [RS]
+
+* Lectern when powered [RS]
+
+Show cauldron, composter fill level/contents on sides and top. [RS]
+
+Show furnace, boiler, smoker status on sides and top. [RS]
+
+square honeycomb? [MP]
+
+Moss more like this? [MP]
+
+Cobweb more like this? [MP]
+
+Carpet more like this? [MP]
+
+Saplings more like this? [MP]
+
+CM: Canis minor (find URL)
+RS: https://www.planetminecraft.com/texture-pack/redstone-engineer-support-pack-plus-for-1-17/
+MP: https://www.planetminecraft.com/texture-pack/mad-pixels-cartoony-16x/
