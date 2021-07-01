@@ -1,12 +1,7 @@
 {
-  "parent": "minecraft:block/cube",
+  "parent": "minecraft:block/cube_regular",
   "textures": {
-    "particle": "minecraft:block/basalt_top",
-    "down": "minecraft:block/basalt_top",
-    "up": "minecraft:block/basalt_top",
-    "north": "minecraft:block/basalt_side1",
-    "south": "minecraft:block/basalt_side1",
-    "east": "minecraft:block/basalt_side2",
-    "west": "minecraft:block/basalt_side2"
+    "end": "minecraft:block/basalt_top",
+    "side": "minecraft:block/basalt_side"
   }
 }
