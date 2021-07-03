@@ -31,7 +31,7 @@ no_flats = (6, 11, 18, 23)
 
 for i in range(0, 25):
     img = staff_img.copy()
-    name_img = names_img.crop((2, i * 6, 12, (i + 1) * 6))
+    name_img = names_img.crop((4, i * 6, 12, (i + 1) * 6))
     img.paste(name_img, (3, 31))
     if not was_flat:
         height += 2
