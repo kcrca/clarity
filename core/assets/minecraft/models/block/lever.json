@@ -3,7 +3,7 @@
     "textures": {
         "particle": "block/lever_base",
         "base": "block/lever_base",
-        "lever": "block/lever"
+        "lever": "block/lever_on"
     },
     "elements": [
         {   "from": [ 5, 0, 4 ],
