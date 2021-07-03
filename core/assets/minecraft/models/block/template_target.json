@@ -3,7 +3,7 @@
   "textures": {
     "target": "minecraft:block/target",
     "particle": "minecraft:block/target",
-    "power": "minecraft:block/target_03"
+    "power": "minecraft:block/target"
   },
   "elements": [
       {   "from": [ 0, 0, 0 ],
