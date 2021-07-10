@@ -159,7 +159,9 @@ special_textures = (
     'block/destroy_stage_9',
     'block/portal', # animation for the nether portal
     'block/lava_flow',
-    'block/note_block_notes',
+    'block/note_block_names',
+    'block/note_block_note',
+    'block/note_block_staff',
     'block/water_flow',
     'block/waxed_overlay',
     'item/clock_font',
