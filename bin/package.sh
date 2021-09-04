@@ -14,7 +14,6 @@ packs=$top/site/packs
 version=`cat core/pack_version.txt`
 
 dirs=(clarity connectivity continuity changes current beguile)
-rm -rf $packs $dirs
 
 # Create the packs dir
 test -d $packs || mkdir -p $packs
@@ -23,29 +22,33 @@ echo Output in "$out"
 rm -rf $out
 cp /dev/null $out
 
-which -a python3
-
-echo Regenerating derived files
-for f in bin/*.py; do
-    script=`basename $f`
-    case $script in
-	report.py|gui_arrows.py)
-	    ;;
-	colorize.py)
-	    for cfg in `find $top -name colorize.cfg`; do
-		d=`dirname $cfg`
-		echo ... python3 $script $d 2>&1 | tee -a $out3
-		python3 $f $d
-	    done
-	    ;;
-	*)
-	    echo ... python3 $script $a 2>&1 | tee -a $out
-	    python3 $f >> $out
-	    ;;
-    esac
-done
-echo ... python3 gui_arrows.py $a 2>&1 | tee -a $out
-python3 bin/gui_arrows.py >> $out
+newest_zip=$(ls -t $packs)
+newer=$(find bin core/assets -newer $packs -type f ! -name '.*')
+if (( $#newest_zip > 0 && $#newer > 0 )); then
+    echo Regenerating derived files
+    for f in bin/*.py; do
+	script=`basename $f`
+	case $script in
+	    report.py|gui_arrows.py)
+		;;
+	    colorize.py)
+		for cfg in `find $top -name colorize.cfg`; do
+		    d=`dirname $cfg`
+		    echo ... python3 $script $d 2>&1 | tee -a $out3
+		    python3 $f $d
+		done
+		;;
+	    *)
+		echo ... python3 $script $a 2>&1 | tee -a $out
+		python3 $f >> $out
+		;;
+	esac
+    done
+    echo ... python3 gui_arrows.py $a 2>&1 | tee -a $out
+    python3 bin/gui_arrows.py >> $out
+else
+    echo No new derived files
+fi
 
 to_title() {
     echo "$(tr a-z A-Z <<< ${1:0:1})${1:1}"
@@ -99,6 +102,7 @@ echo ... Repacking
 python3 repack/repack.py >> $out || ( cat $out ; echo Exit: 1: read $out ; exit 1)
 
 rm -f home
+rm -rf $packs/*.zip
 # Works for a mac, should check for other configurations
 ln -s $HOME/Library/Application\ Support/minecraft home
 for name in "${dirs[@]}"; do
