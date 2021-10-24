@@ -10,5 +10,5 @@ for c in clarity continuity connectivity vanilla; do
 	-fill white -font Verdana -pointsize 24 -gravity SouthWest -annotate +84+6 ${uc} \
 	${c}_frame.gif
 done
-convert -delay 100 *.gif -loop 0 ../../comparison.gif
+convert -delay 200 *.gif -loop 0 ../../comparison.gif
 rm -f *.gif
