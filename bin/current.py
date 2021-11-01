@@ -4,12 +4,8 @@
 # they can be added.
 
 import configparser
-import json
-import os
-import shutil
 import sys
 
-from PIL import Image
 from clip import *
 
 scale = 0.75
