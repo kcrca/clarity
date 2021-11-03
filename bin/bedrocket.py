@@ -16,16 +16,16 @@ def as_path(param, default_loc):
         return None
     if param[0] == '/':
         return param
-    return str(default_loc.joinpath(param))
+    return default_loc + '/' + param
 
 
 def file_map(pack):
     data = pd.read_excel(r'bedrocket.ods', sheet_name="block")
     file_cols = data[['Java (Vanilla)', 'Bedrock']]
-    files = {str(pack.joinpath('/pack.png')): '/pack_icon.png'}
+    files = {'/pack.png': '/pack_icon.png'}
 
-    j_block_dir = pack.joinpath('assets/minecraft/textures/block')
-    b_block_dir = pathlib.Path('textures/blocks')
+    j_block_dir = '/assets/minecraft/textures/block'
+    b_block_dir = '/textures/blocks'
 
     for row in file_cols.itertuples():
         j = as_path(row[1], j_block_dir)
@@ -42,7 +42,9 @@ os.chdir(bin)
 parser = argparse.ArgumentParser(description='Convert java resource pack to bedrock')
 parser.add_argument('pack', metavar='file', type=pathlib.Path)
 
-args = parser.parse_args(sys.argv)
+args = parser.parse_args()
 
 files = file_map(args.pack)
 print(len(files))
+
+# os.walk
