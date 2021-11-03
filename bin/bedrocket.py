@@ -1,10 +1,15 @@
 import argparse
 import pathlib
-import sys
 
 import pandas as pd
 
 from clip import *
+
+
+def do_ignore(path, contents):
+    if path in skip_dirs:
+        return contents
+    return ignore_glob(path, contents)
 
 
 def as_path(param, default_loc):
@@ -19,8 +24,8 @@ def as_path(param, default_loc):
     return default_loc + '/' + param
 
 
-def file_map(pack):
-    data = pd.read_excel(r'bedrocket.ods', sheet_name="block")
+def file_map():
+    data = pd.read_excel(directory('config') + '/bedrocket.ods', sheet_name="block")
     file_cols = data[['Java (Vanilla)', 'Bedrock']]
     files = {'/pack.png': '/pack_icon.png'}
 
@@ -36,15 +41,31 @@ def file_map(pack):
     return files
 
 
-bin = directory('bin')
-os.chdir(bin)
+def do_skip(path, _):
+    return path in skip_dirs
+
+
+def do_copy(src, dst):
+    print('copy %s %s' % (src, dst))
+    return True
+
 
 parser = argparse.ArgumentParser(description='Convert java resource pack to bedrock')
-parser.add_argument('pack', metavar='file', type=pathlib.Path)
+parser.add_argument('java_pack', type=pathlib.Path)
+parser.add_argument('bedrock_pack', type=pathlib.Path)
 
 args = parser.parse_args()
+java_pack = str(args.java_pack)
+bedrock_pack = str(args.bedrock_pack)
+skip_dirs = set()
+ignore_glob = shutil.ignore_patterns('.*')
+for s in ('assets/minecraft/blockstates', 'assets/minecraft/optifine'):
+    skip_dirs.add(java_pack + '/' + s)
 
-files = file_map(args.pack)
+files = file_map()
 print(len(files))
 
-# os.walk
+if args.bedrock_pack.exists():
+    shutil.rmtree(args.bedrock_pack)t
+    
+shutil.copytree(java_pack, bedrock_pack, ignore=do_ignore, copy_function=do_copy)
