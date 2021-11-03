@@ -66,6 +66,5 @@ files = file_map()
 print(len(files))
 
 if args.bedrock_pack.exists():
-    shutil.rmtree(args.bedrock_pack)t
-    
-shutil.copytree(java_pack, bedrock_pack, ignore=do_ignore, copy_function=do_copy)
+    shutil.rmtree(args.bedrock_pack)
+shutil.copytree(java_pack, bedrock_pack, ignore=do_ignore, copy_function=do_copy, symlinks=True)
