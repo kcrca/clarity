@@ -6,12 +6,6 @@ import pandas as pd
 from clip import *
 
 
-def do_ignore(path, contents):
-    if path in skip_dirs:
-        return contents
-    return ignore_glob(path, contents)
-
-
 def as_path(param, default_loc):
     if type(param) != str:
         return None
@@ -41,8 +35,10 @@ def file_map():
     return files
 
 
-def do_skip(path, _):
-    return path in skip_dirs
+def do_ignore(path, contents):
+    if path in skip_dirs:
+        return contents
+    return ignore_glob(path, contents)
 
 
 def do_copy(src, dst):
