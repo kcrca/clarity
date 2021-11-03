@@ -45,6 +45,7 @@ def directory(name, *args):
         'models': "core/assets/minecraft/models",
         'minecraft': "core/assets/minecraft",
         'site': 'site',
+        'core': 'core',
     }
     is_defaults = name == 'defaults'
     if is_defaults:
