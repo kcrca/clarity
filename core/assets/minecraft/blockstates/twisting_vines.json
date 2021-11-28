@@ -1,0 +1,13 @@
+{
+  "multipart": [
+    {
+      "apply": [
+	{ "model": "block/twisting_vines" }
+      ]
+    },
+    {
+      "when": { "age": 25 },
+      "apply": { "model": "block/twisting_vines_top" }
+    }
+  ]
+}
