@@ -22,8 +22,8 @@ echo Output in "$out"
 rm -rf $out
 cp /dev/null $out
 
-newest_zip=$(ls -t $packs)
-newer=$(find bin core/assets -newer $packs -type f ! -name '.*')
+newest_zip=($(ls -t $packs))
+newer=($(find bin core/assets -newer $packs -type f ! -name '.*'))
 if (( $#newest_zip > 0 && $#newer > 0 )); then
     echo Regenerating derived files
     for f in bin/*.py; do
@@ -97,7 +97,7 @@ do_create() {
     tar c -C $name.repack/override . | tar xf - -C $name
     find $name \( -name '*.pxm' -o -name '*.psd' -o -name '*.py*' \) -print0 | xargs -0 rm
 }
-
+ 
 echo ... Repacking
 python3 repack/repack.py >> $out || ( cat $out ; echo Exit: 1: read $out ; exit 1)
 
