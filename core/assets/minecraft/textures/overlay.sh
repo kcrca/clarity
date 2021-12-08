@@ -25,7 +25,7 @@ for new in $(find "${dirs[@]}" -name parts -prune -o -name '*.png'); do
     base=$(dirname $new)/$(basename $new .png)
     short_name=$(echo $base | sed -e 's,.*minecraft/,,')
     if [ -f $old ]; then
-	caption="-background White label:$short_name -gravity Center -append"
+	caption="-background White label:$short_name -gravity Center -append -pointsize 12"
 	# scale on width since height might vary for animation
 	new_width=$(identify -format '%w\n' $new)
 	old_width=$(identify -format '%w\n' $old)
@@ -37,9 +37,7 @@ for new in $(find "${dirs[@]}" -name parts -prune -o -name '*.png'); do
 	img=${base}_diff.gif
 	convert -delay 100 \
 	    \( $new_img $caption \) \
-	    \( $new_img $old_img -gravity northwest -compose Overlay -composite $caption \) \
 	    \( $old_img $caption \) \
-	    \( $old_img $new_img -gravity northwest -compose Overlay -composite $caption \) \
 	    -loop 0 -border 1 $img
 	cat <<EOF >>$html
 <img src="$img" alt="$short_name" style="margin: 10px"/>
