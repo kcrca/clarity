@@ -1,0 +1,57 @@
+#!/bin/sh
+
+typeset -a dirs
+dirs=( "$@" )
+if [ ${#dirs} -eq 0 ]; then
+    dirs=( . )
+fi
+
+find "${dirs[@]}" -name '*_diff.gif' -delete
+[ -z "$rm_only" ] || exit 0
+
+tmp=/tmp/overlay
+html=$tmp/index.html
+cp /dev/null $html
+skipped=""
+
+rm -rf $tmp
+mkdir $tmp
+
+for new in $(find "${dirs[@]}" -name parts -prune -o -name '*.png'); do
+    echo $new
+    dir=$(dirname $new)
+    new="$(cd "$dir" ; pwd)/$(basename $new)"
+    old="${new/core/default_resourcepack}"
+    base=$dir/$(basename $new .png)
+    short_name=$(echo $base | sed -e 's,.*minecraft/,,')
+    test -d $tmp/$dir || mkdir -p $tmp/$dir
+    if [ -f $old ]; then
+	caption="-background White label:$short_name -gravity Center -append -pointsize 12"
+	# scale on width since height might vary for animation
+	new_width=$(identify -format '%w\n' $new)
+	old_width=$(identify -format '%w\n' $old)
+	max_width=$(echo $new_width\\n$old_width| sort -nr | head -1)
+	new_scale=$(echo "100 * $max_width / $new_width" | bc)
+	old_scale=$(echo "100 * $max_width / $old_width" | bc)
+	new_img="( $new -resize $new_scale% )"
+	old_img="( $old -resize $old_scale% )"
+	img=$tmp/${base}_diff.gif
+	convert -delay 100 \
+	    \( $new_img $caption \) \
+	    \( $old_img $caption \) \
+	    -loop 0 -border 1 $img
+	cat <<EOF >>$html
+<img src="$img" alt="$short_name" style="margin: 10px"/>
+EOF
+    else
+        skipped="$skipped<li>$short_name"
+    fi
+done
+
+if [ x"$skipped" != x"" ]; then
+    cat <<EOF >>$html
+<p>Skipped:<ul>$skipped</ul>
+EOF
+fi
+
+run open $html
