@@ -17,7 +17,7 @@ skipped=""
 rm -rf $tmp
 mkdir $tmp
 
-for new in $(find "${dirs[@]}" -name parts -prune -o -name '*.png'); do
+for new in $(find "${dirs[@]}" -name parts -prune -o -name '*.png' | sort); do
     echo $new
     dir=$(dirname $new)
     new="$(cd "$dir" ; pwd)/$(basename $new)"
