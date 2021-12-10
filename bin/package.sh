@@ -67,7 +67,7 @@ do_zip() {
     (
 	name=$1
 	ucname=`to_title $name`
-	zipname="${ucname}_$version.zip"
+	zipname="${ucname}.$version.zip"
 	echo Building $zipname
 	cd $name
 	# Strip the EXIF and other text tags from images
