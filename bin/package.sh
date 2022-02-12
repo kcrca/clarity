@@ -101,10 +101,9 @@ do_create() {
 echo ... Repacking
 python3 repack/repack.py >> $out || ( cat $out ; echo Exit: 1: read $out ; exit 1)
 
-rm -f home
+test -h home || (rm -rf home && ln -s $HOME/Library/Application\ Support/minecraft home)
 rm -rf $packs/*.zip
 # Works for a mac, should check for other configurations
-ln -s $HOME/Library/Application\ Support/minecraft home
 for name in "${dirs[@]}"; do
     ucname=`to_title $name`
     zipname="${ucname}_$version"
