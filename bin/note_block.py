@@ -23,10 +23,12 @@ def colorize(img, color_hex):
     return new_img
 
 
-LINE_POS = 28
-NOTE_POS = 16
+LINE_POS_SRC_X = 46
+NOTE_POS_SRC_X = 27
 ON_COLOR = 0xe2b398
-HEIGHT_BASE = 8
+HEIGHT_BASE = 15
+
+LINE_POS_X = 23
 
 model_src_path = os.path.join(directory('models'), 'block', 'note_block/note_block_00.json')
 model_src = open(model_src_path).read()
@@ -39,12 +41,12 @@ names_img = Image.open(names_src_path).convert('RGBA')
 staff_img = Image.open(os.path.join(blocks, 'note_block_staff.png')).convert('RGBA')
 size = staff_img.size[0]
 notation_img = Image.open(os.path.join(blocks, 'note_block_note.png')).convert('RGBA')
-flat = notation_img.crop((0, 0, NOTE_POS, size))
-note = notation_img.crop((NOTE_POS, 0, LINE_POS, size))
-line = notation_img.crop((LINE_POS, 0, size, size))
+flat = notation_img.crop((0, 0, NOTE_POS_SRC_X, size))
+note = notation_img.crop((NOTE_POS_SRC_X, 0, LINE_POS_SRC_X, size))
+line = notation_img.crop((LINE_POS_SRC_X, 0, size, size))
 note_on = colorize(note, ON_COLOR)
 flat_on = colorize(flat, ON_COLOR)
-height = 0
+height = -1
 was_flat = False
 note_adj = 0
 flat_adj = 0
@@ -52,21 +54,28 @@ no_flats = (6, 11, 18, 23)
 
 for i in range(0, 25):
     img = staff_img.copy()
-    name_img = names_img.crop((4, i * 6, 12, (i + 1) * 6))
-    img.paste(name_img, (3, size - 3 - name_img.size[1]), name_img)
-    if not was_flat:
-        height += 2
-    if i < 4 or i > 22:
-        line_height = (4 if i < 4 else 28)
-        img.paste(line, (14, HEIGHT_BASE - line_height), line)
+    name_img = names_img.crop((3, i * 8, 13, (i + 1) * 8))
+    img.paste(name_img, (5, size - 6 - name_img.size[1]), name_img)
+
+    # Adjust for when the note flips upside down
     if i == 14:
         note = ImageOps.flip(note)
         note_on = ImageOps.flip(note_on)
-        note_adj = 16
+        note_adj = 17
         flat_adj = 6
+
+    # Place the below-clef lines
+    if i < 7:
+        img.paste(line, (LINE_POS_X, HEIGHT_BASE - 11), line)
+        if i < 4:
+            img.paste(line, (LINE_POS_X, HEIGHT_BASE - 5), line)
     img_on = img.copy()
 
-    note_pos = (16, HEIGHT_BASE - height + note_adj)
+    # Change the height when needed, then place the note itself
+    if not was_flat:
+        height += 3
+    note_pos = (NOTE_POS_SRC_X, HEIGHT_BASE - height + note_adj)
+    print("%d: %s" % (i, note_pos))
     img.paste(note, note_pos, note)
     img_on.paste(note_on, note_pos, note_on)
 
