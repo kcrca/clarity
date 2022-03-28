@@ -163,6 +163,7 @@ block/dark_oak_planks.png
 block/acacia_planks.png
 block/warped_planks.png
 block/crimson_planks.png
+block/mangrove_planks.png
 block/jungle_pressure_plate.png
 block/birch_pressure_plate.png
 block/spruce_pressure_plate.png
@@ -170,6 +171,7 @@ block/dark_oak_pressure_plate.png
 block/acacia_pressure_plate.png
 block/warped_pressure_plate.png
 block/crimson_pressure_plate.png
+block/mangrove_pressure_plate.png
 block/spruce_log.png
 block/dark_oak_log.png
 block/acacia_log.png
@@ -183,6 +185,7 @@ entity/signs/dark_oak.png
 entity/signs/acacia.png
 entity/signs/warped.png
 entity/signs/crimson.png
+entity/signs/mangrove.png
 item/jungle_sign.png
 item/birch_sign.png
 item/spruce_sign.png
@@ -190,6 +193,7 @@ item/dark_oak_sign.png
 item/acacia_sign.png
 item/warped_sign.png
 item/crimson_sign.png
+item/mangrove_sign.png
 block/stripped_jungle_log_top.png
 block/stripped_birch_log_top.png
 block/stripped_spruce_log_top.png
@@ -197,11 +201,13 @@ block/stripped_dark_oak_log_top.png
 block/stripped_acacia_log_top.png
 block/stripped_warped_stem_top.png
 block/stripped_crimson_stem_top.png
+block/stripped_mangrove_log_top.png
 entity/boat/jungle.png
 entity/boat/birch.png
 entity/boat/spruce.png
 entity/boat/dark_oak.png
 entity/boat/acacia.png
+entity/boat/mangrove.png
 block/repeating_command_block_back.png
 block/chain_command_block_back.png
 block/repeating_command_block_front.png

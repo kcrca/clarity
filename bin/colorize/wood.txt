@@ -6,3 +6,4 @@ dark_oak
 acacia
 warped log=stem
 crimson log=stem
+mangrove
