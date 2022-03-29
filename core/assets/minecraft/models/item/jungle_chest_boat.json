@@ -1,0 +1,6 @@
+{
+    "parent": "item/chest_boat",
+    "textures": {
+        "wood": "block/jungle_planks"
+    }
+}
