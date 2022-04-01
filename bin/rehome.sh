@@ -1,6 +1,5 @@
 #!/bin/zsh
 set -e
-set -x
 
 cd ~/clarity
 
@@ -8,10 +7,10 @@ src=$PWD
 dst=/Applications/MultiMC.app/Data/instances/$1/.minecraft
 [[ -d $dst ]] || exec file $dst
 
-rm home
+rm -f home
 ln -s $dst home
 cd home
-rm resourcepacks/core
+rm -f resourcepacks/core
 ln -s $src/core resourcepacks/
 [[ -f options.txt.bak ]] | cp options.txt options.txt.bak
 ex - options.txt << \EOF
