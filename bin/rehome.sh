@@ -22,6 +22,6 @@ ex - options.txt << \EOF
 /^key_key.pickItem:/s/:.*/:key.keyboard.p
 /^key_key.socialInteractions:/s/:.*/:key.keyboard.unknown
 /^key_key.use:/s/:.*/:key.keyboard.left.alt
-/^soundCategory_master:/s:.*/:0.0
+/^soundCategory_master:/s/:.*/:0.0
 /^reducedDebugInfo:/s:.*/false
 wq
