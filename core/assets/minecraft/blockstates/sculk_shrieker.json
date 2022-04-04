@@ -1,10 +1,16 @@
 {
   "variants": {
-    "shrieking=false": {
+    "can_summon=false,shrieking=false": {
       "model": "minecraft:block/sculk_shrieker"
     },
-    "shrieking=true": {
+    "can_summon=false,shrieking=true": {
       "model": "minecraft:block/sculk_shrieker_on"
+    },
+    "can_summon=true,shrieking=false": {
+      "model": "minecraft:block/sculk_shrieker_can_summon"
+    },
+    "can_summon=true,shrieking=true": {
+      "model": "minecraft:block/sculk_shrieker_can_summon_on"
     }
   }
 }
