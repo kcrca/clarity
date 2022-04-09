@@ -3,10 +3,10 @@
   "textures": {
     "down": "minecraft:block/oak_planks",
     "east": "minecraft:block/bookshelf_06",
-    "north": "minecraft:block/bookshelf_05",
+    "north": "minecraft:block/bookshelf_13",
     "particle": "minecraft:block/bookshelf_00",
-    "south": "minecraft:block/bookshelf_17",
+    "south": "minecraft:block/bookshelf_11",
     "up": "minecraft:block/oak_planks",
-    "west": "minecraft:block/bookshelf_01"
+    "west": "minecraft:block/bookshelf_00"
   }
 }

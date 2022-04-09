@@ -23,7 +23,7 @@ rm -rf $out
 cp /dev/null $out
 
 newest_zip=($(ls -t $packs))
-newer=($(find bin core/assets -newer $packs -type f ! -name '.*'))
+newer=($(find bin core/assets -newer $packs -type f ! -name '.*' | head))
 if (( $#newest_zip > 0 && $#newer > 0 )); then
     echo Regenerating derived files
     for f in bin/*.py; do
@@ -49,6 +49,8 @@ if (( $#newest_zip > 0 && $#newer > 0 )); then
 else
     echo No new derived files
 fi
+
+set -x
 
 to_title() {
     echo "$(tr a-z A-Z <<< ${1:0:1})${1:1}"
