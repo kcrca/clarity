@@ -1,0 +1,7 @@
+{
+  "parent": "block/template_mangrove_propagule",
+  "textures": {
+    "sapling": "block/mangrove_propagule_2",
+    "particle": "block/mangrove_propagule_2"
+  }
+}
