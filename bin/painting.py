@@ -9,9 +9,10 @@ import glob
 __author__ = 'arnold'
 
 import os
-import random
 import json
 from PIL import Image
+from PIL.Image import Dither
+
 import clip
 
 # If this ever changes it could be worth the trouble to generalize, but for now I'm
@@ -26,32 +27,42 @@ breakout_dir = clip.directory('site', 'paintings')
 images = list(glob.glob(os.path.join(paintings, '*.png')))
 images.remove(os.path.join(paintings, 'back.png'))
 
-# Set the seed to prevent the png changing each time this is run. Otherwise, we end up updating the png file each time
-# we run the script.
-random.seed(13)
-random.shuffle(images)
+# These are always put together since they are related
+together = list(os.path.join(paintings, '%s.png' % x) for x in ('earth', 'fire', 'water', 'wind'))
 
 thumb_scale = 4
 
 frames = []
 max_size = 0
+art_imgs = []
 for img_file in images:
     art_img = Image.open(img_file)
     w, h = art_img.size
-    max_size = max(w, h, max_size)
-
-item_img = Image.new('RGBA', (max_size, max_size * len(images)), (0, 0, 0, 0))
-for i in range(0, len(images)):
-    art_img = Image.open(images[i])
-    w, h = art_img.size
-    if os.path.exists(images[1]):
+    if os.path.exists(img_file + ".mcmeta"):
         # Assuming all animated images are square
         h = w
         art_img = art_img.crop((0, 0, w, w))
-    # scale image up to fix in max size
+    art_imgs.append((img_file, (w, h), art_img))
+    max_size = max(w, h, max_size)
+
+
+def together_index(path):
+    try:
+        return together.index(path)
+    except ValueError:
+        return -1
+
+
+art_imgs.sort(key = lambda desc: (desc[1], together_index(desc[0]), desc[0]))
+
+item_img = Image.new('RGBA', (max_size, max_size * len(images)), (0, 0, 0, 0))
+for i in range(0, len(art_imgs)):
+    # scale image up to max size
+    img_file, size, art_img = art_imgs[i]
+    w, h = size
     art_scale = min(max_size / w, max_size / h)
     if art_scale > 1:
-        art_img = art_img.resize((int(w * art_scale), int(h * art_scale)))
+        art_img = art_img.resize((int(w * art_scale), int(h * art_scale)), Dither.NONE)
     art_size = art_img.size
     placement = [int((max_size - v) / 2) for v in art_size]
     item_img.paste(art_img, (placement[0], placement[1] + i * max_size))
