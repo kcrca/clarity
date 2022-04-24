@@ -26,7 +26,7 @@ breakout_dir = clip.directory('site', 'paintings')
 images = list(glob.glob(os.path.join(paintings, '*.png')))
 images.remove(os.path.join(paintings, 'back.png'))
 
-# Set the seed to prevent the png changing each time this is run. Otherwise we end up checking a new png file each time
+# Set the seed to prevent the png changing each time this is run. Otherwise, we end up updating the png file each time
 # we run the script.
 random.seed(13)
 random.shuffle(images)
@@ -44,6 +44,10 @@ item_img = Image.new('RGBA', (max_size, max_size * len(images)), (0, 0, 0, 0))
 for i in range(0, len(images)):
     art_img = Image.open(images[i])
     w, h = art_img.size
+    if os.path.exists(images[1]):
+        # Assuming all animated images are square
+        h = w
+        art_img = art_img.crop((0, 0, w, w))
     # scale image up to fix in max size
     art_scale = min(max_size / w, max_size / h)
     if art_scale > 1:
