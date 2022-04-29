@@ -1,0 +1,17 @@
+{
+    "parent": "item/generated",
+    "textures": {
+        "layer0": "item/goat_horn"
+    },
+    "display": {
+        "firstperson_lefthand": {
+            "rotation": [ -20, -40, 0 ],
+	    "scale": [ 0.8, 0.8, 0.8 ],
+            "translation": [ 0, -2, -1 ]
+        },
+        "firstperson_righthand": {
+            "rotation": [ -20, -30, 0 ],
+            "translation": [ 6, -3, 1 ]
+        }
+    }
+}
