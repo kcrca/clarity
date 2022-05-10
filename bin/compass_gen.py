@@ -77,18 +77,19 @@ def rotate(points, angle):
 
 
 for i in range(0, TICKS):
-    img = Image.new('RGBA', (IMG_SIZE, IMG_SIZE), ImageColor.getrgb("#0000"))
-    draw = ImageDraw.Draw(img)
     n, l, s, r, r_l, r_s, r_r = rotate(coords, i * PER_TICK_ROT)
-    draw.polygon(list(map(tuple, (l, r, n))), fill=(ImageColor.getrgb("#f00f")))
-    draw.polygon(list(map(tuple, (l, r, s))), fill=(ImageColor.getrgb("#000f")))
-    img.save('%s/compass_%0*d.png' % (img_dir, TICK_DIGIT_COUNT, i))
 
-    img = Image.new('RGBA', (IMG_SIZE, IMG_SIZE), ImageColor.getrgb("#0000"))
-    draw = ImageDraw.Draw(img)
-    draw.polygon(list(map(tuple, (l, r, n))), fill=(ImageColor.getrgb("#009295")))
-    draw.polygon(list(map(tuple, (l, r, s))), fill=(ImageColor.getrgb("#29dfeb")))
-    img.save('%s/recovery_compass_%0*d.png' % (img_dir, TICK_DIGIT_COUNT, i))
+
+    def arrow_image(up_color, down_color):
+        img = Image.new('RGBA', (IMG_SIZE, IMG_SIZE), ImageColor.getrgb("#0000"))
+        draw = ImageDraw.Draw(img)
+        draw.polygon(list(map(tuple, (l, r, n))), fill=(ImageColor.getrgb(up_color)))
+        draw.polygon(list(map(tuple, (l, r, s))), fill=(ImageColor.getrgb(down_color)))
+        return img
+
+
+    arrow_image("#f00f", "#000f").save('%s/compass_%0*d.png' % (img_dir, TICK_DIGIT_COUNT, i))
+    arrow_image("#009295", "#29dfeb").save('%s/recovery_compass_%0*d.png' % (img_dir, TICK_DIGIT_COUNT, i))
 
     day_frac = i * TICK_FRACTION
 
@@ -99,24 +100,20 @@ for i in range(0, TICKS):
         angle_frac -= HALF_TICK_FRACTION
     overrides.append({"predicate": {"angle": angle_frac}, "model": model})
 
+    display = {
+        "rotation": [-20, -35, 0],
+        "translation": FP_TRANSLATION,
+        "scale": FP_SCALE
+    }
     with open(json_path, 'w') as f:
-        angle = ((angle_frac + HALF_TICK_FRACTION) * 360 + 270) % 360
         json.dump({
             "parent": "item/base_compass",
             "textures": {
                 "layer0": "item/compass_%0*d" % (TICK_DIGIT_COUNT, i % TICKS)
             },
             "display": {
-                "firstperson_righthand": {
-                    "rotation": [-20, -35, 0],
-                    "translation": FP_TRANSLATION,
-                    "scale": FP_SCALE
-                },
-                "firstperson_lefthand": {
-                    "rotation": [-20, -35, 0],
-                    "translation": FP_TRANSLATION,
-                    "scale": FP_SCALE
-                }
+                "firstperson_righthand": display,
+                "firstperson_lefthand": display
             }
         }, f, indent=4, sort_keys=True)
 
