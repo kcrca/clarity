@@ -7,27 +7,89 @@
 __author__ = 'arnold'
 
 import json
+import math
 import os
 import shutil
+
+import numpy as np
+from PIL import ImageColor, Image
+from PIL import ImageDraw
 
 import clip
 
 TICKS = 32
 TICK_DIGIT_COUNT = clip.num_digits(TICKS)
-
 TICK_FRACTION = 1.0 / TICKS
 HALF_TICK_FRACTION = TICK_FRACTION / 2
 
-FP_SCALE = [0.3, 0.3, 0.3]
-FP_TRANSLATION = [-1, 4, 1]
+FP_SCALE = [0.5, ] * 3
+FP_TRANSLATION = [-1, 2, 1]
 FP_X_ROT = -65
-FP_Y_ROT = 0  # Generate each override file for each angle "tick"
+FP_Y_ROT = 0
 
-dir = clip.directory('models')
-os.chdir(dir)
+IMG_SIZE = 512
+IMG_MID = IMG_SIZE / 2.0
+NEEDLE_WIDTH = IMG_SIZE * 0.05
+
+TIP = 0.9 * IMG_SIZE
+N_POINT = (IMG_MID, TIP)
+S_POINT = (IMG_MID, IMG_SIZE - TIP)
+L_MID_POINT = (IMG_MID - NEEDLE_WIDTH, IMG_MID)
+R_MID_POINT = (IMG_MID + NEEDLE_WIDTH, IMG_MID)
+REC_L_MID_POINT = (NEEDLE_WIDTH, IMG_MID)
+REC_R_MID_POINT = (IMG_SIZE - NEEDLE_WIDTH, IMG_MID)
+REC_S_POINT = (IMG_MID, IMG_MID - NEEDLE_WIDTH)
+coords = [N_POINT, L_MID_POINT, S_POINT, R_MID_POINT, REC_L_MID_POINT, REC_S_POINT, REC_R_MID_POINT]
+
+PER_TICK_ROT = -2 * math.pi / TICKS
+
+model_dir = clip.directory('models')
+os.chdir(model_dir)
+img_dir = clip.directory('textures', 'item')
 
 overrides = []
-for i in range(0, TICKS + 1):
+
+
+def get_rotation_matrix(angle):
+    """ For background, https://en.wikipedia.org/wiki/Rotation_matrix
+    rotation is clockwise in traditional descartes, and counterclockwise,
+    if y goes down (as in picture coordinates)
+    """
+    return np.array([
+        [np.cos(angle), -np.sin(angle)],
+        [np.sin(angle), np.cos(angle)]])
+
+
+def rotate(points, angle):
+    """ Get coordinates of points rotated by a given angle counterclocwise
+
+    Args:
+        points (np.array): point coordinates shaped (n, 2)
+        angle (float): counterclockwise rotation angle in radians
+    Returns:
+        np.array of new coordinates shaped (n, 2)
+    """
+    mid = np.array([IMG_MID, IMG_MID])
+    relative_points = points - mid
+    rot = get_rotation_matrix(angle)
+    dot = relative_points.dot(rot)
+    return dot + mid
+
+
+for i in range(0, TICKS):
+    img = Image.new('RGBA', (IMG_SIZE, IMG_SIZE), ImageColor.getrgb("#0000"))
+    draw = ImageDraw.Draw(img)
+    n, l, s, r, r_l, r_s, r_r = rotate(coords, i * PER_TICK_ROT)
+    draw.polygon(list(map(tuple, (l, r, n))), fill=(ImageColor.getrgb("#f00f")))
+    draw.polygon(list(map(tuple, (l, r, s))), fill=(ImageColor.getrgb("#000f")))
+    img.save('%s/compass_%0*d.png' % (img_dir, TICK_DIGIT_COUNT, i))
+
+    img = Image.new('RGBA', (IMG_SIZE, IMG_SIZE), ImageColor.getrgb("#0000"))
+    draw = ImageDraw.Draw(img)
+    draw.polygon(list(map(tuple, (l, r, n))), fill=(ImageColor.getrgb("#009295")))
+    draw.polygon(list(map(tuple, (l, r, s))), fill=(ImageColor.getrgb("#29dfeb")))
+    img.save('%s/recovery_compass_%0*d.png' % (img_dir, TICK_DIGIT_COUNT, i))
+
     day_frac = i * TICK_FRACTION
 
     model = 'item/compass/compass_%0*d' % (TICK_DIGIT_COUNT, i % TICKS)
@@ -41,14 +103,17 @@ for i in range(0, TICKS + 1):
         angle = ((angle_frac + HALF_TICK_FRACTION) * 360 + 270) % 360
         json.dump({
             "parent": "item/base_compass",
+            "textures": {
+                "layer0": "item/compass_%0*d" % (TICK_DIGIT_COUNT, i % TICKS)
+            },
             "display": {
                 "firstperson_righthand": {
-                    "rotation": [FP_X_ROT, FP_Y_ROT, -angle + 27],
+                    "rotation": [-20, -35, 0],
                     "translation": FP_TRANSLATION,
                     "scale": FP_SCALE
                 },
                 "firstperson_lefthand": {
-                    "rotation": [FP_X_ROT, FP_Y_ROT, angle - 22],
+                    "rotation": [-20, -35, 0],
                     "translation": FP_TRANSLATION,
                     "scale": FP_SCALE
                 }
@@ -63,14 +128,15 @@ with open('item/compass.json', 'w') as f:
     }, f, indent=4, sort_keys=True)
 
 
-def toRecovery(src, dst=None):
+# noinspection PyUnusedLocal
+def to_recovery(src, dst=None):
     old_text = open(src, 'r').read()
     new_text = old_text.replace('compass', 'recovery_compass')
     open(src.replace('compass', 'recovery_compass'), 'w').write(new_text)
 
 
-# Recovery compass is just modified compass
-toRecovery("item/compass.json")
-toRecovery("item/base_compass.json")
+# Recovery compass models are just modified compass ones
+to_recovery("item/compass.json")
+to_recovery("item/base_compass.json")
 shutil.rmtree("item/recovery_compass", ignore_errors=True)
-shutil.copytree("item/compass", "item/recovery_compass", copy_function=toRecovery)
+shutil.copytree("item/compass", "item/recovery_compass", copy_function=to_recovery)

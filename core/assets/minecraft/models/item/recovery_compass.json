@@ -191,12 +191,6 @@
             "predicate": {
                 "angle": 0.953125
             }
-        },
-        {
-            "model": "item/recovery_compass/recovery_compass_00",
-            "predicate": {
-                "angle": 0.984375
-            }
         }
     ],
     "parent": "item/base_recovery_compass"
