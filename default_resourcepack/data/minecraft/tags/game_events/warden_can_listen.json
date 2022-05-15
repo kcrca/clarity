@@ -1,5 +1,4 @@
 {
-  "replace": false,
   "values": [
     "minecraft:block_attach",
     "minecraft:block_change",
@@ -24,7 +23,6 @@
     "minecraft:entity_shake",
     "minecraft:equip",
     "minecraft:explode",
-    "minecraft:flap",
     "minecraft:fluid_pickup",
     "minecraft:fluid_place",
     "minecraft:hit_ground",
