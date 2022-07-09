@@ -26,8 +26,8 @@
     "minecraft:fluid_pickup",
     "minecraft:fluid_place",
     "minecraft:hit_ground",
+    "minecraft:instrument_play",
     "minecraft:item_interact_finish",
-    "minecraft:item_interact_start",
     "minecraft:lightning_strike",
     "minecraft:note_block_play",
     "minecraft:piston_contract",
@@ -39,6 +39,7 @@
     "minecraft:splash",
     "minecraft:step",
     "minecraft:swim",
+    "minecraft:teleport",
     "minecraft:shriek",
     "#minecraft:shrieker_can_listen"
   ]
