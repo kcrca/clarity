@@ -17,6 +17,7 @@ ex - options.txt << \EOF
 /^advancedItemTooltips:/s/:.*/:true
 /^autoJump:/s/:.*/:false
 /^bobView:/s/:.*/:false
+/^biomeBlendRadius:s/:.*/0
 /^chatScale:/s/:.*/:0.75
 /^darkMojangStudiosBackground:/s/:.*/:true
 /^key_key.pickItem:/s/:.*/:key.keyboard.p
