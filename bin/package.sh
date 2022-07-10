@@ -50,8 +50,6 @@ else
     echo No new derived files
 fi
 
-set -x
-
 to_title() {
     echo "$(tr a-z A-Z <<< ${1:0:1})${1:1}"
 }
