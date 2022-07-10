@@ -199,4 +199,4 @@ print('Textures: %d' % len(textures))
 if len(unused_textures) > 0:
     print('UNUSED textures:\n   ', end=' ')
     print('\n    '.join(sorted(unused_textures)))
-    os.sys.exit(1)
+    # os.sys.exit(1)
