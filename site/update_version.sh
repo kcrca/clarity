@@ -4,7 +4,6 @@ set -e
 
 cd `dirname $0`
 
-set -x
 ver_cur="$1"
 [ x"$ver_cur" != x"" ] || (echo Must specify version ; exit 1)
 ver_old=$(sed -E -n -e 's/^<.-- version: ([^ ]*) -->/\1/p' < index.html)
@@ -23,7 +22,7 @@ q
 EOF
 
 # If it's been changed, update the edit date
-if cmp -s index.html index.html.new; then
+if diff -I'"timestamp"' index.html{,.new} >/dev/null; then
     rm index.html.new
 else
     mv index.html.new index.html
