@@ -7,8 +7,11 @@ __author__ = 'arnold'
 import configparser
 import os
 import re
+
 from PIL import Image
 from PIL import ImageDraw
+from PIL.Image import Resampling
+
 import clip
 
 config = configparser.ConfigParser()
@@ -46,7 +49,7 @@ for i in range(0, 10):
     y2 = y1 + raw_font_size
     digit = chars.crop((x1, y1, x2, y2)).convert('RGBA')
     if font_size != raw_font_size:
-        digit.thumbnail((font_size, font_size), Image.ANTIALIAS)
+        digit.thumbnail((font_size, font_size), Resampling.LANCZOS)
     digits[i] = digit
 
 used_part_files = []

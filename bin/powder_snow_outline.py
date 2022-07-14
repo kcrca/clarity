@@ -8,6 +8,7 @@ __author__ = 'arnold'
 import sys
 
 from PIL import Image
+from PIL.Image import Transpose
 
 import clip
 
@@ -35,6 +36,6 @@ else:
         img.paste(row, (0, y * 2))
         img.paste(row, (0, y * 2 + 1))
 
-    img.paste(img.crop((0, 0, ul_w, ul_h * 2)).transpose(Image.FLIP_LEFT_RIGHT), (ul_w, 0))
-    img.paste(img.crop((0, 0, ul_w * 2, ul_h * 2)).transpose(Image.FLIP_TOP_BOTTOM), (0, ul_h * 2))
+    img.paste(img.crop((0, 0, ul_w, ul_h * 2)).transpose(Transpose.FLIP_LEFT_RIGHT), (ul_w, 0))
+    img.paste(img.crop((0, 0, ul_w * 2, ul_h * 2)).transpose(Transpose.FLIP_TOP_BOTTOM), (0, ul_h * 2))
     img.save(img_path)

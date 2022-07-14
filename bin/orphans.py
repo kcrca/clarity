@@ -4,6 +4,8 @@ __author__ = 'arnold'
 
 import glob
 import json
+import sys
+
 import clip
 import re
 
@@ -18,7 +20,7 @@ def find_models(data):
         return models
     if isinstance(data, dict):
         try:
-            return (data['model'],)
+            return data['model'],
         except KeyError:
             pass
         models = []
@@ -85,6 +87,12 @@ def import_model(model_name):
     models[model_name] = model
     try:
         del unused_models[model_name]
+    except KeyError:
+        pass
+    try:
+        for o in model['overrides']:
+            if 'model' in o:
+                import_model(o['model'])
     except KeyError:
         pass
 
@@ -157,7 +165,7 @@ special_textures = (
     'block/destroy_stage_7',
     'block/destroy_stage_8',
     'block/destroy_stage_9',
-    'block/portal', # animation for the nether portal
+    'block/portal',  # animation for the nether portal
     'block/lava_flow',
     'block/note_block_names',
     'block/note_block_note',
@@ -175,8 +183,6 @@ special_textures = (
     'item/blank_banner_pattern',
     'item/carpet_for_llama',
     'item/netherite_ingot',
-
-    #
 )
 
 for file in glob.glob('%s/item/*.png' % clip.directory('textures')) + glob.glob(
@@ -199,4 +205,4 @@ print('Textures: %d' % len(textures))
 if len(unused_textures) > 0:
     print('UNUSED textures:\n   ', end=' ')
     print('\n    '.join(sorted(unused_textures)))
-    # os.sys.exit(1)
+    sys.exit(1)

@@ -9,9 +9,11 @@
 
 __author__ = 'arnold'
 
-import os
 import json
+import os
+
 from PIL import Image
+
 import clip
 
 NUM_FRAMES = 16

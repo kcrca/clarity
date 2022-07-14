@@ -4,12 +4,13 @@
 
 __author__ = 'arnold'
 
+import collections
+import json
 import os
 import random
-import json
-import collections
 
 from PIL import Image
+
 import clip
 
 weeks_in_year = 52

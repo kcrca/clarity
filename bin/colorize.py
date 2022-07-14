@@ -58,9 +58,9 @@ def color_list(colors_config, has_alpha):
 
 
 def map_for(map_name, key_color, has_alpha):
-    possible_keys = [key_color,]
+    possible_keys = [key_color, ]
     try:
-        possible_keys+=  aliases[key_color]
+        possible_keys += aliases[key_color]
     except KeyError:
         pass
 

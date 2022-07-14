@@ -1,7 +1,8 @@
-import clip
 import json
 
 from PIL import Image
+
+import clip
 
 src_dir = clip.directory('defaults', 'textures', 'block')
 dst_dir = clip.directory('textures', 'block')

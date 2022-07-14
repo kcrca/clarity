@@ -4,10 +4,12 @@ __author__ = 'arnold'
 
 import configparser
 import json
-import shutil
-import os
 import math
+import os
+import shutil
+
 from PIL import Image
+
 import clip
 
 

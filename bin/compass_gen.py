@@ -12,7 +12,7 @@ import os
 import shutil
 
 import numpy as np
-from PIL import ImageColor, Image
+from PIL import Image, ImageColor
 from PIL import ImageDraw
 
 import clip

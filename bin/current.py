@@ -10,7 +10,6 @@ from clip import *
 
 scale = 0.75
 
-
 top = directory('top')
 os.chdir(top)
 

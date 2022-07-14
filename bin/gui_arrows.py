@@ -8,10 +8,12 @@ import re
 import shutil
 from collections import defaultdict
 
-from PIL import Image
-from PIL import ImageDraw
-from PIL import ImageColor
 import numpy
+from PIL import Image
+from PIL import ImageColor
+from PIL import ImageDraw
+from PIL.Image import Transpose
+
 import clip
 
 desc_re = re.compile(r'(large)?_?(.*)_(.*)@(\d+),(\d+)')
@@ -72,9 +74,9 @@ def build_arrows(size, hover=None):
     else:
         left = left_arrows(size)
 
-    up = generate_arrows('up', left, Image.ROTATE_270)
-    right = generate_arrows('right', left, Image.FLIP_LEFT_RIGHT)
-    down = generate_arrows('down', up, Image.FLIP_TOP_BOTTOM)
+    up = generate_arrows('up', left, Transpose.ROTATE_270)
+    right = generate_arrows('right', left, Transpose.FLIP_LEFT_RIGHT)
+    down = generate_arrows('down', up, Transpose.FLIP_TOP_BOTTOM)
     return {'left': left, 'right': right, 'up': up, 'down': down}
 
 
