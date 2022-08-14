@@ -10,6 +10,8 @@ __author__ = 'arnold'
 
 import os
 import json
+from pathlib import Path
+
 from PIL import Image
 from PIL.Image import Dither
 
@@ -24,11 +26,8 @@ texture = os.path.join(texture_dir, 'item', 'painting.png')
 animation = os.path.join(texture_dir, 'item', 'painting.png.mcmeta')
 breakout_dir = clip.directory('site', 'paintings')
 
-images = list(glob.glob(os.path.join(paintings, '*.png')))
-images.remove(os.path.join(paintings, 'back.png'))
-
-# These are always put together since they are related
-together = list(os.path.join(paintings, '%s.png' % x) for x in ('earth', 'fire', 'water', 'wind'))
+unused = ('back', 'earth', 'fire', 'water', 'wind')
+images = tuple(filter(lambda p: Path(p).stem not in (unused), glob.glob(os.path.join(paintings, '*.png'))))
 
 thumb_scale = 4
 
@@ -45,15 +44,7 @@ for img_file in images:
     art_imgs.append((img_file, (w, h), art_img))
     max_size = max(w, h, max_size)
 
-
-def together_index(path):
-    try:
-        return together.index(path)
-    except ValueError:
-        return -1
-
-
-art_imgs.sort(key = lambda desc: (desc[1], together_index(desc[0]), desc[0]))
+art_imgs.sort(key=lambda desc: (desc[1], desc[0]))
 
 item_img = Image.new('RGBA', (max_size, max_size * len(images)), (0, 0, 0, 0))
 for i in range(0, len(art_imgs)):
