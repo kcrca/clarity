@@ -1,7 +1,72 @@
 {
-    "parent": "item/double_height",
-    "textures": {
-        "top": "block/fern",
-        "bottom": "block/large_fern_bottom"
-    }
+	"credit": "Made with Blockbench",
+	"parent": "block/block",
+	"ambientocclusion": false,
+	"textures": {
+		"stem": "block/large_fern_bottom",
+		"particle": "block/fern",
+		"cross": "block/fern"
+	},
+	"elements": [
+		{
+			"from": [0.5, 12, 8],
+			"to": [16.5, 28, 8],
+			"shade": false,
+			"rotation": {"angle": 45, "axis": "x", "origin": [0, 9, 8]},
+			"faces": {
+				"north": {"uv": [16, 0, 0, 16], "texture": "#cross", "tintindex": 0},
+				"south": {"uv": [0, 0, 16, 16], "texture": "#cross", "tintindex": 0}
+			}
+		},
+		{
+			"from": [0.5, 12, 8],
+			"to": [16.5, 28, 8],
+			"shade": false,
+			"rotation": {"angle": -45, "axis": "x", "origin": [0, 9, 8]},
+			"faces": {
+				"north": {"uv": [16, 0, 0, 16], "texture": "#cross", "tintindex": 0},
+				"south": {"uv": [0, 0, 16, 16], "texture": "#cross", "tintindex": 0}
+			}
+		},
+		{
+			"from": [8, 10, 0],
+			"to": [8, 26, 16],
+			"shade": false,
+			"rotation": {"angle": 45, "axis": "z", "origin": [7.5, 9, 0]},
+			"faces": {
+				"east": {"uv": [16, 0, 0, 16], "texture": "#cross", "tintindex": 0},
+				"west": {"uv": [0, 0, 16, 16], "texture": "#cross", "tintindex": 0}
+			}
+		},
+		{
+			"from": [8, -2, 0.8],
+			"to": [8, 11, 15.2],
+			"shade": false,
+			"rotation": {"angle": 45, "axis": "y", "origin": [8, 6, 8], "rescale": true},
+			"faces": {
+				"east": {"uv": [0, 0, 16, 16], "texture": "#stem"},
+				"west": {"uv": [0, 0, 16, 16], "texture": "#stem"}
+			}
+		},
+		{
+			"from": [0.8, -2, 8],
+			"to": [15.2, 11, 8],
+			"shade": false,
+			"rotation": {"angle": 45, "axis": "y", "origin": [8, 6, 8], "rescale": true},
+			"faces": {
+				"north": {"uv": [0, 0, 16, 16], "texture": "#stem"},
+				"south": {"uv": [0, 0, 16, 16], "texture": "#stem"}
+			}
+		},
+		{
+			"from": [8, 10, 0],
+			"to": [8, 26, 16],
+			"shade": false,
+			"rotation": {"angle": -45, "axis": "z", "origin": [8.5, 9, 0]},
+			"faces": {
+				"east": {"uv": [16, 0, 0, 16], "texture": "#cross", "tintindex": 0},
+				"west": {"uv": [0, 0, 16, 16], "texture": "#cross", "tintindex": 0}
+			}
+		}
+	]
 }
