@@ -1,5 +1,6 @@
 {
     "parent": "block/item_frame",
+    "gui_light": "front",
     "display": {
         "fixed": {
             "rotation": [ 0, 180, 0 ],
