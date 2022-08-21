@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/thin_cross",
+  "textures": {
+    "cross": "minecraft:block/nether_sprouts"
+  }
+}
