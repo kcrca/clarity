@@ -1,4 +1,26 @@
 {
+    "gui_light": "front",
+    "display": {
+	"comment": "seems to ignore first/thirdperson?",
+        "gui": {
+            "rotation": [-67.5, 0, 45],
+            "scale": [1.5, 1.5, 1.5]
+        },
+        "ground": {
+            "rotation": [90, 45, 0],
+            "scale": [0.8, 0.8, 0.8]
+        },
+        "head": {
+            "rotation": [90, 0, 0],
+            "translation": [0, 0, -16],
+            "scale": [1.6, 1.6, 1.6]
+        },
+        "fixed": {
+            "rotation": [45, 0, 90],
+            "translation": [0, 0, -1.5],
+            "scale": [1.5, 1.5, 1.5]
+        }
+    },
     "textures": {
         "spyglass": "item/spyglass_model"
     },
@@ -26,27 +48,5 @@
                 "down": {"uv": [0, 13, 2, 15], "texture": "#spyglass"}
             }
         }
-    ],
-    "gui_light": "front",
-    "display": {
-        "thirdperson_righthand": {
-            "translation": [0, -2, 0]
-        },
-        "ground": {
-            "rotation": [90, 0, 0]
-        },
-        "gui": {
-            "rotation": [-67.5, 0, 45],
-            "scale": [1.5, 1.5, 1.5]
-        },
-        "head": {
-            "rotation": [90, 0, 0],
-            "translation": [0, 0, -16],
-            "scale": [1.6, 1.6, 1.6]
-        },
-        "fixed": {
-            "translation": [0, 0, -1.5],
-            "scale": [1.5, 1.5, 1.5]
-        }
-    }
+    ]
 }
