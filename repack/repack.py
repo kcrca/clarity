@@ -608,7 +608,7 @@ class Pass(object):
                 self.changes(src, dst)
         if len(self.unused_changes):
             global warnings
-            warnings += (self.__class__.__name__ + 'Changes not done: Files not found: %s' % ', '.join(
+            warnings += (self.__class__.__name__ + ': Changes not done: Files not found: %s' % ', '.join(
                 self.unused_changes),)
 
     def subpath_for(self, dst):

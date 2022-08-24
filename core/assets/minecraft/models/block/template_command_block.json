@@ -1,0 +1,19 @@
+{
+    "parent": "block/cube_directional",
+    "display": {
+        "fixed": {
+            "rotation": [ 0, 90, 0 ],
+            "translation": [ 0, 0, 0],
+            "scale":[ 0.5, 0.5, 0.5 ]
+        }
+    },
+    "textures": {
+        "particle": "#back",
+        "down": "#side",
+        "up": "#side",
+        "north": "#front",
+        "east": "#side",
+        "south": "#back",
+        "west": "#side"
+    }
+}
