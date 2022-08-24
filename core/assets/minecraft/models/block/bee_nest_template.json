@@ -1,8 +1,7 @@
 {
-    "parent": "block/orientable_all",
+    "parent": "block/orientable_most",
     "textures": {
         "particle": "block/bee_nest_side",
-        "bottom": "block/bee_nest_bottom",
         "top": "block/bee_nest_top",
         "front": "#front",
         "side": "block/bee_nest_side",

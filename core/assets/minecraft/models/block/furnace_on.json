@@ -1,5 +1,5 @@
 {
-    "parent": "block/orientable_all",
+    "parent": "block/orientable_most",
     "textures": {
         "top": "block/furnace_top_on",
         "front": "block/furnace_front_on",

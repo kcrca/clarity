@@ -1,5 +1,5 @@
 {
-    "parent": "block/orientable_all",
+    "parent": "block/orientable_most",
     "textures": {
         "top": "block/smoker_top",
         "front": "block/smoker_front",
