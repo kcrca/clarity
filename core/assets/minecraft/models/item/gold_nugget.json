@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/template_nugget",
+  "textures": {
+    "layer0": "minecraft:item/gold_nugget"
+  }
+}

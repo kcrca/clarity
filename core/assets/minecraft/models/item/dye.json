@@ -1,5 +1,5 @@
 {
-    "parent": "item/fortyfive",
+    "parent": "item/handheld_item",
     "display": {
 	"gui": {
             "rotation": [ 0, 0, -45 ],

@@ -1,5 +1,5 @@
 {
-    "parent": "item/fortyfive",
+    "parent": "item/handheld_item",
     "textures": {
         "layer0": "item/bread"
     }
