@@ -1,7 +1,7 @@
 {
     "parent": "item/generated", 
     "textures": {
-        "layer0": "item/recovery_compass"
+        "layer0": "item/recovery_compass_00"
     },
     "display": {
         "gui": {

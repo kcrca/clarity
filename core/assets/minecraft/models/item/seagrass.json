@@ -1,3 +1,6 @@
 {
-    "parent": "block/seagrass"
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "minecraft:block/seagrass"
+  }
 }
