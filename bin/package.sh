@@ -95,7 +95,7 @@ do_create() {
     tar c -C clarity "$@" | tar xf - -C $name
     # Trivial implementation of repack for this case
     tar c -C $name.repack/override . | tar xf - -C $name
-    find $name \( -name '*.pxm' -o -name '*.psd' -o -name '*.py*' \) -print0 | xargs -0 rm
+    find $name \( -name '*.pxd' -o -name '*.psd' -o -name '*.py*' \) -print0 | xargs -0 rm
 }
  
 echo ... Repacking
@@ -115,7 +115,7 @@ for name in "${dirs[@]}"; do
 	mkdir -p $name
 	tar c -C $name.repack/override . | tar xf - -C $name
 	find $name/assets/minecraft/textures/block -type d -depth 1 -print0 | xargs -0 rm -r
-	find $name \( -name '*.pxm' -o -name '*.psd' -o -name '*.py' -o -name '*.sh' \) -print0 | xargs -0 rm
+	find $name \( -name '*.pxd' -o -name '*.psd' -o -name '*.py' -o -name '*.sh' \) -print0 | xargs -0 rm
 	;;
     "current")
         # This pack is nearly entirely built by current.py, but this is not.

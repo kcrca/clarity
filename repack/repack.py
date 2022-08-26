@@ -23,7 +23,7 @@ skip_dirs_re = re.compile(r'^\.|^(no|alternates|parts|variants)$')
 solid_prop_re = re.compile(r'\nsolid=(\d+)\n')
 
 # Keep the support file list (.bak, .psd, ...) consistent with report_default.cfg
-do_not_copy_re = re.compile(r'\.(ai|bak|cfg|DS_Store|gif|psd|pxm|pyc|py|sh|tiff)$|/(.$|\.)')
+do_not_copy_re = re.compile(r'\.(ai|bak|cfg|DS_Store|gif|psd|pxd|pyc|py|sh|tiff)$|/(.$|\.)')
 
 warnings = []
 
