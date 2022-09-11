@@ -75,7 +75,6 @@ for i in range(0, 25):
     if not was_flat:
         height += 3
     note_pos = (NOTE_POS_SRC_X, HEIGHT_BASE - height + note_adj)
-    print("%d: %s" % (i, note_pos))
     img.paste(note, note_pos, note)
     img_on.paste(note_on, note_pos, note_on)
 
