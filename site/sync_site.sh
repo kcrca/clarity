@@ -2,7 +2,7 @@
 set -e
 cd `dirname $0`
 dst_dir="."
-rsync -c -avz --delete \
+rsync -c -avz --delete --progress \
     --exclude='restworld' \
     --exclude=src \
     --exclude='.??*' \
