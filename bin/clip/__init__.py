@@ -28,7 +28,7 @@ class Square:
         return adjust
 
 
-def directory(name, *args):
+def directory(name, *args, **kwargs):
     """
     Returns the directory with the specified name, as an absolute path.
     :param name: The name of the directory. One of "textures" or "models".
@@ -47,8 +47,8 @@ def directory(name, *args):
         'site': 'site',
         'core': 'core',
     }
-    is_defaults = name == 'defaults'
-    if is_defaults:
+    is_defaults = name == 'defaults' or 'is_defaults' in kwargs and kwargs['is_defaults']
+    if is_defaults and name == 'defaults':
         name = args[0]
         args = args[1:]
     path = dirs[name]

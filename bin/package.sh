@@ -21,7 +21,7 @@ until [[ $v:r == $v ]]; do
     v=$v:r
 done
 
-dirs=(clarity connectivity continuity changes current beguile)
+dirs=(contraption clarity connectivity continuity changes current beguile)
 
 # Create the packs dir
 test -d $packs || mkdir -p $packs
@@ -124,6 +124,9 @@ for name in "${dirs[@]}"; do
 	tar c -C $name.repack/override . | tar xf - -C $name
 	find $name/assets/minecraft/textures/block -type d -depth 1 -print0 | xargs -0 rm -r
 	find $name \( -name '*.pxd' -o -name '*.psd' -o -name '*.py' -o -name '*.sh' \) -print0 | xargs -0 rm
+	;;
+    "contraption")
+	cp -r $name.repack/override $name/
 	;;
     "current")
         # This pack is nearly entirely built by current.py, but this is not.
