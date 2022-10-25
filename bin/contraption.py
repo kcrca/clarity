@@ -80,7 +80,7 @@ def write_from(which, dir):
         if 'write' in d and d['write']:
             del d['write']
             del d['name']
-            del d['orig']
+            # del d['orig']
             if 'kids' in d:
                 del d['kids']
             out = f'{dir}/{m}.json'
@@ -130,7 +130,7 @@ def main():
             ref['model'] = f'minecraft:block/{new_model_name}'
             blockstate['write'] = True
             if new_model_name not in blocks:
-                model = blocks[block_name]
+                model = blocks[model_name]
                 elem_model = model
                 while 'elements' not in elem_model:
                     elem_model = parent_model(elem_model)
@@ -155,6 +155,19 @@ def main():
                             face['uv'] = [0, 0, 16, 16]
                         if 'cullface' in face:
                             del face['cullface']
+
+    for model_name in blocks:
+        model = blocks[model_name]
+        try:
+            for elem in model['elements']:
+                for face in elem['faces'].values():
+                    if 'cullface' in face:
+                        del face['cullface']
+                        model['write'] = True
+        except KeyError:
+            pass
+
+
 
     write_from(blockstates, blockstates_dir)
     write_from(blocks, models_dir)
