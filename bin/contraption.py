@@ -115,9 +115,10 @@ def main():
     kidize(blocks)
     kidize(items)
 
-    shrink = (
-        'observer', 'dropper', 'dispenser', 'hopper', 'note_block', 'furnace', 'smoker', 'blast_furnace', 'piston',
-        'sticky_piston', 'redstone_block', 'slime_block', 'honey_block', 'target')
+    config_items = config.items('default')
+    n, shrink_list = config_items[0]
+    assert(n == 'shrink')
+    shrink = shrink_list.split()
 
     for block_name in shrink:
         blockstate = blockstates[block_name]
