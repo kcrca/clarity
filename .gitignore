@@ -6,12 +6,13 @@ home
 ?
 .?
 .idea
+/beguile
+/changes
 /clarity
 /connectivity
 /continuity
-/changes
+/contraption
 /current
-/beguile
 /home
 *.zip
 core/assets/minecraft/report_default

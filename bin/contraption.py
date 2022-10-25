@@ -1,7 +1,10 @@
 #!/usr/bin/env python3
+import configparser
 import copy
 import json
+import os
 import re
+import shutil
 import sys
 from pathlib import Path
 
@@ -12,6 +15,9 @@ blocks = {}
 items = {}
 
 collections = {'block': blocks, 'item': items}
+
+blockstates_dir = 'contraption/assets/minecraft/blockstates'
+models_dir = 'contraption/assets/minecraft/models/block'
 
 
 def populate(which, orig, *where):
@@ -72,21 +78,47 @@ def write_from(which, dir):
     for m in sorted(which):
         d = which[m]
         if 'write' in d and d['write']:
-            print(f'{dir}: {m}')
+            del d['write']
+            del d['name']
+            del d['orig']
+            if 'kids' in d:
+                del d['kids']
+            out = f'{dir}/{m}.json'
+            Path(out).parent.mkdir(exist_ok=True)
+            clip.dump(out, d)
 
 
 def main():
+    top = clip.directory('top')
+    os.chdir(top)
+
+    config_file = clip.directory('config', 'contraption.cfg')
+    config = configparser.ConfigParser()
+    config.read(config_file)
+
+    if os.path.exists('contraption'):
+        shutil.rmtree('contraption')
+    os.makedirs(blockstates_dir)
+    os.makedirs(models_dir)
+
+    pack = json.load(open('core/pack.mcmeta'))
+    pack['pack']['description'] = "Clarity pack to make redstone mechanisms clearer."
+    clip.dump('contraption/pack.mcmeta', pack)
+
     # Read in all the models
     for orig in (True, False):
         populate(blockstates, orig, 'blockstates')
         populate(blocks, orig, 'models', 'block')
         populate(items, orig, 'models', 'item')
+
     # Add 'kids' values to all models
     kidize(blocks)
     kidize(items)
+
     shrink = (
         'observer', 'dropper', 'dispenser', 'hopper', 'note_block', 'furnace', 'smoker', 'blast_furnace', 'piston',
         'sticky_piston', 'redstone_block', 'slime_block', 'honey_block', 'target')
+
     for block_name in shrink:
         blockstate = blockstates[block_name]
         refs = list(model_refs(blockstate))
@@ -94,7 +126,7 @@ def main():
             model_name = ref['model']
             _, model_name = split_model_name(model_name)
             new_model_name = f'{model_name}_cntr'
-            ref['model'] = f'minecraft:blocks/{new_model_name}'
+            ref['model'] = f'minecraft:block/{new_model_name}'
             blockstate['write'] = True
             if new_model_name not in blocks:
                 model = blocks[block_name]
@@ -109,7 +141,6 @@ def main():
                 new_model['elements'] = new_elems
                 blocks[new_model_name] = new_model
                 for elem in new_elems:
-                    # print(f'- {elem}')
                     convert(elem['from'])
                     convert(elem['to'])
                     try:
@@ -117,15 +148,15 @@ def main():
                     except KeyError:
                         # This may not exist
                         pass
-                    if 'uv' not in elem:
-                        # Otherwise the default is the new smaller area
-                        elem['uv'] = [0, 0, 16, 16]
-                    for f in elem['faces'].values():
-                        if 'cullface' in f:
-                            del f['cullface']
-                    # print(f'+ {elem}')
-    write_from(blockstates, clip.directory('blockstates'))
-    write_from(blocks, clip.directory('models', 'block'))
+                    for face in elem['faces'].values():
+                        if 'uv' not in face:
+                            # Otherwise the default is the new smaller area
+                            face['uv'] = [0, 0, 16, 16]
+                        if 'cullface' in face:
+                            del face['cullface']
+
+    write_from(blockstates, blockstates_dir)
+    write_from(blocks, models_dir)
 
 
 if __name__ == '__main__':

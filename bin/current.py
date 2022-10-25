@@ -20,7 +20,7 @@ config.read(config_file)
 current_states = 'current/assets/minecraft/blockstates'
 current_models = 'current/assets/minecraft/models/block'
 current_textures = 'current/assets/minecraft/textures/block'
-if (os.path.exists('current')):
+if os.path.exists('current'):
     shutil.rmtree('current')
 os.makedirs(current_states)
 os.makedirs(current_models)
