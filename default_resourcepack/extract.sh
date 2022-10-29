@@ -2,6 +2,7 @@
 set -x
 
 places=(/Applications/MultiMC.app/Data/libraries/com/mojang/minecraft)
+cd ~/clarity/default_resourcepack
 
 for f in $places; do
     loc="$f/$1/minecraft-$1-client.jar"
