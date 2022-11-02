@@ -221,6 +221,10 @@ block/oxidized_copper.png
 block/exposed_cut_copper.png
 block/weathered_cut_copper.png
 block/oxidized_cut_copper.png
+block/pearlescent_froglight_top.png
+block/verdant_froglight_top.png
+block/pearlescent_froglight_side.png
+block/verdant_froglight_side.png
 item/stone_axe.png
 item/golden_axe.png
 item/wooden_axe.png

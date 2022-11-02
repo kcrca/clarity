@@ -311,6 +311,7 @@ def main(argv=None):
 
     list_colorings = []
     exclude_colors = set()
+    verbose = False
     # process options
     for o, a in opts:
         if o in ('-h', '--help'):
@@ -324,6 +325,8 @@ def main(argv=None):
         elif o in ('-x', '--exclude'):
             color = decode_color(a, False)
             exclude_colors.add(color)
+        if o in ('-v', '--verbose'):
+            verbose = True
 
     if len(list_colorings):
         for coloring in list_colorings:
@@ -343,7 +346,8 @@ def main(argv=None):
         ignores = ignore_spec.split(',') if ignore_spec else ()
         # The key file is always required, so remove any options
         key_color, key_file = file_from_color(file_opt_re.sub('', file_pat), key_color)
-        print('%s: reading %s' % (coloring, key_file))
+        if verbose:
+            print('%s: reading %s' % (coloring, key_file))
         src_img = Image.open(key_file)
         if src_img.mode == 'P':
             src_img = src_img.convert('RGB')
@@ -358,7 +362,8 @@ def main(argv=None):
             _, dst_file = file_from_color(file_pat, color_name)
             if dst_file == '':
                 continue
-            print(('    %s' % dst_file))
+            if verbose:
+                print(('    %s' % dst_file))
             mode = 'RGB'
             if has_alpha:
                 mode = 'RGBA'
