@@ -7,3 +7,4 @@ acacia
 warped log=stem
 crimson log=stem
 mangrove
+bamboo
