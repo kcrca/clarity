@@ -25,4 +25,5 @@ ex - options.txt << \EOF
 /^key_key.use:/s/:.*/:key.keyboard.left.alt
 /^soundCategory_master:/s/:.*/:0.0
 /^reducedDebugInfo:/s:.*/false
+/^sendCommandFeedback:/s:.*/false
 wq
