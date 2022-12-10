@@ -213,6 +213,15 @@ item/warped_hanging_sign.png
 item/crimson_hanging_sign.png
 item/mangrove_hanging_sign.png
 item/bamboo_hanging_sign.png
+gui/hanging_signs/jungle.png
+gui/hanging_signs/birch.png
+gui/hanging_signs/spruce.png
+gui/hanging_signs/dark_oak.png
+gui/hanging_signs/acacia.png
+gui/hanging_signs/warped.png
+gui/hanging_signs/crimson.png
+gui/hanging_signs/mangrove.png
+gui/hanging_signs/bamboo.png
 block/stripped_jungle_log_top.png
 block/stripped_birch_log_top.png
 block/stripped_spruce_log_top.png
