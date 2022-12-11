@@ -126,10 +126,13 @@ for name in "${dirs[@]}"; do
 	find $name \( -name '*.pxd' -o -name '*.psd' -o -name '*.py' -o -name '*.sh' \) -print0 | xargs -0 rm
 	;;
     "contraption")
-	cp -r $name.repack/override/* $name/
+	#cp -r $name.repack/override/* $name/
+	mkdir -p $name
+	rsync --safe-links -a $name.repack/override/* $name/
 	;;
     "current")
         # This pack is nearly entirely built by current.py, but this is not.
+	mkdir -p $name
 	cp $name.repack/override/pack*.png $name/
 	;;
     *)
