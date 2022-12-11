@@ -1,6 +1,6 @@
 Clarity Resource Pack Family for Minecraft by claritypack.com 
 is licensed under a Creative Commons Attribution 4.0 International License. 
-© 2016 by Ken Arnold
+© 2016-2023 by Ken Arnold
 See https://creativecommons.org/licenses/by/4.0/
 
 Based on a work at https://github.com/kcrca/clarity.
