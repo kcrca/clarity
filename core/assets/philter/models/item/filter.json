@@ -1,0 +1,91 @@
+{
+    "ambientocclusion": false,
+    "parent": "block/block",
+    "textures": {
+        "particle": "philter:block/filter",
+	"top": "philter:block/filter_side_facing_top",
+        "side": "philter:block/filter",
+        "top_filter": "philter:block/filter_side_filter_top_on",
+        "side_filter": "philter:block/filter_filter_on"
+    },
+    "elements": [
+        {
+	    "comment": "The top section of the filter that is always the same",
+	    "from": [ 0, 10, 0 ],
+            "to": [ 16, 16, 16 ],
+            "faces": {
+                "north": { "texture": "#side", "cullface": "north" },
+                "south": { "texture": "#side", "cullface": "south" },
+                "west":  { "texture": "#side", "cullface": "west" },
+                "east":  { "texture": "#side", "cullface": "up" },
+                "down":  { "texture": "#side", "cullface": "up" }
+            }
+	},
+        {   "from": [ 4, 4, 4 ],
+            "to": [ 12, 10, 12 ],
+            "faces": {
+                "down":  { "texture": "#side" },
+                "north": { "texture": "#side" },
+                "south": { "texture": "#side" },
+                "west":  { "texture": "#side" },
+                "east":  { "texture": "#side" }
+            }
+        },
+        {
+	    "comment": "Side-facing hopper top and spout",
+	    "from": [ 0, 16, 0 ],
+            "to": [ 16, 16, 16 ],
+            "faces": {
+               "up":     { "texture": "#top", "cullface": "up" }
+            }
+        },
+        {   "from": [ 4, 4, 4 ],
+            "to": [ 12, 10, 12 ],
+            "faces": {
+                "down":  { "texture": "#side" },
+                "north": { "texture": "#side" },
+                "south": { "texture": "#side" },
+                "west":  { "texture": "#side" },
+                "east":  { "texture": "#side" }
+            }
+        },
+        {   "from": [ 6, 4, 0 ],
+            "to": [ 10, 8, 4 ],
+            "faces": {
+                "down":  { "rotation": 90, "texture": "#side" },
+                "up":    { "rotation": 90, "texture": "#side" },
+                "north": { "rotation": 90, "texture": "#side", "cullface": "north" },
+                "west":  { "rotation": 90, "texture": "#side" },
+                "east":  { "rotation": 90, "texture": "#side" }
+            }
+        },
+        {
+	    "comment": "Side-facing on filter top and spout",
+	    "from": [ 0, 16.05, 0 ],
+            "to": [ 16, 16.05, 16 ],
+            "faces": {
+                "up":    { "texture": "#top_filter", "rotation": 90, "cullface": "up" }
+            }
+        },
+        {   "from": [ 3.95, 3.95, 3.95 ],
+            "to": [ 12.05, 10, 8.05 ],
+            "faces": {
+                "down":  { "texture": "#side_filter" },
+                "north": { "texture": "#side_filter" },
+                "south": { "texture": "#side_filter" },
+                "west":  { "texture": "#side_filter" },
+                "east":  { "texture": "#side_filter" }
+            }
+        },
+        {   "from": [ 16, 8, 6 ],
+            "to": [ 12, 4, 10 ],
+            "faces": {
+                "down":  { "texture": "#side_filter" },
+                "up":    { "texture": "#side_filter" },
+                "north": { "texture": "#side_filter", "cullface": "north" },
+                "west":  { "texture": "#side_filter" },
+                "east":  { "texture": "#side_filter" }
+            }
+        }
+    ]
+}
