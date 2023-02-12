@@ -1,3 +1,13 @@
+trims:
+    This needs its own room, maybe where the paintings are (and move them where?)
+    Three variables: 6 armor materials, 10 trim colors (materials), 11 trim patterns = 660
+    Plan #1:
+	User sets one thing to not change (material: redstone, say)
+	User stes one thing to cycle (armor materials, say)
+	In this example, the loop has all trims in redstone, looping changing the armor material
+	It may be better for the user to set the "see all" value (in this case trim)
+	For 10, 2 rows of 5; for 11, 5 in front, 6 in back; for armor, two rows of 3
+
 friendlies:
     camel (and kid)
     sniffer (and kid?)
