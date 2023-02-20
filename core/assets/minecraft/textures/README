@@ -163,6 +163,7 @@ block/acacia_planks.png
 block/warped_planks.png
 block/crimson_planks.png
 block/mangrove_planks.png
+block/cherry_planks.png
 block/jungle_pressure_plate.png
 block/birch_pressure_plate.png
 block/spruce_pressure_plate.png
@@ -171,12 +172,15 @@ block/acacia_pressure_plate.png
 block/warped_pressure_plate.png
 block/crimson_pressure_plate.png
 block/mangrove_pressure_plate.png
+block/cherry_pressure_plate.png
 block/spruce_log.png
 block/dark_oak_log.png
 block/acacia_log.png
+block/cherry_log.png
 block/spruce_log_top.png
 block/dark_oak_log_top.png
 block/acacia_log_top.png
+block/cherry_log_top.png
 entity/signs/jungle.png
 entity/signs/birch.png
 entity/signs/spruce.png
@@ -186,6 +190,7 @@ entity/signs/warped.png
 entity/signs/crimson.png
 entity/signs/mangrove.png
 entity/signs/bamboo.png
+entity/signs/cherry.png
 entity/signs/hanging/jungle.png
 entity/signs/hanging/birch.png
 entity/signs/hanging/spruce.png
@@ -195,6 +200,7 @@ entity/signs/hanging/warped.png
 entity/signs/hanging/crimson.png
 entity/signs/hanging/mangrove.png
 entity/signs/hanging/bamboo.png
+entity/signs/hanging/cherry.png
 item/jungle_sign.png
 item/birch_sign.png
 item/spruce_sign.png
@@ -204,6 +210,7 @@ item/warped_sign.png
 item/crimson_sign.png
 item/mangrove_sign.png
 item/bamboo_sign.png
+item/cherry_sign.png
 item/jungle_hanging_sign.png
 item/birch_hanging_sign.png
 item/spruce_hanging_sign.png
@@ -213,6 +220,7 @@ item/warped_hanging_sign.png
 item/crimson_hanging_sign.png
 item/mangrove_hanging_sign.png
 item/bamboo_hanging_sign.png
+item/cherry_hanging_sign.png
 gui/hanging_signs/jungle.png
 gui/hanging_signs/birch.png
 gui/hanging_signs/spruce.png
@@ -222,6 +230,7 @@ gui/hanging_signs/warped.png
 gui/hanging_signs/crimson.png
 gui/hanging_signs/mangrove.png
 gui/hanging_signs/bamboo.png
+gui/hanging_signs/cherry.png
 block/stripped_jungle_log_top.png
 block/stripped_birch_log_top.png
 block/stripped_spruce_log_top.png
@@ -230,12 +239,14 @@ block/stripped_acacia_log_top.png
 block/stripped_warped_stem_top.png
 block/stripped_crimson_stem_top.png
 block/stripped_mangrove_log_top.png
+block/stripped_cherry_log_top.png
 entity/boat/jungle.png
 entity/boat/birch.png
 entity/boat/spruce.png
 entity/boat/dark_oak.png
 entity/boat/acacia.png
 entity/boat/mangrove.png
+entity/boat/cherry.png
 block/repeating_command_block_back.png
 block/chain_command_block_back.png
 block/repeating_command_block_front.png
