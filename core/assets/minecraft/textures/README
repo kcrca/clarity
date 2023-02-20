@@ -247,6 +247,13 @@ entity/boat/dark_oak.png
 entity/boat/acacia.png
 entity/boat/mangrove.png
 entity/boat/cherry.png
+entity/chest_boat/jungle.png
+entity/chest_boat/birch.png
+entity/chest_boat/spruce.png
+entity/chest_boat/dark_oak.png
+entity/chest_boat/acacia.png
+entity/chest_boat/mangrove.png
+entity/chest_boat/cherry.png
 block/repeating_command_block_back.png
 block/chain_command_block_back.png
 block/repeating_command_block_front.png
