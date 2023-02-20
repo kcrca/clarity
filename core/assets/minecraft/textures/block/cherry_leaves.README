@@ -4,4 +4,8 @@ This may be because the blossoms are functinoally chaotic, like
 flames are, and should be left that way. I may revisit this, so I'm
 saving the PSD file, but I'm not generating the PNG file from them.
 
-The same goes for pink_petals, mine were _worse_.
+The same goes for pink_petals, mine were _worse_. Although the stems
+make no sense to me (the petals have stems?) and add a (very tiny) bit
+of noise, so my stem texture (all transparent) looks better. If I stick
+with this there's a slight performance benefit from redoing the models
+to just not use the stems.
