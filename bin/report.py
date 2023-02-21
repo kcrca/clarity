@@ -51,8 +51,11 @@ class FileStatus(object):
         self.multi_matches = dict()
         try:
             to_ignore = config.get('ignore', prefix.lower())
-            pats = set(to_ignore.split())
-            self.ignore = [re.compile(pat) for pat in pats]
+            toSplit = re.sub(r'[ \t]*#[^\n]*', '', to_ignore)
+            pats = set(toSplit.split())
+            self.ignore = []
+            for pat in pats:
+                self.ignore.append(re.compile(pat))
             self.unused_ignores |= pats
         except configparser.NoOptionError:
             pass

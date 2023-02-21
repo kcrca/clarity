@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/odd_cross",
+  "textures": {
+    "cross": "minecraft:block/torchflower_crop_stage2"
+  }
+}
