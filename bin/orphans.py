@@ -176,13 +176,22 @@ special_textures = (
     'item/clock_font',
 
     # Used in generating UI places where things are to be put
+    'item/blank_banner_pattern',
+    'item/carpet_for_llama',
     'item/empty_armor_slot_boots',
     'item/empty_armor_slot_chestplate',
     'item/empty_armor_slot_helmet',
     'item/empty_armor_slot_leggings',
     'item/empty_armor_slot_shield',
-    'item/blank_banner_pattern',
-    'item/carpet_for_llama',
+    'item/empty_slot_amethyst_shard',
+    'item/empty_slot_diamond',
+    'item/empty_slot_emerald',
+    'item/empty_slot_ingot',
+    'item/empty_slot_lapis_lazuli',
+    'item/empty_slot_quartz',
+    'item/empty_slot_redstone_dust',
+    'item/empty_slot_smithing_template_armor_trim',
+    'item/empty_slot_smithing_template_netherite_upgrade',
     'item/netherite_ingot',
 )
 
