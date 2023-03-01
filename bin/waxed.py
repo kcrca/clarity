@@ -25,7 +25,6 @@ for in_file in glob.glob(clip.directory('defaults', 'models', 'block') + "/*copp
     out_dir = os.path.dirname(out_file)
     out_base = os.path.basename(out_file)
     out_file = "%s/waxed_%s" % (out_dir, out_base)
-    print(out_file)
     with open(in_file) as in_fp:
         in_str = in_fp.read()
         out_str = re.sub(r"(block/)([^/]*copper[^/]*)", r"\1waxed_\2", in_str)
