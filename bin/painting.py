@@ -13,7 +13,6 @@ import json
 from pathlib import Path
 
 from PIL import Image
-from PIL.Image import Dither
 
 import clip
 
@@ -53,7 +52,7 @@ for i in range(0, len(art_imgs)):
     w, h = size
     art_scale = min(max_size / w, max_size / h)
     if art_scale > 1:
-        art_img = art_img.resize((int(w * art_scale), int(h * art_scale)), Dither.NONE)
+        art_img = art_img.resize((int(w * art_scale), int(h * art_scale)), 0)
     art_size = art_img.size
     placement = [int((max_size - v) / 2) for v in art_size]
     item_img.paste(art_img, (placement[0], placement[1] + i * max_size))
