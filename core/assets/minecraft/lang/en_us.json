@@ -3,5 +3,9 @@
   "gui.recipebook.toggleRecipes.blastable": "Show Blastable",
   "gui.recipebook.toggleRecipes.craftable": "Show Craftable",
   "gui.recipebook.toggleRecipes.smeltable": "Show Smeltable",
-  "gui.recipebook.toggleRecipes.smokable": "Show Smokable"
+  "gui.recipebook.toggleRecipes.smokable": "Show Smokable",
+
+  "entity.minecraft.villager.fisherman": "Fisher",
+  "subtitles.entity.villager.work_fisherman": "Fisher works",
+  "merchant.level.3": "Intermediate"
 }
