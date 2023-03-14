@@ -150,7 +150,7 @@ done
 echo Building "ClarityFamily_$version.zip"
 (
     cd $packs
-    zip -q "ClarityFamily_$version.zip" *.zip
+    zip -q "ClarityFamily_$version.zip" *${version}.zip
 )
 
 echo Building site
