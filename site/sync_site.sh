@@ -4,6 +4,7 @@ cd `dirname $0`
 dst_dir="."
 rsync -c -avz --delete --progress \
     --exclude='restworld' \
+    --exclude='philter' \
     --exclude=src \
     --exclude='.??*' \
     --exclude='*'.sh \
