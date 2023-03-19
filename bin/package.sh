@@ -21,7 +21,8 @@ until [[ $v:r == $v ]]; do
     v=$v:r
 done
 
-dirs=(contraption clarity connectivity continuity changes current beguile)
+# Removed 'changes' because miencraft time seems to longer run long enough to see it
+dirs=(contraption clarity connectivity continuity current beguile)
 
 # Create the packs dir
 test -d $packs || mkdir -p $packs
