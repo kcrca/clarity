@@ -49,6 +49,7 @@ figcaption {
     padding: 1.5ex;
     background-color: rgb(107, 107, 107);
     text-align: center;
+    align: center;
     vertical-align: middle;
     font-style: italic;
     font-weight: bold;
@@ -67,13 +68,9 @@ figcaption {
     display: none;
 }
 
-.downloads td {
-    text-align: left;
-}
-
 .downloads img {
     vertical-align: middle;
-    float: left;
+    float: center;
 }
 
 .timestamp, .license {
