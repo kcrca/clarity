@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/gem",
+  "textures": {
+    "layer0": "minecraft:item/pitcher_pod"
+  }
+}
