@@ -24,7 +24,6 @@ for part in parts.glob('*.png'):
     pot_img = pot_bg.copy()
     pot_img.paste(img, mask=img)
     pot_img.save(textures / f'{which}_pottery_pattern.png')
-    # ../../item/pottery_shard_archer.png
     masked_img = shard_bg.copy()
     masked_img.paste(img, (-2, 0), mask=img)
     shard = Image.new('RGBA', img.size)
