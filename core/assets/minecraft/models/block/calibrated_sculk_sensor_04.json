@@ -1,0 +1,6 @@
+{
+  "parent": "block/template_calibrated_sculk_sensor",
+  "textures": {
+    "power": "minecraft:block/sculk_sensor_04"
+  }
+}

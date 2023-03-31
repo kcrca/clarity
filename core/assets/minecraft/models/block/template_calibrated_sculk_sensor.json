@@ -1,0 +1,10 @@
+{
+    "parent": "block/template_sculk_sensor_base",
+    "textures": {
+        "power": "block/blank",
+        "in_side": "block/calibrated_sculk_sensor_input_side_on",
+	"power_in_side": "block/blank",
+        "top": "block/calibrated_sculk_sensor_top",
+        "amethyst": "block/calibrated_sculk_sensor_amethyst"
+    }
+}
