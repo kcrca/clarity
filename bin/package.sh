@@ -82,6 +82,9 @@ do_zip() {
 	# Strip the EXIF and other text tags from images
 	# xargs isn't working directly here, so we use it to bunch up args only
 	find . -name '*.png' -type f | xargs | while read l; do; eval exiv2 rm "$l"; done
+	for f in $(find . -name '*.png.split'); do
+	    rm $f $f:r
+	done
 	ed -s pack.mcmeta <<EOF
 /pack_format/c
 $pack_format
@@ -105,6 +108,9 @@ do_create() {
     # Trivial implementation of repack for this case
     tar c -C $name.repack/override . | tar xf - -C $name
     find $name \( -name '*.pxd' -o -name '*.psd' -o -name '*.py*' \) -print0 | xargs -0 rm
+    for f in $(find $name -name '*.png.split'); do
+	rm $f $f:r
+    done
 }
  
 echo ... Repacking
@@ -125,6 +131,9 @@ for name in "${dirs[@]}"; do
 	tar c -C $name.repack/override . | tar xf - -C $name
 	find $name/assets/minecraft/textures/block -type d -depth 1 -print0 | xargs -0 rm -r
 	find $name \( -name '*.pxd' -o -name '*.psd' -o -name '*.py' -o -name '*.sh' \) -print0 | xargs -0 rm
+	for f in $(find $name -name '*.png.split'); do
+	    rm $f $f:r
+	done
 	;;
     "contraption")
 	#cp -r $name.repack/override/* $name/

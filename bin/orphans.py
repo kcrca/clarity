@@ -6,6 +6,7 @@ __author__ = 'arnold'
 import glob
 import json
 import sys
+from pathlib import Path
 
 import clip
 import re
@@ -198,7 +199,7 @@ special_textures = (
 for file in glob.glob('%s/item/*.png' % clip.directory('textures')) + glob.glob(
         '%s/block/*.png' % clip.directory('textures')):
     texture_name = subpath_re.search(file).group(1)
-    if texture_name not in special_textures:
+    if texture_name not in special_textures and not Path(file + '.split').exists():
         unused_textures[texture_name] = True
 
 for model_name in models:
