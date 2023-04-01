@@ -670,7 +670,7 @@ class ContinuityPass(Pass):
 
 class ConnectivityPass(Pass):
     """
-    The pass for the Connectivity (CTM) pass. Each continuity texture requires both edged and edgeless blocks. The
+    The pass for the Connectivity (CTM) pass. Each connectivity texture requires both edged and edgeless blocks. The
     edgless blocks are taken from the previously-generated Continuity pack.
     """
 
