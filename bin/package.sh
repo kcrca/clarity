@@ -107,7 +107,7 @@ do_create() {
     tar c -C clarity "$@" | tar xf - -C $name
     # Trivial implementation of repack for this case
     tar c -C $name.repack/override . | tar xf - -C $name
-    find $name \( -name '*.pxd' -o -name '*.psd' -o -name '*.py*' \) -print0 | xargs -0 rm
+    find $name \( -name '*.ai' -o -name '*.px?' -o -name '*.psd' -o -name '*.py*' -o -name '.*README' \) -print0 | xargs -0 rm
     for f in $(find $name -name '*.png.split'); do
 	rm $f $f:r
     done
