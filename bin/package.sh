@@ -12,6 +12,9 @@ cd $bin/..
 top="$PWD"
 packs=$top/site/packs
 version=`cat core/pack_version.txt`
+path=($top/venv/bin $path)
+
+setopt nullglob
 
 # Suss out the top-level version numbers, which is 1.X
 v=$version
