@@ -10,6 +10,8 @@ dst=/Applications/MultiMC.app/Data/instances/$1/.minecraft
 rm -f home
 ln -s $dst home
 cd home
+rm -f allowed_symlinks.txt
+echo '[regex].*' > allowed_symlinks.txt
 rm -f resourcepacks/core
 ln -s $src/core resourcepacks/
 [[ -f options.txt.bak ]] | cp options.txt options.txt.bak
@@ -27,3 +29,4 @@ ex - options.txt << \EOF
 /^soundCategory_master:/s/:.*/:0.0
 /^reducedDebugInfo:/s:.*/false
 wq
+EOF
