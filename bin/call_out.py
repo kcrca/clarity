@@ -77,4 +77,4 @@ if dst_dir.exists():
 shutil.copytree(src_dir, dst_dir, copy_function=colorify, ignore=should_ignore)
 
 with open(dst_dir / 'pack.mcmeta', 'w') as fp:
-    json.dump({'pack': {'pack_format': 18, 'description': 'Highlight textures not in any pack'}}, fp, indent=2)
+    json.dump({'pack': {'pack_format': 18, 'description': 'Call out textures not in any pack'}}, fp, indent=2)
