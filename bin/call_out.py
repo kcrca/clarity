@@ -9,7 +9,7 @@ import clip
 
 top_dir = Path(clip.directory('top'))
 src_dir = top_dir / 'default_resourcepack'
-dst_dir = top_dir / 'complete'
+dst_dir = top_dir / 'call_out'
 textures = str(src_dir / 'assets/minecraft/textures')
 
 dst_dir.mkdir(0o755, exist_ok=True)
@@ -51,8 +51,8 @@ def colorify(src_path, dst_path, *, follow_symlinks=True):
     orig_mode = src_img.mode
     has_alpha = has_transparency(src_img)
     src_img = src_img.convert('LA' if has_alpha else 'L').convert('RGBA' if has_alpha else 'RGB')
-    complete_img = color_for(src_img)
-    mod_img = Image.blend(src_img, complete_img, 0.5)
+    colored_img = color_for(src_img)
+    mod_img = Image.blend(src_img, colored_img, 0.5)
     if has_alpha:
         _, _, _, a = src_img.split()
         r, g, b, _ = mod_img.split()
