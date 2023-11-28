@@ -3,25 +3,25 @@ import re
 import shutil
 from pathlib import Path
 
-from PIL import Image, ImageColor, ImageOps
+from PIL import Image, ImageColor
 
 import clip
 
 top_dir = Path(clip.directory('top'))
 src_dir = top_dir / 'default_resourcepack'
-dst_dir = top_dir / 'cobalt'
+dst_dir = top_dir / 'complete'
 dst_dir.mkdir(0o755, exist_ok=True)
 
-cobalt = ImageColor.getrgb("#39FF14")
-cobalt_imgs = {}
+color = ImageColor.getrgb("#39FF14")
+color_imgs = {}
 
 
-def cobalt_for(src_img):
+def color_for(src_img):
     mode = 'RGBA' if has_transparency(src_img) else 'RGB'
     key = (mode, src_img.size)
-    if key not in cobalt_imgs:
-        cobalt_imgs[key] = Image.new(mode, src_img.size, cobalt)
-    return cobalt_imgs[key]
+    if key not in color_imgs:
+        color_imgs[key] = Image.new(mode, src_img.size, color)
+    return color_imgs[key]
 
 
 def has_transparency(img):
@@ -38,7 +38,7 @@ def has_transparency(img):
     return False
 
 
-def cobaltify(src_path, dst_path, *, follow_symlinks=True):
+def completify(src_path, dst_path, *, follow_symlinks=True):
     if '/textures/' not in src_path and Path(src_path).parent != src_dir:
         return
     if re.match(r'.*/(font|colormap|gui|misc|environment)/.*', src_path):
@@ -49,8 +49,8 @@ def cobaltify(src_path, dst_path, *, follow_symlinks=True):
     orig_mode = src_img.mode
     has_alpha = has_transparency(src_img)
     src_img = src_img.convert('LA' if has_alpha else 'L').convert('RGBA' if has_alpha else 'RGB')
-    cobalt_img = cobalt_for(src_img)
-    mod_img = Image.blend(src_img, cobalt_img, 0.5)
+    complete_img = color_for(src_img)
+    mod_img = Image.blend(src_img, complete_img, 0.5)
     if has_alpha:
         _, _, _, a = src_img.split()
         r, g, b, _ = mod_img.split()
@@ -62,7 +62,7 @@ def cobaltify(src_path, dst_path, *, follow_symlinks=True):
 
 if dst_dir.exists():
     shutil.rmtree(dst_dir)
-shutil.copytree(src_dir, dst_dir, copy_function=cobaltify)
+shutil.copytree(src_dir, dst_dir, copy_function=completify)
 
 with open(dst_dir / 'pack.mcmeta', 'w') as fp:
-    json.dump({'pack': { 'pack_format': 18, 'description': 'Highlight textures not in any pack'}}, fp, indent=2)
+    json.dump({'pack': {'pack_format': 18, 'description': 'Highlight textures not in any pack'}}, fp, indent=2)
