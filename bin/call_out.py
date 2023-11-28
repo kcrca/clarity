@@ -1,5 +1,4 @@
 import json
-import re
 import shutil
 from pathlib import Path
 
@@ -11,6 +10,9 @@ top_dir = Path(clip.directory('top'))
 src_dir = top_dir / 'default_resourcepack'
 dst_dir = top_dir / 'call_out'
 textures = str(src_dir / 'assets/minecraft/textures')
+with open(src_dir / 'version.json') as fp:
+    version_info = json.load(fp)
+version = version_info['pack_version']['resource']
 
 dst_dir.mkdir(0o755, exist_ok=True)
 
@@ -75,8 +77,9 @@ def call_out(dst_dir, full):
     if dst_dir.exists():
         shutil.rmtree(dst_dir)
     shutil.copytree(src_dir, dst_dir, copy_function=colorify, ignore=should_ignore)
+    desc = 'Call out remaining textures not in any pack (except fonts)' if full else 'Call out most textures not in any pack'
     with open(dst_dir / 'pack.mcmeta', 'w') as fp:
-        json.dump({'pack': {'pack_format': 18, 'description': 'Call out textures not in any pack'}}, fp, indent=2)
+        json.dump({'pack': {'pack_format': version, 'description': desc}}, fp, indent=2)
 
 
 call_out(dst_dir, False)
