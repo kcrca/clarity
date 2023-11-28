@@ -12,14 +12,15 @@ src_dir = top_dir / 'default_resourcepack'
 dst_dir = top_dir / 'cobalt'
 dst_dir.mkdir(0o755, exist_ok=True)
 
-cobalt = ImageColor.getrgb("#6666ff")
+cobalt = ImageColor.getrgb("#39FF14")
 cobalt_imgs = {}
 
 
 def cobalt_for(src_img):
-    key = (src_img.mode, src_img.size)
+    mode = 'RGBA' if has_transparency(src_img) else 'RGB'
+    key = (mode, src_img.size)
     if key not in cobalt_imgs:
-        cobalt_imgs[key] = Image.new(src_img.mode, src_img.size, cobalt)
+        cobalt_imgs[key] = Image.new(mode, src_img.size, cobalt)
     return cobalt_imgs[key]
 
 
@@ -31,10 +32,8 @@ def has_transparency(img):
         for _, index in img.getcolors():
             if index == transparent:
                 return True
-    elif img.mode == "RGBA":
-        extrema = img.getextrema()
-        if extrema[3][0] < 255:
-            return True
+    elif img.mode[-1] == "A":
+        return True
 
     return False
 
@@ -48,11 +47,11 @@ def cobaltify(src_path, dst_path, *, follow_symlinks=True):
         return shutil.copy2(src_path, dst_path, follow_symlinks=follow_symlinks)
     src_img = Image.open(src_path)
     orig_mode = src_img.mode
-    if orig_mode != 'RGB' and orig_mode != 'RGBA':
-        src_img = src_img.convert('RGBA' if has_transparency(src_img) else 'RGB')
+    has_alpha = has_transparency(src_img)
+    src_img = src_img.convert('LA' if has_alpha else 'L').convert('RGBA' if has_alpha else 'RGB')
     cobalt_img = cobalt_for(src_img)
     mod_img = Image.blend(src_img, cobalt_img, 0.5)
-    if has_transparency(src_img):
+    if has_alpha:
         _, _, _, a = src_img.split()
         r, g, b, _ = mod_img.split()
         mod_img = Image.merge('RGBA', (r, g, b, a))
