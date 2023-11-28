@@ -41,10 +41,6 @@ def has_transparency(img):
 
 
 def colorify(src_path, dst_path, *, follow_symlinks=True):
-    if '/textures/' not in src_path and Path(src_path).parent != src_dir:
-        return
-    if re.match(r'.*/(font|colormap|gui|misc|environment)/.*', src_path):
-        return
     if not src_path.endswith('.png'):
         return shutil.copy2(src_path, dst_path, follow_symlinks=follow_symlinks)
     src_img = Image.open(src_path)
@@ -62,19 +58,26 @@ def colorify(src_path, dst_path, *, follow_symlinks=True):
     mod_img.save(dst_path)
 
 
-def should_ignore(dir, files):
-    if dir != textures and textures.startswith(dir):
-        def top_filter(file):
-            path = Path(dir) / file
-            return path.is_dir() and not textures.startswith(str(path))
+def call_out(dst_dir, full):
+    def should_ignore(dir, files):
+        if dir != textures and textures.startswith(dir):
+            def top_filter(file):
+                path = Path(dir) / file
+                return path.is_dir() and not textures.startswith(str(path))
 
-        return list(filter(top_filter, files))
-    return list(filter(lambda x: x in ('font', 'colormap', 'gui', 'misc', 'environment'), files))
+            return list(filter(top_filter, files))
+        if dir == textures:
+            exclude = ['font'] + list(
+                filter(lambda x: full != (x in ('colormap', 'gui', 'misc', 'environment')), files))
+            return exclude
+        return ()
+
+    if dst_dir.exists():
+        shutil.rmtree(dst_dir)
+    shutil.copytree(src_dir, dst_dir, copy_function=colorify, ignore=should_ignore)
+    with open(dst_dir / 'pack.mcmeta', 'w') as fp:
+        json.dump({'pack': {'pack_format': 18, 'description': 'Call out textures not in any pack'}}, fp, indent=2)
 
 
-if dst_dir.exists():
-    shutil.rmtree(dst_dir)
-shutil.copytree(src_dir, dst_dir, copy_function=colorify, ignore=should_ignore)
-
-with open(dst_dir / 'pack.mcmeta', 'w') as fp:
-    json.dump({'pack': {'pack_format': 18, 'description': 'Call out textures not in any pack'}}, fp, indent=2)
+call_out(dst_dir, False)
+call_out(Path(str(dst_dir) + "_all"), True)
