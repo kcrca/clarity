@@ -1,0 +1,69 @@
+import json
+import re
+import shutil
+from pathlib import Path
+
+from PIL import Image, ImageColor, ImageOps
+
+import clip
+
+top_dir = Path(clip.directory('top'))
+src_dir = top_dir / 'default_resourcepack'
+dst_dir = top_dir / 'cobalt'
+dst_dir.mkdir(0o755, exist_ok=True)
+
+cobalt = ImageColor.getrgb("#6666ff")
+cobalt_imgs = {}
+
+
+def cobalt_for(src_img):
+    key = (src_img.mode, src_img.size)
+    if key not in cobalt_imgs:
+        cobalt_imgs[key] = Image.new(src_img.mode, src_img.size, cobalt)
+    return cobalt_imgs[key]
+
+
+def has_transparency(img):
+    if img.info.get("transparency", None) is not None:
+        return True
+    if img.mode == "P":
+        transparent = img.info.get("transparency", -1)
+        for _, index in img.getcolors():
+            if index == transparent:
+                return True
+    elif img.mode == "RGBA":
+        extrema = img.getextrema()
+        if extrema[3][0] < 255:
+            return True
+
+    return False
+
+
+def cobaltify(src_path, dst_path, *, follow_symlinks=True):
+    if '/textures/' not in src_path and Path(src_path).parent != src_dir:
+        return
+    if re.match(r'.*/(font|colormap|gui|misc|environment)/.*', src_path):
+        return
+    if not src_path.endswith('.png'):
+        return shutil.copy2(src_path, dst_path, follow_symlinks=follow_symlinks)
+    src_img = Image.open(src_path)
+    orig_mode = src_img.mode
+    if orig_mode != 'RGB' and orig_mode != 'RGBA':
+        src_img = src_img.convert('RGBA' if has_transparency(src_img) else 'RGB')
+    cobalt_img = cobalt_for(src_img)
+    mod_img = Image.blend(src_img, cobalt_img, 0.5)
+    if has_transparency(src_img):
+        _, _, _, a = src_img.split()
+        r, g, b, _ = mod_img.split()
+        mod_img = Image.merge('RGBA', (r, g, b, a))
+    if orig_mode != src_img.mode:
+        mod_img = mod_img.convert(orig_mode)
+    mod_img.save(dst_path)
+
+
+if dst_dir.exists():
+    shutil.rmtree(dst_dir)
+shutil.copytree(src_dir, dst_dir, copy_function=cobaltify)
+
+with open(dst_dir / 'pack.mcmeta', 'w') as fp:
+    json.dump({'pack': { 'pack_format': 18, 'description': 'Highlight textures not in any pack'}}, fp, indent=2)
