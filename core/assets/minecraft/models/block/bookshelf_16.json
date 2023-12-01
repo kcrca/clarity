@@ -2,11 +2,11 @@
   "parent": "minecraft:block/cube",
   "textures": {
     "down": "minecraft:block/oak_planks",
-    "east": "minecraft:block/bookshelf_07",
-    "north": "minecraft:block/bookshelf_15",
+    "east": "minecraft:block/bookshelf_12",
+    "north": "minecraft:block/bookshelf_14",
     "particle": "minecraft:block/bookshelf_00",
-    "south": "minecraft:block/bookshelf_14",
+    "south": "minecraft:block/bookshelf_11",
     "up": "minecraft:block/oak_planks",
-    "west": "minecraft:block/bookshelf_12"
+    "west": "minecraft:block/bookshelf_06"
   }
 }
