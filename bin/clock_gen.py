@@ -7,6 +7,7 @@ import json
 import math
 import os
 import shutil
+from pathlib import Path
 
 from PIL import Image
 
@@ -31,7 +32,7 @@ os.chdir(clip.directory('minecraft'))
 
 # The 'clock_in' describes the input image that defines the clock font, etc.
 in_sec = 'clock_in'
-digits_path = config.get(in_sec, 'digits_path')
+digits_path = __file__.replace('.py', '.png')
 digit_start = list(map(int, config.get(in_sec, 'digit_start').split()))
 assert len(digit_start) == 2
 digit_size = list(map(int, config.get(in_sec, 'digit_size').split()))
