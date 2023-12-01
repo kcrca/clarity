@@ -67,12 +67,14 @@ def call_out(dst_dir, full):
                 path = Path(dir) / file
                 return path.is_dir() and not textures.startswith(str(path))
 
-            return list(filter(top_filter, files))
-        if dir == textures:
-            exclude = ['font'] + list(
-                filter(lambda x: full != (x in ('colormap', 'gui', 'misc', 'environment')), files))
-            return exclude
-        return ()
+            exclude = list(filter(top_filter, files))
+        else:
+            exclude = []
+            if dir == textures:
+                exclude.append('font')
+                exclude.extend(filter(lambda x: full != (x in ('colormap', 'gui', 'misc', 'environment')), files))
+        exclude.extend(filter(lambda x: x[0] == '.', files))
+        return exclude
 
     if dst_dir.exists():
         shutil.rmtree(dst_dir)

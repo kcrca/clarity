@@ -30,7 +30,7 @@ def shelf_texture(i):
 
 textures = clip.directory('textures', 'block')
 models = clip.directory('models', 'block')
-books_png = os.path.join(textures, 'books.png')
+books_png = os.path.join('bin', 'bookshelves.png')
 continuity = clip.directory('top', 'continuity.repack', 'override', 'assets', 'minecraft', 'textures', 'block')
 books_img = Image.open(books_png)
 books_pixel = books_img.load()
