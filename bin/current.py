@@ -33,7 +33,7 @@ dump('current/pack.mcmeta', pack)
 c_blockstates = directory('blockstates')
 d_blockstates = directory('defaults', 'blockstates')
 
-current_digits = Image.open('%s/block/current.png' % directory('textures')).convert('RGBA')
+current_digits = Image.open(__file__.replace('.py', '.png')).convert('RGBA')
 w = current_digits.size[0]
 h = current_digits.size[1] / 16
 for i in range(0, 16):
