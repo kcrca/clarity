@@ -1,4 +1,5 @@
 import json
+import re
 import shutil
 from pathlib import Path
 
@@ -9,14 +10,15 @@ import clip
 top_dir = Path(clip.directory('top'))
 src_dir = top_dir / 'default_resourcepack'
 dst_dir = top_dir / 'call_out'
-textures = str(src_dir / 'assets/minecraft/textures')
+common = '/assets/minecraft'
+copy_pat = re.compile('(textures|blockstates|models)')
 with open(src_dir / 'version.json') as fp:
     version_info = json.load(fp)
 version = version_info['pack_version']['resource']
 
 dst_dir.mkdir(0o755, exist_ok=True)
 
-color = ImageColor.getrgb("#39FF14")
+color = ImageColor.getrgb("#39ff14")
 color_imgs = {}
 
 
@@ -47,6 +49,11 @@ def colorify(src_path, dst_path, *, follow_symlinks=True):
         return shutil.copy2(src_path, dst_path, follow_symlinks=follow_symlinks)
     src_img = Image.open(src_path)
     orig_mode = src_img.mode
+    # 'L' means greyscale, and we can't have that. But png doesn't support PA, so we have to use RGBA
+    if orig_mode == 'L':
+        orig_mode = 'P'
+    elif orig_mode == 'LA':
+        orig_mode = 'RGBA'
     has_alpha = has_transparency(src_img)
     src_img = src_img.convert('LA' if has_alpha else 'L').convert('RGBA' if has_alpha else 'RGB')
     colored_img = color_for(src_img)
@@ -62,18 +69,19 @@ def colorify(src_path, dst_path, *, follow_symlinks=True):
 
 def call_out(dst_dir, full):
     def should_ignore(dir, files):
-        if dir != textures and textures.startswith(dir):
-            def top_filter(file):
-                path = Path(dir) / file
-                return path.is_dir() and not textures.startswith(str(path))
+        def files_and(*args):
+            return list(filter(lambda x: Path(src_dir / dir / x).is_dir() and x not in args, files))
 
-            exclude = list(filter(top_filter, files))
-        else:
-            exclude = []
-            if dir == textures:
-                exclude.append('font')
-                exclude.extend(filter(lambda x: full != (x in ('colormap', 'gui', 'misc', 'environment')), files))
-        exclude.extend(filter(lambda x: x[0] == '.', files))
+        if dir == str(src_dir):
+            return files_and('assets')
+        if dir.endswith('/assets'):
+            return files_and('minecraft')
+        elif dir.endswith('assets/minecraft'):
+            return files_and('textures', 'models', 'blockstates')
+        exclude = []
+        if dir.endswith('/assets/minecraft/textures'):
+            exclude.append('font')
+            exclude.extend(filter(lambda x: full != (x in ('colormap', 'gui', 'misc', 'environment')), files))
         return exclude
 
     if dst_dir.exists():
