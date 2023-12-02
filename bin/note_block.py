@@ -1,4 +1,10 @@
 #!/usr/bin/env python3
+from pathlib import Path
+
+from PIL import ImageOps, ImageColor
+
+from clip import *
+
 
 # This program generates the item images for the daylight detector. It reads the model files
 # for each detector state, grabs its block image, and pastes that into the image file for the item. This creates an
@@ -6,10 +12,6 @@
 # inverted is never in an "item" state, it only exists in the real world as a modified daylight detector.)
 #
 # The creation of the .mcmeta file is left to the user.
-
-from PIL import ImageOps, ImageColor
-
-from clip import *
 
 
 def colorize(img, color_hex):
@@ -35,8 +37,9 @@ model_src = open(model_src_path).read()
 
 blocks = os.path.join(directory('textures'), 'block')
 
-names_src_path = os.path.join(blocks, 'note_block_names.png')
+names_src_path = os.path.join(Path(__file__).parent / 'note_block_names.png')
 names_img = Image.open(names_src_path).convert('RGBA')
+names_dst_path = str(Path(blocks) / 'note_block')
 
 staff_img = Image.open(os.path.join(blocks, 'note_block_staff.png')).convert('RGBA')
 size = staff_img.size[0]
@@ -87,7 +90,7 @@ for i in range(0, 25):
         was_flat = False
 
     num = '%02d' % i
-    img_path = names_src_path.replace('_names', '_' + num)
+    img_path = f'{names_dst_path}_{num}.png'
     img.convert('RGB').save(img_path, optimize=True)
     img_on.convert('RGB').save(img_path.replace('.png', '_on.png'), optimize=True)
 
