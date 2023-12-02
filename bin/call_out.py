@@ -17,6 +17,7 @@ with open(src_dir / 'version.json') as fp:
 version = version_info['pack_version']['resource']
 
 dst_dir.mkdir(0o755, exist_ok=True)
+this_dir = Path(__file__).parent
 
 color = ImageColor.getrgb("#39ff14")
 color_imgs = {}
@@ -77,6 +78,8 @@ def call_out(dst_dir, full):
         if dir.endswith('/assets'):
             return files_and('minecraft')
         elif dir.endswith('assets/minecraft'):
+            if full:
+                return files_and('textures')
             return files_and('textures', 'models', 'blockstates')
         exclude = []
         if dir.endswith('/assets/minecraft/textures'):
@@ -87,7 +90,9 @@ def call_out(dst_dir, full):
     if dst_dir.exists():
         shutil.rmtree(dst_dir)
     shutil.copytree(src_dir, dst_dir, copy_function=colorify, ignore=should_ignore)
-    desc = 'Call out remaining textures not in any pack (except fonts)' if full else 'Call out most textures not in any pack'
+    shutil.copy2(this_dir / 'call_out_all.png' if full else 'call_out.png', dst_dir / 'pack.png')
+    desc = 'Call out %s textures not in any pack (except fonts) by making them bright green.' % (
+        'remaining' if full else 'most')
     with open(dst_dir / 'pack.mcmeta', 'w') as fp:
         json.dump({'pack': {'pack_format': version, 'description': desc}}, fp, indent=2)
 
