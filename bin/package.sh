@@ -25,7 +25,7 @@ until [[ $v:r == $v ]]; do
 done
 
 # Removed 'changes' because miencraft time seems to longer run long enough to see it
-dirs=(contraption clarity connectivity continuity current beguile)
+dirs=(contraption clarity connectivity continuity current call_out call_out_all beguile)
 
 # Create the packs dir
 test -d $packs || mkdir -p $packs
@@ -41,7 +41,7 @@ if (( $#newest_zip > 0 && $#newer > 0 )); then
     for f in bin/*.py; do
 	script=`basename $f`
 	case $script in
-	    report.py|gui_arrows.py)
+	    report.py)
 		;;
 	    colorize.py)
 		for cfg in `find $top -name colorize.cfg`; do
@@ -56,8 +56,6 @@ if (( $#newest_zip > 0 && $#newer > 0 )); then
 		;;
 	esac
     done
-    echo ... python3 gui_arrows.py $a 2>&1 | tee -a $out
-    python3 bin/gui_arrows.py >> $out
 else
     echo No new derived files
 fi

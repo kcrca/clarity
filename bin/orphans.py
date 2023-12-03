@@ -194,7 +194,8 @@ special_textures = (
     'item/empty_slot_smithing_template_armor_trim',
     'item/empty_slot_smithing_template_netherite_upgrade',
     'item/netherite_ingot',
-)
+) + tuple(('block/bookshelf_%02d' % i) for i in range(0, 20))
+# bookshelf images are only _probably_ used, so this allows for the case where one isn't
 
 for file in glob.glob('%s/item/*.png' % clip.directory('textures')) + glob.glob(
         '%s/block/*.png' % clip.directory('textures')):

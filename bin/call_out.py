@@ -4,6 +4,7 @@ import shutil
 from pathlib import Path
 
 from PIL import Image, ImageColor
+from PIL.Image import Resampling
 
 import clip
 
@@ -90,7 +91,11 @@ def call_out(dst_dir, full):
     if dst_dir.exists():
         shutil.rmtree(dst_dir)
     shutil.copytree(src_dir, dst_dir, copy_function=colorify, ignore=should_ignore)
-    shutil.copy2(this_dir / 'call_out_all.png' if full else 'call_out.png', dst_dir / 'pack.png')
+    icon = this_dir / ('call_out_all.png' if full else 'call_out.png')
+    shutil.copy2(icon, dst_dir / 'pack.png')
+    thumb = Image.open(icon)
+    thumb.thumbnail((64,64), Resampling.LANCZOS)
+    thumb.save(dst_dir / 'pack_thumb.png')
     desc = 'Call out %s textures not in any pack (except fonts) by making them bright green.' % (
         'remaining' if full else 'most')
     with open(dst_dir / 'pack.mcmeta', 'w') as fp:
