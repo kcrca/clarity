@@ -2,6 +2,6 @@
   "parent": "minecraft:block/door_bottom_left",
   "textures": {
     "bottom": "minecraft:block/waxed_oxidized_copper_door_bottom",
-    "top": "minecraft:block/oxidized_copper_door_top"
+    "top": "minecraft:block/waxed_oxidized_copper_door_top"
   }
 }

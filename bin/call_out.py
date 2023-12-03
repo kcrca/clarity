@@ -7,6 +7,7 @@ from PIL import Image, ImageColor
 from PIL.Image import Resampling
 
 import clip
+from bin.clip import has_transparency
 
 top_dir = Path(clip.directory('top'))
 src_dir = top_dir / 'default_resourcepack'
@@ -30,20 +31,6 @@ def color_for(src_img):
     if key not in color_imgs:
         color_imgs[key] = Image.new(mode, src_img.size, color)
     return color_imgs[key]
-
-
-def has_transparency(img):
-    if img.info.get("transparency", None) is not None:
-        return True
-    if img.mode == "P":
-        transparent = img.info.get("transparency", -1)
-        for _, index in img.getcolors():
-            if index == transparent:
-                return True
-    elif img.mode[-1] == "A":
-        return True
-
-    return False
 
 
 def colorify(src_path, dst_path, *, follow_symlinks=True):
