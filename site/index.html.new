@@ -494,15 +494,43 @@
     <br>is licensed under a <a rel="license"
                                href="http://creativecommons.org/licenses/by/4.0/">Creative
         Commons Attribution 4.0 International License</a>.
-    <br>© 2016-2024 by Ken Arnold. Based on a work at <a
+    <br>© 2016-2023 by Ken Arnold. Based on a work at <a
             xmlns:dct="http://purl.org/dc/terms/" href="https://github.com/kcrca/clarity" rel="dct:source">https://github.com/kcrca/clarity</a>.
         <!--CopyrightEnd-->
-    <p class="timestamp">Page Last Edited: Oct 21 17:58:51 2023
+    <p class="timestamp">Page Last Edited: Dec  2 17:12:11 2023
 
 </div>
 
-<script defer src="tabs.js"></script>
+<script>
 
+function openTab(evt, tabName) {
+    var i, tabcontent, tablinks;
+    tabcontent = document.getElementsByClassName("tabcontent");
+    for (i = 0; i < tabcontent.length; i++) {
+        tabcontent[i].style.display = "none";
+    }
+    tablinks = document.getElementsByClassName("tablinks");
+    for (i = 0; i < tablinks.length; i++) {
+        tablinks[i].className = tablinks[i].className.replace(" active", "");
+    }
+
+    document.getElementById(tabName).style.display = "block";
+    activeButtons = document.getElementsByClassName(tabName);
+    for (i = 0; i < activeButtons.length; i++) {
+        activeButtons[i].className += " active";
+    }
+}
+
+tab_name = location.hash.substring(1);
+if (!tab_name) {
+    tab_name = "Overview";
+}
+
+document.addEventListener("DOMContentLoaded", function(event) { 
+    openTab(null, tab_name);
+});
+
+</script>
 </body>
 
 </html>
