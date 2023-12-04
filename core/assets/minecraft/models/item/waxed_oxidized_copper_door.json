@@ -1,0 +1,7 @@
+{
+    "parent": "item/door",
+    "textures": {
+        "top": "block/waxed_oxidized_copper_door_top",
+        "bottom": "block/waxed_oxidized_copper_door_bottom"
+    }
+}
