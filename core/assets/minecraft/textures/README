@@ -262,6 +262,10 @@ block/repeating_command_block_side.png
 block/chain_command_block_side.png
 block/repeating_command_block_conditional.png
 block/chain_command_block_conditional.png
+block/pearlescent_froglight_top.png
+block/verdant_froglight_top.png
+block/pearlescent_froglight_side.png
+block/verdant_froglight_side.png
 block/exposed_copper.png
 block/weathered_copper.png
 block/oxidized_copper.png
@@ -292,10 +296,6 @@ block/oxidized_copper_door.png
 block/exposed_chiseled_copper.png
 block/weathered_chiseled_copper.png
 block/oxidized_chiseled_copper.png
-block/pearlescent_froglight_top.png
-block/verdant_froglight_top.png
-block/pearlescent_froglight_side.png
-block/verdant_froglight_side.png
 item/stone_axe.png
 item/golden_axe.png
 item/wooden_axe.png
