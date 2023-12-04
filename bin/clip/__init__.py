@@ -119,11 +119,11 @@ def alpha_composite(output, image, pos, rotation=0):
     if rotation:
         size = image.size
         image = image.rotate(rotation, expand=1).resize(size, Image.ANTIALIAS)
-    output.paste(Image.alpha_composite(output, image), output)
-    # r, g, b, a = image.split()
-    # rgb = Image.merge("RGB", (r, g, b))
-    # mask = Image.merge("L", (a,))
-    # output.paste(rgb, pos, mask)
+    # output.paste(Image.alpha_composite(output, image), output)
+    r, g, b, a = image.split()
+    rgb = Image.merge("RGB", (r, g, b))
+    mask = Image.merge("L", (a,))
+    output.paste(rgb, pos, mask)
 
 
 def has_transparency(img):
