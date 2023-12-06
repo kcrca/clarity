@@ -7,7 +7,7 @@ from PIL import Image, ImageColor
 from PIL.Image import Resampling
 
 import clip
-from bin.clip import has_transparency
+from clip import has_transparency
 
 top_dir = Path(clip.directory('top'))
 src_dir = top_dir / 'default_resourcepack'
@@ -64,7 +64,8 @@ def call_out(dst_dir, full):
         if dir == str(src_dir):
             return files_and('assets')
         if dir.endswith('/assets'):
-            return files_and('minecraft')
+            # I don't know what this does, but it confuses minecraft
+            return files_and('minecraft') + ['.mcassetsroot']
         elif dir.endswith('assets/minecraft'):
             if full:
                 return files_and('textures')
@@ -81,7 +82,7 @@ def call_out(dst_dir, full):
     icon = this_dir / ('call_out_all.png' if full else 'call_out.png')
     shutil.copy2(icon, dst_dir / 'pack.png')
     thumb = Image.open(icon)
-    thumb.thumbnail((64,64), Resampling.LANCZOS)
+    thumb.thumbnail((64, 64), Resampling.LANCZOS)
     thumb.save(dst_dir / 'pack_thumb.png')
     desc = 'Call out %s textures not in any pack (except fonts) by making them bright green.' % (
         'remaining' if full else 'most')

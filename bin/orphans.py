@@ -174,6 +174,7 @@ special_textures = (
     'block/note_block_staff',
     'block/water_flow',
     'block/waxed_overlay',
+    'block/waxed_trapdoor_overlay',
     'item/clock_font',
 
     # Used in generating UI places where things are to be put
