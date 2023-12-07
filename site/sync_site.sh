@@ -12,4 +12,4 @@ rsync -c -avz --delete --progress \
     --exclude='.?' \
     --exclude='favicon.p*' \
     --exclude='*.bak' \
-    . kcrca_claritypack@ssh.phx.nearlyfreespeech.net:$dst_dir/
+    . kcrca_claritypack@ssh.nyc1.nearlyfreespeech.net:$dst_dir/
