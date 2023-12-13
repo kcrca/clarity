@@ -4,6 +4,7 @@ import shutil
 from pathlib import Path
 
 from PIL import Image, ImageColor
+from PIL.ImageDraw import ImageDraw
 
 import clip
 from clip import has_transparency
@@ -20,7 +21,8 @@ version = version_info['pack_version']['resource']
 dst_dir.mkdir(0o755, exist_ok=True)
 this_dir = Path(__file__).parent
 
-color = ImageColor.getrgb("#39ff14")
+color = ImageColor.getrgb('#000000')
+magenta = ImageColor.getrgb('#f800f8')
 color_imgs = {}
 
 
@@ -28,7 +30,14 @@ def color_for(src_img):
     mode = 'RGBA' if has_transparency(src_img) else 'RGB'
     key = (mode, src_img.size)
     if key not in color_imgs:
-        color_imgs[key] = Image.new(mode, src_img.size, color)
+        img = color_imgs[key] = Image.new(mode, src_img.size, color)
+        drw = ImageDraw(img)
+        sz = int(min(*src_img.size) / 2)
+        if sz > 0:
+            for x in range(0, src_img.size[0], sz):
+                for y in range(0, src_img.size[1], sz):
+                    if (x / sz + y / sz) % 2 == 0:
+                        drw.rectangle(((x, y), (x + sz - 1, y + sz - 1)), fill=magenta)
     return color_imgs[key]
 
 
@@ -50,8 +59,6 @@ def colorify(src_path, dst_path, *, follow_symlinks=True):
         _, _, _, a = src_img.split()
         r, g, b, _ = mod_img.split()
         mod_img = Image.merge('RGBA', (r, g, b, a))
-    # if orig_mode != src_img.mode:
-    #     mod_img = mod_img.convert(orig_mode)
     mod_img.save(dst_path)
 
 
