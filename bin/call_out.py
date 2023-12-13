@@ -4,7 +4,6 @@ import shutil
 from pathlib import Path
 
 from PIL import Image, ImageColor
-from PIL.Image import Resampling
 
 import clip
 from clip import has_transparency
@@ -51,8 +50,8 @@ def colorify(src_path, dst_path, *, follow_symlinks=True):
         _, _, _, a = src_img.split()
         r, g, b, _ = mod_img.split()
         mod_img = Image.merge('RGBA', (r, g, b, a))
-    if orig_mode != src_img.mode:
-        mod_img = mod_img.convert(orig_mode)
+    # if orig_mode != src_img.mode:
+    #     mod_img = mod_img.convert(orig_mode)
     mod_img.save(dst_path)
 
 
@@ -82,12 +81,13 @@ def call_out(dst_dir, full):
     icon = this_dir / ('call_out_all.png' if full else 'call_out.png')
     shutil.copy2(icon, dst_dir / 'pack.png')
     thumb = Image.open(icon)
-    thumb.thumbnail((64, 64), Resampling.LANCZOS)
+    thumb.thumbnail((64, 64), Image.Resampling.LANCZOS)
     thumb.save(dst_dir / 'pack_thumb.png')
     desc = 'Call out %s textures not in any pack (except fonts) by making them bright green.' % (
         'remaining' if full else 'most')
     with open(dst_dir / 'pack.mcmeta', 'w') as fp:
         json.dump({'pack': {'pack_format': version, 'description': desc}}, fp, indent=2)
+        fp.write('\n')
 
 
 call_out(dst_dir, False)
