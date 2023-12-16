@@ -14,7 +14,7 @@ def percent_of(before, after):
 
 
 class Scrimage:
-    def __init__(self, verbose=True):
+    def __init__(self, verbose=1):
         self.verbose = verbose
 
     def scrimage(self, *paths):
@@ -32,8 +32,6 @@ class Scrimage:
             return self.scrimage(*path.glob('*'))
         try:
             img = Image.open(path)
-            if self.verbose:
-                print(path, end='')
             saved = percent = before = 0
             changed = False
             if img.info:
@@ -54,8 +52,8 @@ class Scrimage:
                     percent = percent_of(before, after)
                     totals[0] += before
                     totals[1] += after
-            if self.verbose:
-                print(f': {saved:,}b / {percent}%')
+            if self.verbose > 1 or (self.verbose == 1 and before != after):
+                print(f'{path}: {saved:,}b / {percent}%')
         except:
             pass
         return totals
@@ -63,7 +61,10 @@ class Scrimage:
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='scrunch images to smaller sizes losslessly')
-    scrimage = Scrimage()
-    totals = scrimage.scrimage(*sys.argv[1:])
+    parser.add_argument('-verbose', '-v', action='count', default=0)
+    parser.add_argument('path', action='append', type=Path)
+    options = parser.parse_args()
+    scrimage = Scrimage(verbose=options.verbose)
+    totals = scrimage.scrimage(*options.path)
     if scrimage.verbose and totals:
         print(f'Total: {totals[0]:,}b / {percent_of(*totals)}%')
