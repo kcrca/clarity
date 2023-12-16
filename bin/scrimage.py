@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 import argparse
 import os
 import sys
@@ -19,7 +20,7 @@ class Scrimage:
     def scrimage(self, *paths):
         totals = [0, 0]
         if len(paths) == 0:
-            return [-1,-1]
+            return []
         if len(paths) > 1:
             for p in paths:
                 nums = self.scrimage(p)
@@ -34,8 +35,16 @@ class Scrimage:
             if self.verbose:
                 print(path, end='')
             saved = percent = before = 0
+            changed = False
             if img.info:
+                changed = True
                 img.info = {}
+            if img.mode.endswith('A'):
+                _, _, _, a = img.split()
+                if not any(lambda x: x != 255 for x in list(a.getdata())):
+                    img = img.convert(img.mode[:-1])
+                    changed = True
+            if changed:
                 if self.verbose:
                     before = os.stat(path).st_size
                 img.save(path)
@@ -56,5 +65,5 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='scrunch images to smaller sizes losslessly')
     scrimage = Scrimage()
     totals = scrimage.scrimage(*sys.argv[1:])
-    if scrimage.verbose and totals[0] >= 0:
+    if scrimage.verbose and totals:
         print(f'Total: {totals[0]:,}b / {percent_of(*totals)}%')
