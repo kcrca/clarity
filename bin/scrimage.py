@@ -2,6 +2,7 @@
 import argparse
 import os
 import sys
+import tempfile
 from pathlib import Path
 
 from PIL import Image
@@ -14,6 +15,8 @@ def percent_of(before, after):
 
 
 class Scrimage:
+    no_alpha = {255}
+
     def __init__(self, verbose=1):
         self.verbose = verbose
 
@@ -30,41 +33,54 @@ class Scrimage:
         path = Path(paths[0])
         if path.is_dir() and not path.is_symlink():
             return self.scrimage(*path.glob('*'))
+        temp = None
         try:
             img = Image.open(path)
-            saved = percent = before = 0
+            saved = percent = 0
             changed = False
-            if img.info:
+            if 'XML:com.adobe.xmp' in img.info:
+                del img.info['XML:com.adobe.xmp']
                 changed = True
-                img.info = {}
             if img.mode.endswith('A'):
-                _, _, _, a = img.split()
-                if not any(lambda x: x != 255 for x in list(a.getdata())):
+                alphas = set(img.getdata(len(img.getbands()) - 1))
+                if alphas == Scrimage.no_alpha:
                     img = img.convert(img.mode[:-1])
                     changed = True
             if changed:
-                if self.verbose:
-                    before = os.stat(path).st_size
-                img.save(path)
-                if self.verbose:
-                    after = os.stat(path).st_size
+                before = os.stat(path).st_size
+                dirname, basename = os.path.split(path)
+                ts = tempfile.NamedTemporaryFile(prefix=path.name[:-len(path.suffix) - 1], dir=dirname,
+                                                 suffix=path.suffix, delete=False)
+                temp = Path(ts.name)
+                img.save(temp)
+                after = os.stat(temp).st_size
+                if after >= before:
+                    temp.unlink()
+                else:
+                    temp.rename(path)
                     saved = before - after
                     percent = percent_of(before, after)
                     totals[0] += before
                     totals[1] += after
-            if self.verbose > 1 or (self.verbose == 1 and before != after):
+            if self.verbose > 1 or (self.verbose == 1 and saved > 0):
                 print(f'{path}: {saved:,}b / {percent}%')
+        except FileNotFoundError as e:
+            raise e
         except:
+            # If the temp file was created, but an error happened in the middle, remove it
+            if temp:
+                temp.unlink()
             pass
         return totals
 
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description='scrunch images to smaller sizes losslessly')
-    parser.add_argument('-verbose', '-v', action='count', default=0)
-    parser.add_argument('path', action='append', type=Path)
-    options = parser.parse_args()
-    scrimage = Scrimage(verbose=options.verbose)
-    totals = scrimage.scrimage(*options.path)
-    if scrimage.verbose and totals:
-        print(f'Total: {totals[0]:,}b / {percent_of(*totals)}%')
+    if len(sys.argv) > 1:
+        parser = argparse.ArgumentParser(description='scrunch images to smaller sizes losslessly')
+        parser.add_argument('-verbose', '-v', action='count', default=0)
+        parser.add_argument('path', action='append', type=Path)
+        options = parser.parse_args()
+        scrimage = Scrimage(verbose=options.verbose)
+        totals = scrimage.scrimage(*options.path)
+        if scrimage.verbose and totals:
+            print(f'Total: {totals[0]:,}b / {percent_of(*totals)}%')
