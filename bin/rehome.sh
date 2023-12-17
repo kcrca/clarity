@@ -14,6 +14,7 @@ rm -f allowed_symlinks.txt
 echo '[regex].*' > allowed_symlinks.txt
 rm -f resourcepacks/core
 ln -s $src/core resourcepacks/
+ln -s $src/call_out* resourcepacks/
 [[ -f options.txt.bak ]] | cp options.txt options.txt.bak
 ex - options.txt << \EOF
 /^advancedItemTooltips:/s/:.*/:true
