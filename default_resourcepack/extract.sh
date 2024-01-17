@@ -10,7 +10,8 @@ for f in $places; do
 	rm -rf [a-df-z]*
 	unzip -qq "$loc" -x '*.class' log4j2.xml META-INF/'*'
 	rm -f pack.*
-	#rm -rf `cat .gitignore`
+	to_rm=`cat .gitignore`
+	rm -rf $to_rm
 	find */ -type f -print0 | xargs -0 chmod -w
 	git add .
     else

@@ -12,7 +12,7 @@ ln -s $dst home
 cd home
 rm -f allowed_symlinks.txt
 echo '[regex].*' > allowed_symlinks.txt
-rm -f resourcepacks/core
+rm -f resourcepacks/core resourcepacks/call_out resourcepacks/call_out_all
 ln -s $src/core resourcepacks/
 ln -s $src/call_out* resourcepacks/
 [[ -f options.txt.bak ]] | cp options.txt options.txt.bak
