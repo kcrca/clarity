@@ -7,6 +7,15 @@ src=$PWD
 dst=/Applications/MultiMC.app/Data/instances/$1/.minecraft
 [[ -d $dst ]] || exec file $dst
 
+(
+    cd home/saves
+    setopt nullglob
+    for f in RestWorld*; do
+	if [[ -d $f ]]; then
+	    [[ -d $dst/saves/$f ]] || cp -r $f $dst/saves/$f
+	fi
+    done
+)
 rm -f home
 ln -s $dst home
 cd home
