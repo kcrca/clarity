@@ -1,6 +1,6 @@
 .DS_Store
 *.bak
-home
+/home
 .*.sw[op]
 .sw[op]
 ?
@@ -11,7 +11,8 @@ home
 /clarity
 /connectivity
 /continuity
-/call_out*
+/call_out
+/call_out_all
 /contraption
 /current
 /home
