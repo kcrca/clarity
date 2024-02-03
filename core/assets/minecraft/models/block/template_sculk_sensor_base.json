@@ -90,8 +90,8 @@
             }
 	},
         {
-            "from": [8, 8, 0],
-            "to": [8, 24, 16],
+            "from": [8, 8, 2],
+            "to": [8, 20, 14],
             "rotation": {"angle": 45, "axis": "y", "origin": [8, 9, 8]},
             "faces": {
                 "east": {"uv": [0, 0, 15, 15], "texture": "#amethyst"},
@@ -99,8 +99,8 @@
             }
         },
         {
-            "from": [0, 8, 8],
-            "to": [16, 24, 8],
+            "from": [2, 8, 8],
+            "to": [14, 20, 8],
             "rotation": {"angle": 45, "axis": "y", "origin": [8, 9, 8]},
             "faces": {
                 "north": {"uv": [0, 0, 15, 15], "texture": "#amethyst"},
