@@ -4,8 +4,8 @@
         "particle": "#stem"
     },
     "elements": [
-        {   "from": [ 8, -1, 0 ],
-            "to": [ 8, 7, 16 ],
+        {   "from": [ 8.75, -1, 0 ],
+            "to": [ 8.75, 7, 16 ],
             "rotation": { "origin": [ 9.5, 8, 6.5 ], "axis": "y", "angle": 0, "rescale": true },
             "faces": {
                 "east": { "uv": [  0, 0, 16, 8 ], "texture": "#stem" },
