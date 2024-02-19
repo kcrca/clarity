@@ -1,0 +1,6 @@
+{
+  "parent": "item/handheld_item",
+  "textures": {
+    "layer0": "minecraft:item/wind_charge"
+  }
+}
