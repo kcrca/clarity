@@ -1,10 +1,2 @@
 assets/minecraft/shaders
-data/minecraft/advancements
-data/minecraft/chat_type
-data/minecraft/damage_type
-data/minecraft/datapacks
-data/minecraft/dimension_type
-data/minecraft/loot_tables
-data/minecraft/recipes
-data/minecraft/structures
-data/minecraft/worldgen
+data
