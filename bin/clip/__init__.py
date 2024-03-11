@@ -28,7 +28,7 @@ class Square:
         return adjust
 
 
-def directory(name, *args, **kwargs):
+def directory(name, *args, **kwargs)->str:
     """
     Returns the directory with the specified name, as an absolute path.
     :param name: The name of the directory. One of "textures" or "models".
