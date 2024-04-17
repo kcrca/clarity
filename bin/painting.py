@@ -40,8 +40,9 @@ for img_file in images:
         # Assuming all animated images are square
         h = w
         art_img = art_img.crop((0, 0, w, w))
-    art_imgs.append((img_file, (w, h), art_img))
-    max_size = max(w, h, max_size)
+    if h == w:
+        art_imgs.append((img_file, (w, h), art_img))
+        max_size = max(w, h, max_size)
 
 art_imgs.sort(key=lambda desc: (desc[1], desc[0]))
 
