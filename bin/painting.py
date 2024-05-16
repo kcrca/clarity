@@ -4,12 +4,11 @@
 #
 #     (*) The animated item, which cycles through the individual paintings.
 #     (*) Broken-out images of each individual painting for the site.
-import glob
-
 __author__ = 'arnold'
 
-import os
+import glob
 import json
+import os
 from pathlib import Path
 
 from PIL import Image
