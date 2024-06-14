@@ -1,10 +1,10 @@
-#!/bin/sh
+#!/bin/zsh
 
 set -e
 
 cd `dirname $0`
 
-for html in ${html} call_out.html; do
+for html in index.html call_out.html; do
     ver_cur="$1"
     [ x"$ver_cur" != x"" ] || (echo Must specify version ; exit 1)
     ver_old=$(sed -E -n -e 's/^<.-- version: ([^ ]*) -->/\1/p' < ${html})
