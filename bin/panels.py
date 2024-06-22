@@ -10,8 +10,7 @@ import os
 import re
 from pathlib import Path
 
-from PIL import Image
-from PIL import ImageDraw
+from PIL import Image, ImageDraw
 
 import clip
 
@@ -100,67 +99,67 @@ for dir in glob.glob(str(mc_dir).replace('minecraft', '*')):
                 m = desc_re.match(desc)
                 if not m:
                     print('%s: cannot parse desc: %s' % (panel, desc))
+                    continue
+                part, x_pos_str, y_pos_str, rotation_str, relative = m.groups()
+
+                if relative == 'right':
+                    x_pos, y_pos = x_size, 0
+                elif relative == 'bottom':
+                    x_pos, y_pos = 0, y_size
                 else:
-                    part, x_pos_str, y_pos_str, rotation_str, relative = m.groups()
+                    x_pos, y_pos = int(x_pos_str), int(y_pos_str)
+                rotation = float(rotation_str) if rotation_str else 0
 
-                    if relative == 'right':
-                        x_pos, y_pos = x_size, 0
-                    elif relative == 'bottom':
-                        x_pos, y_pos = 0, y_size
+
+                def handle_part(part):
+                    while part in basic:
+                        part = basic[part]
+                        subparts = part.split()
+                        if len(subparts) > 1:
+                            for subpart in subparts:
+                                handle_part(subpart)
+                            return
+
+                    m = grid_re.match(part)
+                    if m:
+                        x_count_str, y_count_str = m.groups()
+                        if not y_count_str:
+                            y_count_str = '1'
+                        x_count, y_count = int(x_count_str), int(y_count_str)
+                        if not y_count:
+                            y_count = 1
+                        for x in range(0, x_count):
+                            slot_x = x_pos + x * slot_width
+                            for y in range(0, y_count):
+                                slot_y = y_pos + y * slot_width
+                                pos = (slot_x, slot_y)
+                                clip.alpha_composite(output, slot, pos, rotation)
+                        used_part_files.append('slot.png')
+                    elif part == 'numbers':
+                        draw = ImageDraw.Draw(output)
+                        for i in range(1, 10):
+                            x = x_pos + (i - 1) * slot_width + font_size / 2 + 4
+                            y = y_pos + slot_height + 1
+                            draw.bitmap((x, y), digits[i], fill=font_color)
+                        used_part_files.append('digits.png')
+                    elif part.startswith("item/"):
+                        part_img = Image.open('../../%s.png' % part).convert("RGBA")
+                        pixels = part_img.load()
+                        for x in range(0, part_img.size[0]):
+                            for y in range(0, part_img.size[1]):
+                                c = pixels[x, y]
+                                if c[3] != 0:
+                                    pixels[x, y] = (c[0], c[1], c[2], int(round(c[3] * 0.4)))
+                        pos1 = (x_pos, y_pos)
+                        clip.alpha_composite(output, part_img, pos1, rotation)
                     else:
-                        x_pos, y_pos = int(x_pos_str), int(y_pos_str)
-                    rotation = float(rotation_str) if rotation_str else 0
+                        part_img = open_part(part)
+                        pos2 = (x_pos, y_pos)
+                        clip.alpha_composite(output, part_img, pos2, rotation)
+                        used_part_files.append(part)
 
 
-                    def handle_part(part):
-                        while part in basic:
-                            part = basic[part]
-                            subparts = part.split()
-                            if len(subparts) > 1:
-                                for subpart in subparts:
-                                    handle_part(subpart)
-                                return
-
-                        m = grid_re.match(part)
-                        if m:
-                            x_count_str, y_count_str = m.groups()
-                            if not y_count_str:
-                                y_count_str = '1'
-                            x_count, y_count = int(x_count_str), int(y_count_str)
-                            if not y_count:
-                                y_count = 1
-                            for x in range(0, x_count):
-                                slot_x = x_pos + x * slot_width
-                                for y in range(0, y_count):
-                                    slot_y = y_pos + y * slot_width
-                                    pos = (slot_x, slot_y)
-                                    clip.alpha_composite(output, slot, pos, rotation)
-                            used_part_files.append('slot.png')
-                        elif part == 'numbers':
-                            draw = ImageDraw.Draw(output)
-                            for i in range(1, 10):
-                                x = x_pos + (i - 1) * slot_width + font_size / 2 + 4
-                                y = y_pos + slot_height + 1
-                                draw.bitmap((x, y), digits[i], fill=font_color)
-                            used_part_files.append('digits.png')
-                        elif part.startswith("item/"):
-                            part_img = Image.open('../../%s.png' % part).convert("RGBA")
-                            pixels = part_img.load()
-                            for x in range(0, part_img.size[0]):
-                                for y in range(0, part_img.size[1]):
-                                    c = pixels[x, y]
-                                    if c[3] != 0:
-                                        pixels[x, y] = (c[0], c[1], c[2], int(round(c[3] * 0.4)))
-                            pos1 = (x_pos, y_pos)
-                            clip.alpha_composite(output, part_img, pos1, rotation)
-                        else:
-                            part_img = open_part(part)
-                            pos2 = (x_pos, y_pos)
-                            clip.alpha_composite(output, part_img, pos2, rotation)
-                            used_part_files.append(part)
-
-
-                    handle_part(part)
+                handle_part(part)
 
             output.save(output_path, 'PNG')
 
