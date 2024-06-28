@@ -3,12 +3,13 @@
 # Generates a report comparing two packs.
 
 import configparser
-import os
+import glob
 import re
 import subprocess
 import sys
+from pathlib import Path
 
-from PIL import Image
+import clip
 from clip import *
 
 __author__ = 'arnold'
@@ -16,6 +17,167 @@ __author__ = 'arnold'
 status_by_name = {}
 
 
+def orphans():
+    def find_models(data):
+        if data is None:
+            return []
+        if isinstance(data, list):
+            models = []
+            for member in data:
+                models += find_models(member)
+            return models
+        if isinstance(data, dict):
+            try:
+                return data['model'],
+            except KeyError:
+                pass
+            models = []
+            for key in data:
+                models += find_models(data[key])
+            return models
+        return []
+
+    def find_textures(data):
+        textures = []
+        try:
+            textures_block = data['textures']
+            for texture_name in textures_block:
+                textures.append(path_part(textures_block[texture_name]))
+        except KeyError:
+            pass
+        return textures
+
+    def models_for(state):
+        return find_models(state)
+
+    def path_part(model_name):
+        return model_name.replace('minecraft:', '')
+
+    def import_model(model_name):
+        model_name = path_part(model_name)
+        if model_name in models:
+            return
+        if model_name.startswith('builtin/'):
+            return
+        try:
+            with open(os.path.join(clip.directory('models'), model_name + '.json')) as fp:
+                model = json.load(fp)
+        except IOError:
+            with open(os.path.join(clip.directory('defaults', 'models'), model_name + '.json')) as fp:
+                model = json.load(fp)
+        models[model_name] = model
+        try:
+            del unused_models[model_name]
+        except KeyError:
+            pass
+        try:
+            for o in model['overrides']:
+                if 'model' in o:
+                    import_model(o['model'])
+        except KeyError:
+            pass
+
+        try:
+            import_model(model['parent'])
+        except KeyError:
+            pass
+
+    subpath_re = re.compile(r'([^/]+/[^/]+)\.[a-z]+$')
+    blockstates = {}
+    models = {}
+    unused_models = {}
+    # First we pull in all the models for the blocks, using the blockstates files as the roots of the tree.
+    for file in glob.glob('%s/*.json' % clip.directory('defaults', 'blockstates')):
+        with open(file) as fp:
+            blockstates[os.path.basename(file)] = json.load(fp)
+    for file in glob.glob('%s/*.json' % clip.directory('blockstates')):
+        with open(file) as fp:
+            blockstates[os.path.basename(file)] = json.load(fp)
+    # Find all of our own models, and store them as possibly unused
+    for file in glob.glob('%s/block/*.json' % clip.directory('models')):
+        model_name = subpath_re.search(file).group(1)
+        unused_models[model_name] = True
+    for block_name in blockstates:
+        block = blockstates[block_name]
+        for model_name in models_for(block):
+            model_name = path_part(model_name)
+            try:
+                del unused_models[model_name]
+            except KeyError:
+                pass
+            import_model(model_name)
+    # Next we look at all the items
+    for file in glob.glob('%s/item/*.json' % clip.directory('models')) + glob.glob(
+            '%s/item/*.json' % clip.directory('defaults', 'models')):
+        model_name = subpath_re.search(file).group(1)
+        import_model(model_name)
+    # Now lets look for unused textures
+    textures = set()
+    unused_textures = set()
+    # Textures that are not reachable by the regular techniques
+    special_textures = (
+                           'block/books',
+                           'block/copper_copper',
+                           'block/current',
+                           'block/destroy_stage_0',
+                           'block/destroy_stage_1',
+                           'block/destroy_stage_2',
+                           'block/destroy_stage_3',
+                           'block/destroy_stage_4',
+                           'block/destroy_stage_5',
+                           'block/destroy_stage_6',
+                           'block/destroy_stage_7',
+                           'block/destroy_stage_8',
+                           'block/destroy_stage_9',
+                           'block/portal',  # animation for the nether portal
+                           'block/lava_flow',
+                           'block/note_block_names',
+                           'block/note_block_note',
+                           'block/note_block_staff',
+                           'block/water_flow',
+                           'block/waxed_overlay',
+                           'block/waxed_trapdoor_overlay',
+                           'item/clock_font',
+
+                           # Used in generating UI places where things are to be put
+                           'item/blank_banner_pattern',
+                           'item/carpet_for_llama',
+                           'item/empty_armor_slot_boots',
+                           'item/empty_armor_slot_chestplate',
+                           'item/empty_armor_slot_helmet',
+                           'item/empty_armor_slot_leggings',
+                           'item/empty_armor_slot_shield',
+                           'item/empty_slot_amethyst_shard',
+                           'item/empty_slot_diamond',
+                           'item/empty_slot_emerald',
+                           'item/empty_slot_ingot',
+                           'item/empty_slot_lapis_lazuli',
+                           'item/empty_slot_quartz',
+                           'item/empty_slot_redstone_dust',
+                           'item/empty_slot_smithing_template_armor_trim',
+                           'item/empty_slot_smithing_template_netherite_upgrade',
+                           'item/netherite_ingot',
+                       ) + tuple(('block/bookshelf_%02d' % i) for i in range(0, 20))
+    # bookshelf images are only _probably_ used, so this allows for the case where one isn't
+    for file in glob.glob('%s/item/*.png' % clip.directory('textures')) + glob.glob(
+            '%s/block/*.png' % clip.directory('textures')):
+        texture_name = subpath_re.search(file).group(1)
+        if texture_name not in special_textures and not Path(file + '.split').exists():
+            unused_textures.add(texture_name)
+    for model_name in models:
+        model = models[model_name]
+        for texture_name in find_textures(model):
+            # print '%s: %s' % (model_name, texture_name)
+            textures.add(texture_name)
+            try:
+                unused_textures.remove(texture_name)
+            except KeyError:
+                pass
+
+    return models, unused_models, textures, unused_textures
+
+
+# noinspection PyUnusedLocal
 def no_path(groups):
     return None
 
@@ -31,7 +193,6 @@ def first_group(groups):
 
 
 def path_from_only(groups):
-    path = None
     assert len(groups) == 2
     if len(groups[0]) > 0:
         path = os.path.join(groups[0], groups[1])
@@ -51,8 +212,8 @@ class FileStatus(object):
         self.multi_matches = dict()
         try:
             to_ignore = config.get('ignore', prefix.lower())
-            toSplit = re.sub(r'[ \t]*#[^\n]*', '', to_ignore)
-            pats = set(toSplit.split())
+            to_split = re.sub(r'[ \t]*#[^\n]*', '', to_ignore)
+            pats = set(to_split.split())
             self.ignore = []
             for pat in pats:
                 self.ignore.append(re.compile(pat))
@@ -97,36 +258,58 @@ class FileStatus(object):
             # This does an extra check for changed PNG files to see if they are really different
 
 
-class ChangedFileStatus(FileStatus):
-    def image_compare(self, groups):
-        img1 = Image.open(groups[0])
-        img2 = Image.open(groups[1])
-        if img1.size != img2.size:
-            return False
-        pixels1 = img1.convert('RGBA').load()
-        pixels2 = img2.convert('RGBA').load()
-        for x in range(0, img1.size[0]):
-            for y in range(0, img1.size[1]):
-                if pixels1[(x, y)] != pixels2[(x, y)]:
-                    return False
-        return True
+def image_compare(groups):
+    img1 = Image.open(groups[0])
+    img2 = Image.open(groups[1])
+    if img1.size != img2.size:
+        return False
+    pixels1 = img1.convert('RGBA').load()
+    pixels2 = img2.convert('RGBA').load()
+    for x in range(0, img1.size[0]):
+        for y in range(0, img1.size[1]):
+            if pixels1[(x, y)] != pixels2[(x, y)]:
+                return False
+    return True
 
-    def __init__(self, prefix, pattern, same_file_status, ignore_pats=()):
+
+class ChangedFileStatus(FileStatus):
+    def __init__(self, prefix, pattern, same_file_status):
         super(ChangedFileStatus, self).__init__(prefix, pattern, first_group)
         self.same_file_status = same_file_status
 
     def add_path(self, groups, path):
         if path.endswith('.png'):
             # Check if they are equivalent images, just encoded differently.
-            if self.image_compare(groups):
+            if image_compare(groups):
                 self.same_file_status.add_path(groups, path)
                 return
         super(ChangedFileStatus, self).add_path(groups, path)
 
 
+class MissingFileStatus(FileStatus):
+    def add_path(self, groups, path):
+        # Any missing texture (or model) that isn't in the list of used textures (or models) isn't really missing.
+        if not (path.startswith('textures/') and path not in textures) and not (
+                path.startswith('models/') and path not in models):
+            super().add_path(groups, path)
+
+
 config_file = directory('config', 'report_default.cfg')
 if len(sys.argv) > 1:
     config_file = sys.argv[1]
+
+models, unused_models, textures, unused_textures = orphans()
+print('Models: %s' % len(models))
+if unused_models:
+    print('UNUSED models:\n   ', end=' ')
+    print('\n    '.join(sorted(unused_models)))
+print('Textures: %d' % len(textures))
+if unused_textures:
+    print('UNUSED textures:\n   ', end=' ')
+    print('\n    '.join(sorted(unused_textures)))
+
+if unused_models or unused_textures:
+    sys.exit(1)
 
 os.chdir(directory('minecraft'))
 
@@ -141,7 +324,7 @@ statuses = (
     FileStatus('Ignored', r'\.swp|\~|\/.$|\.DS_Store|_diff\.gif$', path_from_groups=whole_match),
     same_checker,
     ChangedFileStatus('Changed', r'^Files (?:\./)?(.*) and ([^\s]*) differ', same_checker),
-    FileStatus('Missing', r'^Only in ' + other_esc + '/?(.*): (.*)', path_from_groups=path_from_only),
+    MissingFileStatus('Missing', r'^Only in ' + other_esc + '/?(.*): (.*)', path_from_groups=path_from_only),
     FileStatus('Added', r'^Only in \./?(.*): (.*)', path_from_groups=path_from_only),
 )
 

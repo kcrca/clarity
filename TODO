@@ -1,8 +1,1 @@
 banners/shields -- do we really need those blending lines on the simplest ones (e.g. top_stripe)?
-
-many things are in the report's "missing" area because they are no longer needed. For example, lots
-of items are now represented from their block textures, so the model-specific textures are missing.
-We could auto-detect these by merging the orphans.py work into report.py. If a texture is missing, but
-it would be reported as an orphan, it isn't "missing". This would make the "missing" category represent
-what it's said to represent -- things we want to use the default for. The rest is just clutering that
-up.
