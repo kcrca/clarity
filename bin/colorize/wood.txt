@@ -3,6 +3,7 @@ jungle
 birch
 spruce
 dark_oak
+pale_oak
 acacia
 warped log=stem
 crimson log=stem

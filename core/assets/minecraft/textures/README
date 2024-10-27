@@ -159,6 +159,7 @@ block/jungle_planks.png
 block/birch_planks.png
 block/spruce_planks.png
 block/dark_oak_planks.png
+block/pale_oak_planks.png
 block/acacia_planks.png
 block/warped_planks.png
 block/crimson_planks.png
@@ -168,6 +169,7 @@ block/jungle_pressure_plate.png
 block/birch_pressure_plate.png
 block/spruce_pressure_plate.png
 block/dark_oak_pressure_plate.png
+block/pale_oak_pressure_plate.png
 block/acacia_pressure_plate.png
 block/warped_pressure_plate.png
 block/crimson_pressure_plate.png
@@ -175,16 +177,19 @@ block/mangrove_pressure_plate.png
 block/cherry_pressure_plate.png
 block/spruce_log.png
 block/dark_oak_log.png
+block/pale_oak_log.png
 block/acacia_log.png
 block/cherry_log.png
 block/spruce_log_top.png
 block/dark_oak_log_top.png
+block/pale_oak_log_top.png
 block/acacia_log_top.png
 block/cherry_log_top.png
 entity/signs/jungle.png
 entity/signs/birch.png
 entity/signs/spruce.png
 entity/signs/dark_oak.png
+entity/signs/pale_oak.png
 entity/signs/acacia.png
 entity/signs/warped.png
 entity/signs/crimson.png
@@ -195,6 +200,7 @@ entity/signs/hanging/jungle.png
 entity/signs/hanging/birch.png
 entity/signs/hanging/spruce.png
 entity/signs/hanging/dark_oak.png
+entity/signs/hanging/pale_oak.png
 entity/signs/hanging/acacia.png
 entity/signs/hanging/warped.png
 entity/signs/hanging/crimson.png
@@ -205,6 +211,7 @@ item/jungle_sign.png
 item/birch_sign.png
 item/spruce_sign.png
 item/dark_oak_sign.png
+item/pale_oak_sign.png
 item/acacia_sign.png
 item/warped_sign.png
 item/crimson_sign.png
@@ -215,6 +222,7 @@ item/jungle_hanging_sign.png
 item/birch_hanging_sign.png
 item/spruce_hanging_sign.png
 item/dark_oak_hanging_sign.png
+item/pale_oak_hanging_sign.png
 item/acacia_hanging_sign.png
 item/warped_hanging_sign.png
 item/crimson_hanging_sign.png
@@ -225,6 +233,7 @@ gui/hanging_signs/jungle.png
 gui/hanging_signs/birch.png
 gui/hanging_signs/spruce.png
 gui/hanging_signs/dark_oak.png
+gui/hanging_signs/pale_oak.png
 gui/hanging_signs/acacia.png
 gui/hanging_signs/warped.png
 gui/hanging_signs/crimson.png
@@ -235,6 +244,7 @@ block/stripped_jungle_log_top.png
 block/stripped_birch_log_top.png
 block/stripped_spruce_log_top.png
 block/stripped_dark_oak_log_top.png
+block/stripped_pale_oak_log_top.png
 block/stripped_acacia_log_top.png
 block/stripped_warped_stem_top.png
 block/stripped_crimson_stem_top.png
@@ -244,6 +254,7 @@ entity/boat/jungle.png
 entity/boat/birch.png
 entity/boat/spruce.png
 entity/boat/dark_oak.png
+entity/boat/pale_oak.png
 entity/boat/acacia.png
 entity/boat/mangrove.png
 entity/boat/cherry.png
@@ -251,6 +262,7 @@ entity/chest_boat/jungle.png
 entity/chest_boat/birch.png
 entity/chest_boat/spruce.png
 entity/chest_boat/dark_oak.png
+entity/chest_boat/pale_oak.png
 entity/chest_boat/acacia.png
 entity/chest_boat/mangrove.png
 entity/chest_boat/cherry.png
@@ -326,8 +338,8 @@ item/iron_ingot.png
 item/netherite_ingot.png
 item/golden_horse_armor.png
 item/iron_horse_armor.png
-entity/horse/armor/horse_armor_gold.png
-entity/horse/armor/horse_armor_iron.png
+entity/equipment/horse_body/gold.png
+entity/equipment/horse_body/iron.png
 item/golden_boots.png
 item/netherite_boots.png
 item/iron_boots.png
@@ -344,12 +356,12 @@ item/golden_leggings.png
 item/netherite_leggings.png
 item/iron_leggings.png
 item/empty_armor_slot_leggings.png
-models/armor/gold_layer_1.png
-models/armor/netherite_layer_1.png
-models/armor/iron_layer_1.png
-models/armor/gold_layer_2.png
-models/armor/netherite_layer_2.png
-models/armor/iron_layer_2.png
+entity/equipment/humanoid/gold.png
+entity/equipment/humanoid/netherite.png
+entity/equipment/humanoid/iron.png
+entity/equipment/humanoid_leggings/gold.png
+entity/equipment/humanoid_leggings/netherite.png
+entity/equipment/humanoid_leggings/iron.png
 block/heavy_weighted_pressure_plate_00.png
 block/heavy_weighted_pressure_plate_01.png
 block/heavy_weighted_pressure_plate_02.png
