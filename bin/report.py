@@ -289,8 +289,9 @@ class ChangedFileStatus(FileStatus):
 class MissingFileStatus(FileStatus):
     def add_path(self, groups, path):
         # Any missing texture (or model) that isn't in the list of used textures (or models) isn't really missing.
-        if not (path.startswith('textures/') and path not in textures) and not (
-                path.startswith('models/') and path not in models):
+        # ... except in textures/gui, where we can't tell what's used.
+        if '/gui/' in path or (not (path.startswith('textures/') and path not in textures) and not (
+                path.startswith('models/') and path not in models)):
             super().add_path(groups, path)
 
 
