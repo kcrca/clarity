@@ -1,0 +1,11 @@
+{
+    "parent": "item/bundle",
+    "textures": {
+	"bag": "item/white_bundle",
+	"shade": "item/white_bundle_shade"
+    },
+    "gui_light": "front",
+    "overrides": [
+        { "predicate": { "filled": 0.0000001 }, "model": "item/white_bundle_filled" }
+    ]
+}
