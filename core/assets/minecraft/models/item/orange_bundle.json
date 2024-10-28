@@ -4,7 +4,6 @@
 	"bag": "item/orange_bundle",
 	"shade": "item/orange_bundle_shade"
     },
-    "gui_light": "front",
     "overrides": [
         { "predicate": { "filled": 0.0000001 }, "model": "item/orange_bundle_filled" }
     ]
