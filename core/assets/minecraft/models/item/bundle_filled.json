@@ -7,6 +7,7 @@
     },
     "elements": [
 	{
+	    "comment": "long front",
 	    "from": [ 13, 0, 0 ],
             "to": [ 13, 16, 16 ],
             "faces": {
@@ -15,6 +16,7 @@
             }
         },
 	{
+	    "comment": "long back",
 	    "from": [ 3, 0, 0 ],
             "to": [ 3, 16, 16 ],
             "faces": {
@@ -23,6 +25,7 @@
             }
         },
 	{
+	    "comment": "bottom",
 	    "from": [ 3, 0, 0 ],
             "to": [ 13, 0, 16 ],
             "faces": {
@@ -31,6 +34,7 @@
             }
         },
 	{
+	    "comment": "short front",
 	    "from": [ 3, 0, 0 ],
             "to": [ 13, 13, 0 ],
             "faces": {
@@ -39,6 +43,7 @@
             }
         },
 	{
+	    "comment": "short back",
 	    "from": [ 3, 0, 16 ],
             "to": [ 13, 13, 16 ],
             "faces": {
@@ -47,6 +52,7 @@
             }
         },
 	{
+	    "comment": "top sheet #1",
 	    "from": [ 3, 11, 0 ],
             "to": [ 8, 11, 16 ],
 	    "rotation": { "origin": [ 3, 11, 8 ], "axis": "z", "angle": 22.5, "rescale": true },
@@ -55,6 +61,7 @@
             }
         },
 	{
+	    "comment": "top sheet #1",
 	    "from": [ 8, 11, 0 ],
             "to": [ 13, 11, 16 ],
 	    "rotation": { "origin": [ 13, 11, 8 ], "axis": "z", "angle": -22.5, "rescale": true },
