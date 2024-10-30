@@ -5,7 +5,7 @@ __author__ = 'arnold'
 import glob
 import os
 
-from bin import clip
+import clip
 
 os.chdir(clip.directory('models'))
 

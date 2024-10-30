@@ -7,7 +7,6 @@ import json
 import math
 import os
 import shutil
-from pathlib import Path
 
 from PIL import Image
 
