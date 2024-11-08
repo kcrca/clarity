@@ -40,12 +40,13 @@ for img_file in images:
         h = w
         art_img = art_img.crop((0, 0, w, w))
     if h == w:
+        frames += 5 * (len(art_imgs),)
         art_imgs.append((img_file, (w, h), art_img))
         max_size = max(w, h, max_size)
 
 art_imgs.sort(key=lambda desc: (desc[1], desc[0]))
 
-item_img = Image.new('RGBA', (max_size, max_size * len(images)), (0, 0, 0, 0))
+item_img = Image.new('RGBA', (max_size, max_size * len(art_imgs)), (0, 0, 0, 0))
 for i in range(0, len(art_imgs)):
     # scale image up to max size
     img_file, size, art_img = art_imgs[i]
@@ -57,8 +58,6 @@ for i in range(0, len(art_imgs)):
     placement = [int((max_size - v) / 2) for v in art_size]
     item_img.paste(art_img, (placement[0], placement[1] + i * max_size))
     # put in the frame multiple time so animation interpolation only happens part of the time
-    for j in range(0, 5):
-        frames.append(i)
 
 item_img.save(texture, optimize=True)
 
