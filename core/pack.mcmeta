@@ -1,6 +1,6 @@
 {
   "pack": {
-    "pack_format": 42,
+    "pack_format": 44,
     "description": "Clarity's internal core source"
   }
 }
