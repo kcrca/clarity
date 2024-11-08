@@ -1,6 +1,7 @@
 {
     "parent": "item/combo_minecart",
     "textures": {
+        "particle": "block/tnt_side",
         "block_bottom": "block/tnt_bottom",
         "block_top": "block/tnt_top",
         "block_front": "block/tnt_side",
