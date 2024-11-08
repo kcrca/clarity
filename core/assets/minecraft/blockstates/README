@@ -1,5 +1,0 @@
-Override normal blockstates for sand to force the textures to all align no
-matter the block orienation, which is needed for the pattern to look uniform in
-a sea of sand in all texture packs, and for the connected texture pack look (the
-ctm stuff doesn't take block orientation into account, so they all have to be
-the same for it to work).
