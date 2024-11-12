@@ -1,10 +1,9 @@
 {
     "parent": "item/bundle",
     "textures": {
-	"bag": "item/light_gray_bundle",
-	"shade": "item/light_gray_bundle_shade"
-    },
-    "overrides": [
-        { "predicate": { "filled": 0.0000001 }, "model": "item/light_gray_bundle_filled" }
-    ]
+	"front": "item/light_gray_bundle_front",
+	"side": "item/light_gray_bundle_side",
+	"top": "item/light_gray_bundle_top",
+	"bottom": "item/light_gray_bundle_bottom"
+    }
 }

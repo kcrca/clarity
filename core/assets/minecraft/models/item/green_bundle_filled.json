@@ -1,8 +1,0 @@
-{
-    "parent": "item/bundle_filled",
-    "textures": {
-	"bag": "item/green_bundle",
-	"shade": "item/green_bundle_shade",
-	"sheet": "block/white_concrete"
-    }
-}

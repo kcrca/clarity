@@ -1,3 +1,9 @@
 {
-    "parent": "item/bundle_open_back"
+    "parent": "item/bundle_open_back",
+    "textures": {
+	"front": "item/brown_bundle_front",
+	"side": "item/brown_bundle_side",
+	"top": "item/brown_bundle_top",
+	"bottom": "item/brown_bundle_bottom"
+    }
 }
