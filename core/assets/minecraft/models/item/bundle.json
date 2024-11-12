@@ -1,6 +1,7 @@
 {
     "parent": "block/block",
     "textures": {
+	"particle": "item/bundle",
 	"bag": "item/bundle",
 	"shade": "item/bundle_shade"
     },

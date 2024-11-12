@@ -1,6 +1,7 @@
 {
     "parent": "item/bundle",
     "textures": {
+	"particle": "item/bundle",
 	"bag": "item/bundle",
 	"shade": "item/bundle_shade",
 	"sheet": "block/white_concrete"
