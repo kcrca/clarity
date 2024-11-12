@@ -1,44 +1,7 @@
 {
     "parent": "item/bundle_open_front",
     "textures": {
-	"bag": "item/bundle",
-	"shade": "item/bundle_shade",
-	"sheet": "block/white_concrete"
-    },
-    "display": {
-        "gui": {
-            "rotation": [ 30, 225, 0 ],
-            "translation": [ 0, -8, 1.5],
-            "scale":[ 0.9, 0.9, 0.9 ]
-        }
-    },
-    "elements": [
-	{
-	    "comment": "long back",
-	    "from": [ -16, 0, 0 ],
-            "to": [ -16, 16, 16 ],
-            "faces": {
-                "west":  { "texture": "#bag" },
-                "east":  { "texture": "#shade" }
-            }
-        },
-	{
-	    "comment": "bottom",
-	    "from": [ -16, 0, 0 ],
-            "to": [ 0, 0, 16 ],
-            "faces": {
-                "up":  { "texture": "#shade", "uv": [11, 11, 16, 16] },
-                "down":  { "texture": "#shade", "uv": [11, 11, 16, 16] }
-            }
-        },
-	{
-	    "comment": "short back",
-	    "from": [ -16, 0, 16 ],
-            "to": [ 0, 13, 16 ],
-            "faces": {
-                "north":  { "texture": "#shade", "uv": [11, 11, 16, 16] },
-                "south":  { "texture": "#shade", "uv": [11, 11, 16, 16] }
-            }
-        }
-    ]
+	"bag": "item/brown_bundle",
+	"shade": "item/brown_bundle_shade"
+    }
 }

@@ -1,13 +1,9 @@
 {
-    "parent": "block/block",
     "textures": {
 	"particle": "item/bundle",
 	"bag": "item/bundle",
 	"shade": "item/bundle_shade"
     },
-    "overrides": [
-        { "predicate": { "filled": 0.0000001 }, "model": "item/bundle_filled" }
-    ],
     "elements": [
 	{
 	    "from": [ 8.3, 0, 0 ],
