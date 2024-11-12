@@ -1,6 +1,7 @@
 {
     "parent": "item/sheet",
     "textures": {
+        "particle": "block/kelp_plant",
         "layer0": "block/kelp_plant"
     }
 }

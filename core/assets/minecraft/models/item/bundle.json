@@ -1,5 +1,4 @@
 {
-    "parent": "block/block",
     "textures": {
 	"front": "item/bundle_front",
 	"side": "item/bundle_side",
