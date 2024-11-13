@@ -3,13 +3,11 @@
 __author__ = 'arnold'
 
 import glob
-import os
 
 import clip
 
-os.chdir(clip.directory('models'))
-
-for f in glob.glob('*/cyan_*.json'):
+for f in glob.glob(f'{clip.directory("models")}*/cyan_*.json') + glob.glob(
+        f'{clip.directory("minecraft")}/items/cyan_*.json'):
     with open(f) as src_file:
         src = src_file.read()
         for c in clip.colors:
@@ -19,4 +17,3 @@ for f in glob.glob('*/cyan_*.json'):
             contents = src.replace('cyan', c)
             with  open(path, 'w') as dst_file:
                 dst_file.write(contents)
-
