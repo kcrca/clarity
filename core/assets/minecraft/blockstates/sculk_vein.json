@@ -1,10 +1,10 @@
 {
   "multipart": [
-    { "when": { "down":  "true" }, "apply": { "model": "minecraft:block/sculk_vein", "x":  90, "uvlock": true } },
-    { "when": { "east":  "true" }, "apply": { "model": "minecraft:block/sculk_vein", "y":  90, "uvlock": true } },
-    { "when": { "north": "true" }, "apply": { "model": "minecraft:block/sculk_vein" } },
-    { "when": { "south": "true" }, "apply": { "model": "minecraft:block/sculk_vein", "y": 180, "uvlock": true } },
-    { "when": { "up":    "true" }, "apply": { "model": "minecraft:block/sculk_vein", "x": 270, "uvlock": true } },
-    { "when": { "west":  "true" }, "apply": { "model": "minecraft:block/sculk_vein", "y": 270, "uvlock": true } }
+    { "when": { "down":  true }, "apply": { "model": "minecraft:block/sculk_vein", "x":  90, "uvlock": true } },
+    { "when": { "east":  true }, "apply": { "model": "minecraft:block/sculk_vein", "y":  90, "uvlock": true } },
+    { "when": { "north": true }, "apply": { "model": "minecraft:block/sculk_vein" } },
+    { "when": { "south": true }, "apply": { "model": "minecraft:block/sculk_vein", "y": 180, "uvlock": true } },
+    { "when": { "up":    true }, "apply": { "model": "minecraft:block/sculk_vein", "x": 270, "uvlock": true } },
+    { "when": { "west":  true }, "apply": { "model": "minecraft:block/sculk_vein", "y": 270, "uvlock": true } }
   ]
 }
