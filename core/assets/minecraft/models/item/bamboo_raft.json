@@ -2,6 +2,7 @@
 	"credit": "Made with Blockbench",
 	"parent": "block/block",
 	"textures": {
+		"particle": "item/bamboo_raft",
 		"raft": "item/bamboo_raft"
 	},
 	"elements": [

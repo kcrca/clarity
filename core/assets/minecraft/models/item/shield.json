@@ -1,4 +1,7 @@
 {
+    "textures": {
+        "particle": "block/dark_oak_planks"
+    },
     "display": {
         "gui": {
             "rotation": [ 15, -25, -5 ],
