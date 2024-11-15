@@ -1,4 +1,7 @@
 {
+    "textures": {
+	"particle": "#layer0"
+    },
     "display": {
         "gui": {
             "rotation": [ 0, 0, 0 ],

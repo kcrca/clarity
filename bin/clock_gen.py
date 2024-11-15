@@ -128,7 +128,7 @@ for i in range(0, ticks + 1):
     overrides.append({
         "model": {
             "type": "minecraft:model",
-            "model": f"minecraft:item/clock/clock_{i:03d}"
+            "model": f"minecraft:item/clock/clock_{i % ticks:03d}"
         },
         "threshold": at_time_frac
     })
