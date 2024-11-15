@@ -2026,6 +2026,7 @@
             }
         ],
         "property": "minecraft:time",
+	"wobble": false,
         "scale": 1.0,
         "type": "minecraft:range_dispatch"
     }
