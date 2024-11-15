@@ -1,2 +1,30 @@
 {
+    "parent": "block/block",
+    "textures": {
+	"side": "item/bundle_side",
+	"particle": "#side"
+    },
+    "elements": [
+	{
+	    "from": [ 0, 0, 0 ],
+            "to": [ 16, 0, 16 ],
+            "faces": {
+                "up":    { "texture": "#side", "uv": [0, 0, 1, 1]}
+            }
+        },
+	{
+	    "from": [ 0, 0, 16 ],
+            "to": [ 16, 13, 16 ],
+            "faces": {
+                "north":    { "texture": "#side" }
+            }
+        },
+	{
+	    "from": [ 0, 0, 0 ],
+            "to": [ 0, 13, 16 ],
+            "faces": {
+                "east":    { "texture": "#side" }
+            }
+        }
+    ]
 }
