@@ -1,5 +1,6 @@
 {
     "textures": {
+	"particle": "block/kelp_top",
 	"crown": "block/kelp_top"
     },
     "elements": [
