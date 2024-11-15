@@ -1,9 +1,11 @@
 {
+    "parent": "block/block",
     "textures": {
 	"front": "item/bundle_front",
 	"side": "item/bundle_side",
 	"top": "item/bundle_top",
-	"bottom": "item/bundle_bottom"
+	"bottom": "item/bundle_bottom",
+	"particle": "#top"
     },
     "elements": [
 	{
