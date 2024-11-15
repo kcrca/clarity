@@ -1,1 +1,5 @@
-{}
+{
+    "textures": {
+	"particle": "item/bundle_side"
+    }
+}
