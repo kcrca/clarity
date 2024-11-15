@@ -125,7 +125,13 @@ for i in range(0, ticks + 1):
     at_time_frac = day_frac
     if i > 0:
         at_time_frac -= half_tick_fraction
-    overrides.append({"predicate": {"time": at_time_frac}, "model": model})
+    overrides.append({
+        "model": {
+            "type": "minecraft:model",
+            "model": f"minecraft:item/clock/clock_{i:03d}"
+        },
+        "threshold": at_time_frac
+    })
     if i < ticks:
         # no need to write the image when i >= ticks since we already have
         tick_img = blank_img.copy()
@@ -141,11 +147,12 @@ for i in range(0, ticks + 1):
             }
         }, f, indent=4, sort_keys=True)
 
-with open('models/item/clock.json', 'w') as f:
+with open('items/clock.json', 'w') as f:
     json.dump({
-        "parent": out_parent,
-        "textures": {
-            "layer0": "item/clock/clock_%0*d" % (tick_digit_cnt, 0)
-        },
-        "overrides": overrides
+        "model": {
+            "type": "minecraft:range_dispatch",
+            "entries": overrides,
+            "property": "minecraft:time",
+            "scale": 1.0
+        }
     }, f, indent=4, sort_keys=True)
