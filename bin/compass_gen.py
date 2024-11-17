@@ -6,14 +6,10 @@
 
 __author__ = 'arnold'
 
-import json
 import math
-import os
-import shutil
 
 import numpy as np
-from PIL import Image, ImageColor
-from PIL import ImageDraw
+from PIL import Image, ImageColor, ImageDraw
 
 import clip
 
@@ -44,7 +40,6 @@ coords = [N_POINT, L_MID_POINT, S_POINT, R_MID_POINT, REC_L_MID_POINT, REC_S_POI
 PER_TICK_ROT = -2 * math.pi / TICKS
 
 model_dir = clip.directory('models')
-os.chdir(model_dir)
 img_dir = clip.directory('textures', 'item')
 
 overrides = []
@@ -93,36 +88,14 @@ for i in range(0, TICKS):
 
     day_frac = i * TICK_FRACTION
 
-    model = 'item/compass/compass_%0*d' % (TICK_DIGIT_COUNT, i % TICKS)
-    json_path = model + '.json'
-    angle_frac = day_frac
-    if i > 0:
-        angle_frac -= HALF_TICK_FRACTION
-    overrides.append({"predicate": {"angle": angle_frac}, "model": model})
-
     display = {
         "rotation": [-20, -35, 0],
         "translation": FP_TRANSLATION,
         "scale": FP_SCALE
     }
-    with open(json_path, 'w') as f:
-        json.dump({
-            "parent": "item/base_compass",
-            "textures": {
-                "layer0": "item/compass_%0*d" % (TICK_DIGIT_COUNT, i % TICKS)
-            },
-            "display": {
-                "firstperson_righthand": display,
-                "firstperson_lefthand": display
-            }
-        }, f, indent=4, sort_keys=True)
+
 
 # Now generate the primary model file that lists all the overrides generated above.
-with open('item/compass.json', 'w') as f:
-    json.dump({
-        "parent": "item/base_compass",
-        "overrides": overrides
-    }, f, indent=4, sort_keys=True)
 
 
 # noinspection PyUnusedLocal
@@ -130,10 +103,3 @@ def to_recovery(src, dst=None):
     old_text = open(src, 'r').read()
     new_text = old_text.replace('compass', 'recovery_compass')
     open(src.replace('compass', 'recovery_compass'), 'w').write(new_text)
-
-
-# Recovery compass models are just modified compass ones
-to_recovery("item/compass.json")
-to_recovery("item/base_compass.json")
-shutil.rmtree("item/recovery_compass", ignore_errors=True)
-shutil.copytree("item/compass", "item/recovery_compass", copy_function=to_recovery)
