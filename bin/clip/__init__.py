@@ -46,6 +46,7 @@ def directory(name, *args, **kwargs) -> str:
         'top': '',
         'textures': 'core/assets/minecraft/textures',
         'blockstates': 'core/assets/minecraft/blockstates',
+        'items': 'core/assets/minecraft/items',
         'models': "core/assets/minecraft/models",
         'minecraft': "core/assets/minecraft",
         'site': 'site',

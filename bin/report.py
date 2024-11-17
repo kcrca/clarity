@@ -18,36 +18,31 @@ status_by_name = {}
 
 
 def orphans():
-    def find_models(data):
+    def find_models(data)->set:
+        models = set()
         if data is None:
-            return []
-        if isinstance(data, list):
-            models = []
+            pass
+        elif isinstance(data, list):
             for member in data:
-                models += find_models(member)
-            return models
-        if isinstance(data, dict):
-            try:
-                return data['model'],
-            except KeyError:
-                pass
-            models = []
+                models.update(find_models(member))
+        elif isinstance(data, dict):
+            if 'model' in data and isinstance(data['model'], str):
+                models.add(data['model'])
             for key in data:
-                models += find_models(data[key])
-            return models
-        return []
+                models.update(find_models(data[key]))
+        return models
 
-    def find_textures(data):
-        textures = []
+    def find_textures(data)->set:
+        textures = set()
         try:
             textures_block = data['textures']
             for texture_name in textures_block:
-                textures.append(path_part(textures_block[texture_name]))
+                textures.add(path_part(textures_block[texture_name]))
         except KeyError:
             pass
         return textures
 
-    def models_for(state):
+    def models_for(state)->set:
         return find_models(state)
 
     def path_part(model_name):
@@ -82,35 +77,37 @@ def orphans():
         except KeyError:
             pass
 
-    subpath_re = re.compile(r'([^/]+/[^/]+)\.[a-z]+$')
-    blockstates = {}
+    subpath_re = re.compile(r'((item|block)/.*)\.[a-z]+$')
+    roots = {}
+    root_names = {'blockstates': 'block', 'items': 'item'}
     models = {}
     unused_models = {}
-    # First we pull in all the models for the blocks, using the blockstates files as the roots of the tree.
-    for file in glob.glob('%s/*.json' % clip.directory('defaults', 'blockstates')):
-        with open(file) as fp:
-            blockstates[os.path.basename(file)] = json.load(fp)
-    for file in glob.glob('%s/*.json' % clip.directory('blockstates')):
-        with open(file) as fp:
-            blockstates[os.path.basename(file)] = json.load(fp)
+    # First we pull in all the models for the blocks, using the blockstates and items files as the roots of the tree.
+    # We overwrite any info from the default models with our own.
+    for root, base in root_names.items():
+        for file in glob.glob('%s/*.json' % clip.directory('defaults', root)):
+            path = f'{base}/{os.path.basename(file)}'
+            with open(file) as fp:
+                roots[path] = json.load(fp)
+        for file in glob.glob('%s/*.json' % clip.directory(root)):
+            path = f'{base}/{os.path.basename(file)}'
+            with open(file) as fp:
+                roots[path] = json.load(fp)
     # Find all of our own models, and store them as possibly unused
-    for file in glob.glob('%s/block/*.json' % clip.directory('models')):
-        model_name = subpath_re.search(file).group(1)
+    for file in glob.glob('%s/**/*.json' % clip.directory('models'), recursive=True):
+        m = subpath_re.search(file)
+        model_name = m.group(1)
         unused_models[model_name] = True
-    for block_name in blockstates:
-        block = blockstates[block_name]
-        for model_name in models_for(block):
+    for root in roots:
+        model = roots[root]
+        used_models = models_for(model)
+        for model_name in used_models:
             model_name = path_part(model_name)
             try:
                 del unused_models[model_name]
             except KeyError:
                 pass
             import_model(model_name)
-    # Next we look at all the items
-    for file in glob.glob('%s/item/*.json' % clip.directory('models')) + glob.glob(
-            '%s/item/*.json' % clip.directory('defaults', 'models')):
-        model_name = subpath_re.search(file).group(1)
-        import_model(model_name)
     # Now lets look for unused textures
     textures = set()
     unused_textures = set()
