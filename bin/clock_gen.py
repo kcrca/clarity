@@ -147,12 +147,25 @@ for i in range(0, ticks + 1):
             }
         }, f, indent=4, sort_keys=True)
 
+dispatch = {
+    "model": {
+        "type": "minecraft:range_dispatch",
+        "entries": overrides,
+        "property": "minecraft:time",
+        "scale": 64.0,
+        "source": "daytime"
+    },
+    "when": "minecraft:overworld"
+}
+fallback = dispatch["model"]
+fallback["source"] = "random"
+model = {
+    "model": {
+        "type": "minecraft:select",
+        "property": "minecraft:context_dimension",
+        "cases": [dispatch],
+        "fallback": dispatch["model"],
+    }
+}
 with open('items/clock.json', 'w') as f:
-    json.dump({
-        "model": {
-            "type": "minecraft:range_dispatch",
-            "entries": overrides,
-            "property": "minecraft:time",
-            "scale": 1.0
-        }
-    }, f, indent=4, sort_keys=True)
+    json.dump(model, f, indent=4, sort_keys=True)
