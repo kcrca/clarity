@@ -2,7 +2,7 @@
     "parent": "block/block",
     "ambientocclusion": false,
     "textures": {
-        "particle": "#sides"
+        "particle": "block/amethyst_block"
     },
     "elements": [
         {   "from": [ 0.75, 0.75, 8 ],
