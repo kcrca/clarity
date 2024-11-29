@@ -1,18 +1,13 @@
 #!/usr/bin/env python3
 from pathlib import Path
 
-from PIL import ImageOps, ImageColor
+from PIL import ImageColor
 
 from clip import *
 
 
-# This program generates the item images for the daylight detector. It reads the model files
-# for each detector state, grabs its block image, and pastes that into the image file for the item. This creates an
-# animation with a frame per state. (This is only required for the daylight detector because the daylight detector
-# inverted is never in an "item" state, it only exists in the real world as a modified daylight detector.)
-#
-# The creation of the .mcmeta file is left to the user.
-
+# This program generates the item images for the note blocks. We use flats instead of sharps because they are narrower;
+# the sharps just look too big.
 
 def colorize(img, color_hex):
     color = ImageColor.getcolor("#%06xff" % color_hex, 'RGBA')
@@ -26,9 +21,11 @@ def colorize(img, color_hex):
 
 
 LINE_POS_SRC_X = 46
-NOTE_POS_SRC_X = 27
+NOTE1_POS_SRC_X = 27
+FLAT_POS_SRC_X = 23
 ON_COLOR = 0xe2b398
 HEIGHT_BASE = 15
+NOTE_WIDTH = 19
 
 LINE_POS_X = 23
 
@@ -44,16 +41,20 @@ names_dst_path = str(Path(blocks) / 'note_block')
 staff_img = Image.open(os.path.join(blocks, 'note_block_staff.png')).convert('RGBA')
 size = staff_img.size[0]
 notation_img = Image.open(os.path.join(blocks, 'note_block_note.png')).convert('RGBA')
-flat = notation_img.crop((0, 0, NOTE_POS_SRC_X, size))
-note = notation_img.crop((NOTE_POS_SRC_X, 0, LINE_POS_SRC_X, size))
+flat = notation_img.crop((FLAT_POS_SRC_X, 0, NOTE1_POS_SRC_X, size))
+note1 = notation_img.crop((NOTE1_POS_SRC_X, 0, NOTE1_POS_SRC_X + NOTE_WIDTH, size))
+note2 = notation_img.crop((0, 0, NOTE_WIDTH, size))
 line = notation_img.crop((LINE_POS_SRC_X, 0, size, size))
-note_on = colorize(note, ON_COLOR)
+note_on1 = colorize(note1, ON_COLOR)
+note_on2 = colorize(note2, ON_COLOR)
 flat_on = colorize(flat, ON_COLOR)
 height = -1
 was_flat = False
 note_adj = 0
 flat_adj = 0
 no_flats = (6, 11, 18, 23)
+note = note1
+note_on = note_on1
 
 for i in range(0, 25):
     img = staff_img.copy()
@@ -61,11 +62,11 @@ for i in range(0, 25):
     img.paste(name_img, (5, size - 6 - name_img.size[1]), name_img)
 
     # Adjust for when the note flips upside down
-    if i == 14:
-        note = ImageOps.flip(note)
-        note_on = ImageOps.flip(note_on)
+    if i == 16:
+        note = note2
+        note_on = note_on2
         note_adj = 17
-        flat_adj = 6
+        flat_adj = 0
 
     # Place the below-clef lines
     if i < 7:
@@ -77,12 +78,12 @@ for i in range(0, 25):
     # Change the height when needed, then place the note itself
     if not was_flat:
         height += 3
-    note_pos = (NOTE_POS_SRC_X, HEIGHT_BASE - height + note_adj)
+    note_pos = (NOTE1_POS_SRC_X, HEIGHT_BASE - height + note_adj)
     img.paste(note, note_pos, note)
     img_on.paste(note_on, note_pos, note_on)
 
     if i not in no_flats and not was_flat:
-        flat_pos = (0, (HEIGHT_BASE - height + flat_adj))
+        flat_pos = (FLAT_POS_SRC_X, (HEIGHT_BASE - height + flat_adj))
         img.paste(flat, flat_pos, flat)
         img_on.paste(flat_on, flat_pos, flat_on)
         was_flat = True
