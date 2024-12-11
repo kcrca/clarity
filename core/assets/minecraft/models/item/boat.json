@@ -32,8 +32,12 @@
             "scale": [ 0.40, 0.40, 0.40 ]
         }
     },
+    "comment": "In a regular boat the chest is just invisible",
     "textures": {
-        "particle": "#wood"
+        "particle": "#wood",
+        "chest_top": "block/transparent",
+        "chest_side": "#chest_top",
+        "chest_front": "#chest_top"
     },
     "elements": [
         {   "from": [ -2, 0, 0 ],
@@ -91,8 +95,8 @@
                 "east": { "uv": [ 0, 0, 1, 1 ], "texture": "#wood" }
 	    }
         },
-	{   "from": [ 5.25, 10.25, -8 ],
-            "to": [ 6.75, 11.75, 3 ],
+	{   "from": [ 8.25, 10.25, -8 ],
+            "to": [ 9.75, 11.75, 3 ],
 	    "rotation": { "origin": [ 8, 12.5, 0 ], "axis": "x", "angle": -45 },
             "faces": {
                 "down":  { "uv": [ 1, 1, 2, 2 ], "texture": "#wood" },
@@ -103,8 +107,8 @@
                 "north": { "uv": [ 1, 1, 2, 2 ], "texture": "#wood" }
 	    }
         },
-	{   "from": [ 5.5, 8.5, -13 ],
-            "to": [ 6.5, 13.5, -8 ],
+	{   "from": [ 8.5, 8.5, -13 ],
+            "to": [ 9.5, 13.5, -8 ],
 	    "rotation": { "origin": [ 8, 12.5, 0 ], "axis": "x", "angle": -45 },
             "faces": {
                 "down":  { "uv": [ 0, 0, 10, 8 ], "texture": "#wood" },
@@ -115,8 +119,8 @@
                 "north": { "uv": [ 0, 0, 8, 4 ], "texture": "#wood" }
 	    }
         },
-	{   "from": [ 5.25, 10.25, 13 ],
-            "to": [ 6.75, 11.75, 24 ],
+	{   "from": [ 8.25, 10.25, 13 ],
+            "to": [ 9.75, 11.75, 24 ],
 	    "rotation": { "origin": [ 8, 12.5, 16 ], "axis": "x", "angle": 45 },
             "faces": {
                 "down":  { "uv": [ 1, 1, 2, 2 ], "texture": "#wood" },
@@ -127,8 +131,8 @@
                 "north": { "uv": [ 1, 1, 2, 2 ], "texture": "#wood" }
 	    }
         },
-	{   "from": [ 5.5, 8.5, 24 ],
-            "to": [ 6.5, 13.5, 29 ],
+	{   "from": [ 8.5, 8.5, 24 ],
+            "to": [ 9.5, 13.5, 29 ],
 	    "rotation": { "origin": [ 8, 12.5, 16 ], "axis": "x", "angle": 45 },
             "faces": {
                 "down":  { "uv": [ 0, 0, 10, 8 ], "texture": "#wood" },
@@ -137,6 +141,16 @@
                 "west":  { "uv": [ 9, 0, 10, 4 ], "texture": "#wood" },
                 "south": { "uv": [ 0, 4, 8, 8 ], "texture": "#wood" },
                 "north": { "uv": [ 0, 0, 8, 4 ], "texture": "#wood" }
+	    }
+        },
+	{   "from": [ -0.75, 2, 4.0 ],
+            "to": [ 7.1, 12, 13.0 ],
+            "faces": {
+                "up":    { "uv": [ 0, 0, 16, 16 ], "texture": "#chest_top" },
+                "north": { "uv": [ 0, 0, 16, 16 ], "texture": "#chest_side" },
+                "west":  { "uv": [ 0, 0, 16, 16 ], "texture": "#chest_side" },
+                "south":  { "uv": [ 0, 0, 16, 16 ], "texture": "#chest_side" },
+                "east":  { "uv": [ 0, 0, 16, 16 ], "texture": "#chest_front" }
 	    }
         }
     ]
