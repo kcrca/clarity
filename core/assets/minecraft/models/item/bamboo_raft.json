@@ -10,6 +10,7 @@
 	},
 	"elements": [
 		{
+			"comment": "bottom",
 			"from": [-2, 1, 1.5],
 			"to": [18, 3, 14.5],
 			"faces": {
@@ -22,6 +23,7 @@
 			}
 		},
 		{
+			"comment": "left oar handle",
 			"from": [7.25, 7.25, -8],
 			"to": [8.75, 8.75, 3],
 			"rotation": {"angle": -45, "axis": "x", "origin": [8, 9.5, 0]},
@@ -35,6 +37,7 @@
 			}
 		},
 		{
+			"comment": "left oar blade",
 			"from": [7.5, 5.5, -13],
 			"to": [8.5, 10.5, -8],
 			"rotation": {"angle": -45, "axis": "x", "origin": [8, 9.5, 0]},
@@ -48,6 +51,7 @@
 			}
 		},
 		{
+			"comment": "right oar handle",
 			"from": [7.25, 7.25, 13],
 			"to": [8.75, 8.75, 24],
 			"rotation": {"angle": 45, "axis": "x", "origin": [8, 9.5, 16]},
@@ -61,6 +65,7 @@
 			}
 		},
 		{
+			"comment": "right oar blade",
 			"from": [7.5, 5.5, 24],
 			"to": [8.5, 10.5, 29],
 			"rotation": {"angle": 45, "axis": "x", "origin": [8, 9.5, 16]},
@@ -74,6 +79,7 @@
 			}
 		},
 		{
+			"comment": "chest",
 			"from": [-2, 3, 4],
 			"to": [5.85, 11, 13],
 			"faces": {
