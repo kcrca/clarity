@@ -2029,9 +2029,10 @@
                         }
                     ],
                     "property": "minecraft:time",
-                    "scale": 64.0,
-                    "source": "random",
-                    "type": "minecraft:range_dispatch"
+                    "scale": 1.0,
+                    "source": "daytime",
+                    "type": "minecraft:range_dispatch",
+                    "wobble": false
                 },
                 "when": "minecraft:overworld"
             }
@@ -4063,9 +4064,10 @@
                 }
             ],
             "property": "minecraft:time",
-            "scale": 64.0,
+            "scale": 1.0,
             "source": "random",
-            "type": "minecraft:range_dispatch"
+            "type": "minecraft:range_dispatch",
+            "wobble": false
         },
         "property": "minecraft:context_dimension",
         "type": "minecraft:select"

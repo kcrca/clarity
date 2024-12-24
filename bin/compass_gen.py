@@ -6,7 +6,10 @@
 
 __author__ = 'arnold'
 
+import glob
+import json
 import math
+import os
 
 import numpy as np
 from PIL import Image, ImageColor, ImageDraw
@@ -39,7 +42,7 @@ coords = [N_POINT, L_MID_POINT, S_POINT, R_MID_POINT, REC_L_MID_POINT, REC_S_POI
 
 PER_TICK_ROT = -2 * math.pi / TICKS
 
-model_dir = clip.directory('models')
+model_dir = clip.directory('models', 'item')
 img_dir = clip.directory('textures', 'item')
 
 overrides = []
@@ -85,6 +88,8 @@ for i in range(0, TICKS):
 
     arrow_image("#f00f", "#000f").save('%s/compass_%0*d.png' % (img_dir, TICK_DIGIT_COUNT, i))
     arrow_image("#009295", "#29dfeb").save('%s/recovery_compass_%0*d.png' % (img_dir, TICK_DIGIT_COUNT, i))
+    with open(f'{model_dir}/compass_{i:02d}.json', 'w') as fp:
+        json.dump({'parent': 'item/flat_clock', 'textures': {'layer0': f'item/compass_{i:02d}'}}, fp, indent=2)
 
     day_frac = i * TICK_FRACTION
 
@@ -95,11 +100,16 @@ for i in range(0, TICKS):
     }
 
 
-# Now generate the primary model file that lists all the overrides generated above.
-
-
 # noinspection PyUnusedLocal
 def to_recovery(src, dst=None):
     old_text = open(src, 'r').read()
     new_text = old_text.replace('compass', 'recovery_compass')
     open(src.replace('compass', 'recovery_compass'), 'w').write(new_text)
+
+
+# Recovery compass models are just modified compass ones
+for f in glob.glob(f'{model_dir}/recovery_compass*.json'):
+    os.remove(f)
+
+for f in glob.glob(f'{model_dir}/compass*.json'):
+    to_recovery(f, f.replace('compass', 'recovery_compass'))

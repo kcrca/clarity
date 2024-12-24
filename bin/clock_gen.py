@@ -152,19 +152,20 @@ dispatch = {
         "type": "minecraft:range_dispatch",
         "entries": overrides,
         "property": "minecraft:time",
-        "scale": 64.0,
-        "source": "daytime"
+        "scale": 1.0,
+        "source": "daytime",
+        "wobble": False,
     },
     "when": "minecraft:overworld"
 }
-fallback = dispatch["model"]
+fallback = dispatch["model"].copy()
 fallback["source"] = "random"
 model = {
     "model": {
         "type": "minecraft:select",
         "property": "minecraft:context_dimension",
         "cases": [dispatch],
-        "fallback": dispatch["model"],
+        "fallback": fallback,
     }
 }
 with open('items/clock.json', 'w') as f:
