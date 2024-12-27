@@ -101,15 +101,14 @@ for i in range(0, TICKS):
 
 
 # noinspection PyUnusedLocal
-def to_recovery(src, dst=None):
-    old_text = open(src, 'r').read()
-    new_text = old_text.replace('compass', 'recovery_compass')
-    open(src.replace('compass', 'recovery_compass'), 'w').write(new_text)
 
 
 # Recovery compass models are just modified compass ones
 for f in glob.glob(f'{model_dir}/recovery_compass*.json'):
     os.remove(f)
 
-for f in glob.glob(f'{model_dir}/compass*.json'):
-    to_recovery(f, f.replace('compass', 'recovery_compass'))
+for src in glob.glob(f'{model_dir}/compass*.json'):
+    dst = src.replace('compass', 'recovery_compass')
+    old_text = open(src, 'r').read()
+    new_text = old_text.replace('compass', 'recovery_compass')
+    open(src.replace('compass', 'recovery_compass'), 'w').write(new_text)
