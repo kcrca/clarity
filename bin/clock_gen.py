@@ -165,8 +165,6 @@ dispatch = {
     },
     "when": "minecraft:overworld"
 }
-# fallback = dispatch["model"].copy()
-# fallback["source"] = "random"
 model = {
     "model": {
         "type": "minecraft:select",
