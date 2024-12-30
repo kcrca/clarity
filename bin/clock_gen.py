@@ -64,10 +64,11 @@ for x in range(0, digits_img.size[0]):
 
 digit_imgs = {}
 colon_img = None
-for i in range(0, 10):
+for i in range(0, 11):
     x, y = (digit_start[0] + i * digit_size[0], digit_start[1])
-    digit_imgs[str(i)] = digits_img.crop((x, y, x + digit_size[0], y + digit_size[1]))
-    if i == 9:
+    name = str(i) if i < 10 else '?'
+    digit_imgs[name] = digits_img.crop((x, y, x + digit_size[0], y + digit_size[1]))
+    if i == 10:
         x += digit_size[0]
         colon_img = digits_img.crop((x, y, x + colon_width, y + digit_size[1]))
 
@@ -101,8 +102,7 @@ blank_img = Image.new('RGBA', (face_dim, face_dim), color=out_colors[0])
 blank_img.paste(colon_img, colon_pos)
 
 
-def write_digits(tick_img, num, at, draw_init_zero):
-    num_str = '%02d' % num
+def write_digits(tick_img, num_str, at, draw_init_zero):
     if num_str[0] != '0' or draw_init_zero:
         tick_img.paste(digit_imgs[num_str[0]], at)
     tick_img.paste(digit_imgs[num_str[1]], (at[0] + digit_size[0], at[1]))
@@ -110,36 +110,43 @@ def write_digits(tick_img, num, at, draw_init_zero):
 
 overrides = []
 
-for i in range(0, ticks + 1):
+
+for i in range(-1, ticks + 1):
     day_frac = i * tick_fraction
     total_minutes = round(minutes_per_day * day_frac)
     hrs = (int(total_minutes / 60) + 12) % 24
     mins = total_minutes % 60
     # print "%d: %2d:%02d %f (%d)" % (i, hrs, mins, day_frac, round(day_frac * 24000))
 
-    name = 'clock_%0*d' % (tick_digit_cnt, i % ticks)
+    name = 'clock_%0*d' % (tick_digit_cnt, i % ticks) if i >=0 else 'clock_unk'
     texture = 'item/clock/%s' % name
     png_path = texture + '.png'
     model = 'item/clock/%s' % name
     json_path = model + '.json'
-    at_time_frac = day_frac
-    if i > 0:
-        at_time_frac -= half_tick_fraction
-    overrides.append({
-        "model": {
-            "type": "minecraft:model",
-            "model": f"minecraft:item/clock/clock_{i % ticks:03d}"
-        },
-        "threshold": at_time_frac
-    })
+    if i >= 0:
+        at_time_frac = day_frac
+        if i > 0:
+            at_time_frac -= half_tick_fraction
+        overrides.append({
+            "model": {
+                "type": "minecraft:model",
+                "model": f"minecraft:item/clock/clock_{i % ticks:03d}"
+            },
+            "threshold": at_time_frac
+        })
     if i < ticks:
         # no need to write the image when i >= ticks since we already have
         tick_img = blank_img.copy()
-        write_digits(tick_img, hrs, digit_pos[0], False)
-        write_digits(tick_img, mins, digit_pos[2], True)
+        if i < 0:
+            write_digits(tick_img, '??', digit_pos[0], False)
+            write_digits(tick_img, '??', digit_pos[2], True)
+        else:
+            write_digits(tick_img, '%02d' % hrs, digit_pos[0], False)
+            write_digits(tick_img, '%02d' % mins, digit_pos[2], True)
         tick_img.save('textures/%s' % png_path, optimize=True)
 
-    with open('models/%s' % json_path, 'w') as f:
+    path = 'models/%s' % json_path
+    with open(path, 'w') as f:
         json.dump({
             "parent": out_parent,
             "textures": {
@@ -158,14 +165,17 @@ dispatch = {
     },
     "when": "minecraft:overworld"
 }
-fallback = dispatch["model"].copy()
-fallback["source"] = "random"
+# fallback = dispatch["model"].copy()
+# fallback["source"] = "random"
 model = {
     "model": {
         "type": "minecraft:select",
         "property": "minecraft:context_dimension",
         "cases": [dispatch],
-        "fallback": fallback,
+        "fallback": {
+            "model": "item/clock/clock_unk",
+            "type": "model",
+        },
     }
 }
 with open('items/clock.json', 'w') as f:
