@@ -3,12 +3,15 @@
 __author__ = 'arnold'
 
 import configparser
+import copy
+import glob
 import json
 import math
 import os
 import shutil
 
-from PIL import Image
+from PIL import Image, ImageColor
+from PIL.ImageDraw import ImageDraw
 
 import clip
 
@@ -108,17 +111,15 @@ def write_digits(tick_img, num_str, at, draw_init_zero):
     tick_img.paste(digit_imgs[num_str[1]], (at[0] + digit_size[0], at[1]))
 
 
-overrides = []
-
+fixed_overrides = []
 
 for i in range(-1, ticks + 1):
     day_frac = i * tick_fraction
     total_minutes = round(minutes_per_day * day_frac)
     hrs = (int(total_minutes / 60) + 12) % 24
     mins = total_minutes % 60
-    # print "%d: %2d:%02d %f (%d)" % (i, hrs, mins, day_frac, round(day_frac * 24000))
 
-    name = 'clock_%0*d' % (tick_digit_cnt, i % ticks) if i >=0 else 'clock_unk'
+    name = 'fixed_%0*d' % (tick_digit_cnt, i % ticks) if i >= 0 else 'clock_unk'
     texture = 'item/clock/%s' % name
     png_path = texture + '.png'
     model = 'item/clock/%s' % name
@@ -127,10 +128,10 @@ for i in range(-1, ticks + 1):
         at_time_frac = day_frac
         if i > 0:
             at_time_frac -= half_tick_fraction
-        overrides.append({
+        fixed_overrides.append({
             "model": {
                 "type": "minecraft:model",
-                "model": f"minecraft:item/clock/clock_{i % ticks:03d}"
+                "model": f"minecraft:item/clock/fixed_{i % ticks:03d}"
             },
             "threshold": at_time_frac
         })
@@ -154,26 +155,66 @@ for i in range(-1, ticks + 1):
             }
         }, f, indent=4, sort_keys=True)
 
-dispatch = {
-    "model": {
-        "type": "minecraft:range_dispatch",
-        "entries": overrides,
-        "property": "minecraft:time",
-        "scale": 1.0,
-        "source": "daytime",
-        "wobble": False,
-    },
-    "when": "minecraft:overworld"
-}
-model = {
+# Now create the non-fixed variants of everything
+for f in glob.glob(f'{model_dir}/fixed_*'):
+    with open(f) as src:
+        txt = src.read()
+        with open(f.replace('fixed_', 'clock_'), 'w') as dst:
+            dst.write(txt.replace('fixed_', 'clock_'))
+
+one = digit_imgs['1']
+data = one.getdata()
+left = 1000
+for i in range(len(data)):
+    px = data[i]
+    if px[3] != 0:
+        left = min(left, i % one.size[0])
+half = int(left / 2)
+
+for f in glob.glob(f'{texture_dir}/*.png'):
+    with Image.open(f) as src:
+        dst = Image.new(src.mode, src.size, ImageColor.getrgb('#0000'))
+        draw = ImageDraw(dst)
+        draw.rectangle((0, digit_pos[0][1] - 2, dst.size[0], digit_pos[0][1] + digit_size[1] + 1), fill=(0, 0, 0))
+
+        src_pos = (left, digit_pos[0][1], digit_pos[3][0] + digit_size[0], digit_pos[3][1] + digit_size[1])
+        time = src.crop(src_pos)
+        dst.paste(time, (half, src_pos[1]), time)
+        dst.save(f.replace('fixed_', 'clock_'))
+
+fixed_display = {
     "model": {
         "type": "minecraft:select",
         "property": "minecraft:context_dimension",
-        "cases": [dispatch],
+        "cases": [{
+            "model": {
+                "type": "minecraft:range_dispatch",
+                "entries": fixed_overrides,
+                "property": "minecraft:time",
+                "scale": 1.0,
+                "source": "daytime",
+                "wobble": False,
+            },
+            "when": "minecraft:overworld"
+        }],
         "fallback": {
             "model": "item/clock/clock_unk",
             "type": "model",
         },
+    }
+}
+clock_display = copy.deepcopy(fixed_display['model']['cases'][0]['model'])
+for e in clock_display['entries']:
+    e['model']['model'] = e['model']['model'].replace('fixed_', 'clock_')
+model = {
+    "model": {
+        "type": "minecraft:select",
+        "property": "minecraft:display_context",
+        "cases": [{
+            "when": "fixed",
+            "model": fixed_display['model']
+        }],
+        "fallback": clock_display
     }
 }
 with open('items/clock.json', 'w') as f:
