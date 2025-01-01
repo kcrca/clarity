@@ -46,12 +46,6 @@ def colorify(src_path, dst_path, *, follow_symlinks=True):
     if not src_path.endswith('.png'):
         return shutil.copy2(src_path, dst_path, follow_symlinks=follow_symlinks)
     src_img = Image.open(src_path)
-    orig_mode = src_img.mode
-    # 'L' means greyscale, and we can't have that. But png doesn't support PA, so we have to use RGBA
-    if orig_mode == 'L':
-        orig_mode = 'P'
-    elif orig_mode == 'LA':
-        orig_mode = 'RGBA'
     has_alpha = has_transparency(src_img)
     src_img = src_img.convert('LA' if has_alpha else 'L').convert('RGBA' if has_alpha else 'RGB')
     colored_img = color_for(src_img)

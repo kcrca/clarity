@@ -1,11 +1,9 @@
 #!/usr/bin/env python3
 
-import glob
 import os
-import sys
 from pathlib import Path
 
-from PIL import Image, ImageChops
+from PIL import Image
 
 import clip
 

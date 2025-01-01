@@ -3,7 +3,9 @@
 __author__ = 'arnold'
 
 import random
-from PIL import Image, ImageDraw
+
+from PIL import ImageDraw
+
 from clip import *
 
 DIM = 16

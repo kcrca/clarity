@@ -1,7 +1,9 @@
 #!/usr/bin/env python3
 
 import random
-from PIL import Image, ImageDraw
+
+from PIL import ImageDraw
+
 from clip import *
 
 ALPHA = int(0.6 * 255)

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
-# This program generates powder snow outline. It reads in the upper-left quoadrant, doubles its height (weird, but that's
-# how it's done), and flips it to the other quadrants.
+# This program generates powder snow outline. It reads in the upper-left quadrant, doubles its height (weird,
+# but that's how it's done), and flips it to the other quadrants.
 
 __author__ = 'arnold'
 

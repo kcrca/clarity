@@ -117,7 +117,7 @@ def main():
 
     config_items = config.items('default')
     n, shrink_list = config_items[0]
-    assert(n == 'shrink')
+    assert n == 'shrink'
     shrink = shrink_list.split()
 
     for block_name in shrink:
@@ -166,8 +166,6 @@ def main():
                         model['write'] = True
         except KeyError:
             pass
-
-
 
     write_from(blockstates, blockstates_dir)
     write_from(blocks, models_dir)

@@ -35,7 +35,7 @@ d_blockstates = directory('defaults', 'blockstates')
 
 current_digits = Image.open(__file__.replace('.py', '.png')).convert('RGBA')
 w = current_digits.size[0]
-h = current_digits.size[1] / 16
+h = int(current_digits.size[1] / 16)
 for i in range(0, 16):
     digit_img = current_digits.crop((0, i * h, w, (i + 1) * h))
     full_digit = Image.new('RGBA', (16, 32), (0, 0, 0, 0))
@@ -55,7 +55,7 @@ for model, args in current_cfg:
     y = float(values[0])
     h_off = h
     if y > 16:
-        y -= (16)
+        y -= 16
         h_off = 16
     scaled_w = scale * w
     scaled_h = scale * h_off

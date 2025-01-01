@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# Generates the versions of the paintings files that are published on the wevb site.
+# Generates the versions of the paintings files that are published on the website.
 
 from pathlib import Path
 

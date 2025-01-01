@@ -34,6 +34,7 @@ class Scrimage:
         if path.is_dir() and not path.is_symlink():
             return self.scrimage(*path.glob('*'))
         temp = None
+        # noinspection PyBroadException
         try:
             img = Image.open(path)
             saved = percent = 0

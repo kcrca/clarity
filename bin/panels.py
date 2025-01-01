@@ -25,6 +25,7 @@ def open_part(part):
         return Image.open(mc_dir / ('parts/%s' % part)).convert("RGBA")
 
 
+used_part_files = []
 mc_dir = Path(clip.directory('textures', 'gui', 'container'))
 slot = Image.open(mc_dir / 'parts/slot.png').convert("RGBA")
 for dir in glob.glob(str(mc_dir).replace('minecraft', '*')):
@@ -53,7 +54,7 @@ for dir in glob.glob(str(mc_dir).replace('minecraft', '*')):
 
     digits = {}
     chars = Image.open(mc_dir / 'parts/digits.png').convert('RGBA')
-    raw_font_size = chars.size[0] / 16  # font glyphs are stored 16 to a row
+    raw_font_size = int(chars.size[0] / 16)  # font glyphs are stored 16 to a row
     digit_row_top = 3 * raw_font_size
     for i in range(0, 10):
         x1 = i * raw_font_size
@@ -64,8 +65,6 @@ for dir in glob.glob(str(mc_dir).replace('minecraft', '*')):
         if font_size != raw_font_size:
             digit.thumbnail((font_size, font_size), Image.Resampling.LANCZOS)
         digits[i] = digit
-
-    used_part_files = []
 
     for panels_desc, part_str in panels:
         for panel in panels_desc.split(','):

@@ -59,7 +59,7 @@ def get_rotation_matrix(angle):
 
 
 def rotate(points, angle):
-    """ Get coordinates of points rotated by a given angle counterclocwise
+    """ Get coordinates of points rotated by a given angle counterclockwise
 
     Args:
         points (np.array): point coordinates shaped (n, 2)
@@ -81,7 +81,9 @@ for i in range(0, TICKS):
     def arrow_image(up_color, down_color):
         img = Image.new('RGBA', (IMG_SIZE, IMG_SIZE), ImageColor.getrgb("#0000"))
         draw = ImageDraw.Draw(img)
+        # noinspection PyTypeChecker
         draw.polygon(list(map(tuple, (l, r, n))), fill=(ImageColor.getrgb(up_color)))
+        # noinspection PyTypeChecker
         draw.polygon(list(map(tuple, (l, r, s))), fill=(ImageColor.getrgb(down_color)))
         return img
 

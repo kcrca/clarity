@@ -25,7 +25,7 @@ animation = os.path.join(texture_dir, 'item', 'painting.png.mcmeta')
 breakout_dir = clip.directory('site', 'paintings')
 
 unused = ('earth', 'fire', 'water', 'wind')
-images = tuple(filter(lambda p: Path(p).stem not in (unused), glob.glob(os.path.join(paintings, '*.png'))))
+images = tuple(filter(lambda p: Path(p).stem not in unused, glob.glob(os.path.join(paintings, '*.png'))))
 
 thumb_scale = 4
 

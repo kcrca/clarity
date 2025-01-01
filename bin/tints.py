@@ -2,8 +2,7 @@ import colorsys
 import csv
 import sys
 
-from PIL import ImageColor, Image
-from PIL import ImageDraw
+from PIL import Image, ImageColor, ImageDraw
 
 if len(sys.argv) == 1:
     sys.exit(0)
@@ -11,7 +10,7 @@ print('argv: %s' % sys.argv)
 biomes = {}
 all = []
 for f in sys.argv[1:]:
-    with  open(f) as csv_file:
+    with open(f) as csv_file:
         r = csv.reader(csv_file)
         things = None
         for row in r:

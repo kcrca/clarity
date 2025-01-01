@@ -51,7 +51,7 @@ for season in timings:
     frames.append(index)
     index += 1
 
-# Set the seed to prevent the mcmeta changing each time this is run. Otherwise we end up checking a new file each time
+# Set the seed to prevent the mcmeta changing each time this is run. Otherwise, we end up checking a new file each time
 # we run the script.
 random.seed(13)
 

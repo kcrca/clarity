@@ -50,10 +50,10 @@ def decode_color(color_nums, has_alpha=None):
 
 
 def color_list(colors_config, has_alpha):
-    l = []
+    lst = []
     for color_nums in colors_config:
-        l.append(decode_color(color_nums, has_alpha))
-    return l
+        lst.append(decode_color(color_nums, has_alpha))
+    return lst
 
 
 def map_for(map_name, key_color, has_alpha):
@@ -81,14 +81,14 @@ def map_for(map_name, key_color, has_alpha):
         if color_name == key_color:
             continue
         colors_config = color_config[map_name][color_name]
-        l = color_list(colors_config, has_alpha)
-        if len(l) != num_colors:
+        lst = color_list(colors_config, has_alpha)
+        if len(lst) != num_colors:
             print(('Mismatch: %s: %s: expected %d colors, found %d' % (
-                map_name, color_name, num_colors, len(l))))
+                map_name, color_name, num_colors, len(lst))))
         else:
             m = {}
             for i in range(num_colors):
-                m[key_list[i]] = l[i]
+                m[key_list[i]] = lst[i]
             color_map[color_name] = m
     return color_map
 
@@ -115,8 +115,8 @@ def list_colors(color_name, file_name, exclude_colors):
             r, g, b = data[x, y]
             colors.add((r, g, b))
     sys.stdout.write('%-13s' % (color_name + ':'))
-    for c in sorted(colors, cmp=lambda x, y: sum(x) - sum(y), reverse=True):
-        if not c in exclude_colors:
+    for c in sorted(colors, key=lambda x: sum(x), reverse=True):
+        if c not in exclude_colors:
             # noinspection PyStringFormat
             sys.stdout.write(' %-13s' % ('(%d,%d,%d)' % c[:]))
     print('')
@@ -152,8 +152,8 @@ def file_from_color(file_patterns, color_name):
                 return color_name, cpath
 
         # Handle the case where one color is the canonical one. For example, as of 1.9,
-        # there is "sandstone.png" and "red_standstone.png". The first is a yellow sandstone,
-        # but it isn't called "yellow_standstone.png" because when it was created, there was
+        # there is "sandstone.png" and "red_sandstone.png". The first is a yellow sandstone,
+        # but it isn't called "yellow_sandstone.png" because when it was created, there was
         # only one color. So this code allows there to be a version of the file without the
         # "COLOR_" part of the file name, but only if it actually exists.
         cpath = file_pat.replace('COLOR_', '')
@@ -164,23 +164,6 @@ def file_from_color(file_patterns, color_name):
             raise Exception('No path found for %s in %s' % (file_pat, others))
 
     return color_name, ''
-
-
-def list_coloring(coloring, exclude_colors):
-    map_name, key_color, file_pat = decode_coloring(coloring)
-    # For listing, nothing is required, so remove the options
-    file_pat = re.sub(file_opt_re, file_pat, '')
-    key_file = file_from_color(re.sub(file_opt_re, file_pat, ''), key_color)
-    print('[%s]' % coloring)
-    print('')
-    list_colors(key_color, key_file, exclude_colors)
-    file_re = re.compile(file_from_color(os.path.basename(file_pat), r'(.*)'))
-    file_dir = os.path.dirname(file_pat)
-    for f in sorted(os.listdir(file_dir)):
-        m = file_re.match(f)
-        if m:
-            color_name = m.groups()[0]
-            list_colors(color_name, '%s/%s' % (file_dir, f), exclude_colors)
 
 
 def list_image_colors(files):
@@ -281,7 +264,7 @@ def main(argv=None):
             raise Usage(msg)
             # more code, unchanged
         if len(args) != 1:
-            raise Usage('must specifiy one dir to process')
+            raise Usage('must specify one dir to process')
         global directory
         directory = args[0]
         os.chdir(directory)
@@ -297,7 +280,6 @@ def main(argv=None):
     except configparser.NoSectionError:
         pass
 
-    list_colorings = []
     exclude_colors = set()
     verbose = False
     # process options
@@ -308,18 +290,11 @@ def main(argv=None):
         if o in ('-d', '--dump'):
             list_image_colors(args)
             return 0
-        if o in ('-l', '--list'):
-            list_colorings.append(a)
         elif o in ('-x', '--exclude'):
             color = decode_color(a, False)
             exclude_colors.add(color)
         if o in ('-v', '--verbose'):
             verbose = True
-
-    if len(list_colorings):
-        for coloring in list_colorings:
-            list_coloring(coloring, exclude_colors)
-        return 0
 
     configure_aliases()
     try:
@@ -355,7 +330,7 @@ def main(argv=None):
             mode = 'RGB'
             if has_alpha:
                 mode = 'RGBA'
-            dst_img = Image.new(mode, src_img.size, color=None)
+            dst_img = Image.new(mode, src_img.size, color=(0, 0, 0, 0))
             dst_data = dst_img.load()
             for x in range(src_img.size[0]):
                 for y in range(src_img.size[1]):

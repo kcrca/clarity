@@ -100,6 +100,7 @@ def build_avatars():
                     hair_path = 'parts/hair_styles/hair_%s_%s.png' % (style, hair)
 
                 genotype_percent = skins[skin] * styles[style] * hairs[hair]
+                # noinspection PyTypeChecker
                 genotypes.append((genotype, genotype_percent))
 
                 img = Image.alpha_composite(villager_img, skin_img)

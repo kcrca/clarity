@@ -24,5 +24,5 @@ for img_file in glob.glob(f'{dst_dir}/wolf*_tame.png'):
     img.putpixel((5, 5), eye_px)
     img.putpixel((8, 5), eye_px)
     img.save(img_file)
-    img.paste(overlay, overlay)
+    img.paste(overlay, mask=overlay)
     img.save(img_file.replace('tame', 'angry'))
