@@ -175,7 +175,7 @@ for f in glob.glob(f'{texture_dir}/*.png'):
     with Image.open(f) as src:
         dst = Image.new(src.mode, src.size, ImageColor.getrgb('#0000'))
         draw = ImageDraw(dst)
-        draw.rectangle((0, digit_pos[0][1] - 2, dst.size[0], digit_pos[0][1] + digit_size[1] + 1), fill=(0, 0, 0))
+        draw.rectangle((0, digit_pos[0][1] - 2, dst.size[0], digit_pos[0][1] + digit_size[1] + 1), fill=ImageColor.getrgb('#202020'))
 
         src_pos = (left, digit_pos[0][1], digit_pos[3][0] + digit_size[0], digit_pos[3][1] + digit_size[1])
         time = src.crop(src_pos)
