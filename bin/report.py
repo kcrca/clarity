@@ -18,7 +18,7 @@ status_by_name = {}
 
 
 def orphans():
-    def find_models(data)->set:
+    def find_models(data) -> set:
         models = set()
         if data is None:
             pass
@@ -32,7 +32,7 @@ def orphans():
                 models.update(find_models(data[key]))
         return models
 
-    def find_textures(data)->set:
+    def find_textures(data) -> set:
         textures = set()
         try:
             textures_block = data['textures']
@@ -42,7 +42,7 @@ def orphans():
             pass
         return textures
 
-    def models_for(state)->set:
+    def models_for(state) -> set:
         return find_models(state)
 
     def path_part(model_name):
@@ -252,35 +252,67 @@ class FileStatus(object):
             elif len(patterns) > 1:
                 self.multi_matches[path] = patterns
 
-            # This does an extra check for changed PNG files to see if they are really different
+
+# This does an extra check for changed PNG files to see if they are really different
+def frame_cnt(img_file, img):
+    try:
+        meta_path = Path(img_file + '.mcmeta')
+        with open(meta_path) as fp:
+            mcmeta = json.load(fp)
+            frames = mcmeta['animation']['frames']
+            frames = map(lambda x: x if isinstance(x, int) else x['index'], frames)
+            return len(set(frames))
+
+    except KeyError:
+        if 'animation' in mcmeta:
+            return int(img.size[1] / img.size[0])
+        else:
+            return 1
+    except FileNotFoundError:
+        return 1
 
 
-def image_compare(groups):
-    img1 = Image.open(groups[0])
-    img2 = Image.open(groups[1])
-    if img1.size != img2.size:
-        return False
-    pixels1 = img1.convert('RGBA').load()
-    pixels2 = img2.convert('RGBA').load()
-    for x in range(0, img1.size[0]):
-        for y in range(0, img1.size[1]):
-            if pixels1[(x, y)] != pixels2[(x, y)]:
-                return False
-    return True
+class ReshapedFileStatus(FileStatus):
+    def __init__(self, prefix, pattern):
+        super().__init__(prefix, pattern)
 
 
 class ChangedFileStatus(FileStatus):
-    def __init__(self, prefix, pattern, same_file_status):
-        super(ChangedFileStatus, self).__init__(prefix, pattern, first_group)
+    def __init__(self, prefix, pattern, same_file_status, reshaped_file_status):
+        super().__init__(prefix, pattern, first_group)
         self.same_file_status = same_file_status
+        self.reshaped_file_status = reshaped_file_status
+
+    def image_same(self, groups):
+        img1 = Image.open(groups[0])
+        img2 = Image.open(groups[1])
+
+        frame_cnt1 = frame_cnt(groups[0], img1)
+        frame_cnt2 = frame_cnt(groups[1], img2)
+        ratio1 = img1.size[0] / (img1.size[1] / frame_cnt1)
+        ratio2 = img2.size[0] / (img2.size[1] / frame_cnt2)
+        if ratio1 != ratio2:
+            # This is an error of a different category -- if the size rations are different, that may need to be addressed
+            self.reshaped_file_status.add_path(groups, groups[0])
+            return False
+
+        if img1.size != img2.size:
+            return False
+        pixels1 = img1.convert('RGBA').load()
+        pixels2 = img2.convert('RGBA').load()
+        for x in range(0, img1.size[0]):
+            for y in range(0, img1.size[1]):
+                if pixels1[(x, y)] != pixels2[(x, y)]:
+                    return False
+        return True
 
     def add_path(self, groups, path):
         if path.endswith('.png'):
             # Check if they are equivalent images, just encoded differently.
-            if image_compare(groups):
+            if self.image_same(groups):
                 self.same_file_status.add_path(groups, path)
                 return
-        super(ChangedFileStatus, self).add_path(groups, path)
+        super().add_path(groups, path)
 
 
 class MissingFileStatus(FileStatus):
@@ -316,10 +348,12 @@ other = config.get('basic', 'top')
 other_esc = other.replace('.', '\\.')
 
 same_checker = FileStatus('Same', r'^Files (?:\./)?(.*) and .* identical', path_from_groups=no_path)
+reshaped_checker = FileStatus('Reshaped', '')
+
 statuses = (
     FileStatus('Ignored', r'\.swp|\~|\/.$|\.DS_Store|_diff\.gif$', path_from_groups=whole_match),
     same_checker,
-    ChangedFileStatus('Changed', r'^Files (?:\./)?(.*) and ([^\s]*) differ', same_checker),
+    ChangedFileStatus('Changed', r'^Files (?:\./)?(.*) and ([^\s]*) differ', same_checker, reshaped_checker),
     MissingFileStatus('Missing', r'^Only in ' + other_esc + '/?(.*): (.*)', path_from_groups=path_from_only),
     FileStatus('Added', r'^Only in \./?(.*): (.*)', path_from_groups=path_from_only),
 )
@@ -335,7 +369,7 @@ for line in diff.stdout:
             if status.status_match(line):
                 break
 
-print_order = ['Missing', 'Added', 'Same', 'Changed']
+print_order = ['Missing', 'Added', 'Same', 'Changed', 'Reshaped']
 
 for name in print_order:
     status = status_by_name[name]
