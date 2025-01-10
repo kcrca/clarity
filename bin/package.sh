@@ -24,7 +24,7 @@ until [[ $v:r == $v ]]; do
     v=$v:r
 done
 
-# Removed 'changes' because minecraft time seems to longer run long enough to see it
+# Removed 'changes' because minecraft time seems to no longer run long enough to see it
 dirs=(contraption clarity connectivity continuity current call_out call_out_all beguile)
 
 # Create the packs dir
