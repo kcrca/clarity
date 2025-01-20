@@ -82,17 +82,20 @@ def orphans():
     root_names = {'blockstates': 'block', 'items': 'item'}
     models = {}
     unused_models = {}
+    source_files = {}
     # First we pull in all the models for the blocks, using the blockstates and items files as the roots of the tree.
     # We overwrite any info from the default models with our own.
     for root, base in root_names.items():
         for file in glob.glob('%s/*.json' % clip.directory('defaults', root)):
             path = f'{base}/{os.path.basename(file)}'
-            with open(file) as fp:
-                roots[path] = json.load(fp)
+            source_files[path] = file
         for file in glob.glob('%s/*.json' % clip.directory(root)):
             path = f'{base}/{os.path.basename(file)}'
-            with open(file) as fp:
-                roots[path] = json.load(fp)
+            source_files[path] = file
+    # Now load the files
+    for path in source_files:
+        with open(source_files[path]) as fp:
+            roots[path] = json.load(fp)
     # Find all of our own models, and store them as possibly unused
     for file in glob.glob('%s/**/*.json' % clip.directory('models'), recursive=True):
         m = subpath_re.search(file)
@@ -241,16 +244,17 @@ class FileStatus(object):
         """
         Add the given path to list of matches for this path UNLESS it matches the patterns to be ignored.
         """
-        if path:
-            patterns = []
-            for pat in self.ignore:
-                if pat.search(path):
-                    patterns.append(pat.pattern)
-                    self.unused_ignores.discard(pat.pattern)
-            if len(patterns) == 0:
-                self.files.add(path)
-            elif len(patterns) > 1:
-                self.multi_matches[path] = patterns
+        if not path:
+            return
+        patterns = []
+        for pat in self.ignore:
+            if pat.search(path):
+                patterns.append(pat.pattern)
+                self.unused_ignores.discard(pat.pattern)
+        if len(patterns) == 0:
+            self.files.add(path)
+        elif len(patterns) > 1:
+            self.multi_matches[path] = patterns
 
 
 # This does an extra check for changed PNG files to see if they are really different
@@ -277,6 +281,31 @@ class ReshapedFileStatus(FileStatus):
         super().__init__(prefix, pattern)
 
 
+class AddedFileStatus(FileStatus):
+    def status_match(self, line):
+        super().status_match(line)
+
+    def add_path(self, groups, name):
+        # These are things that can't be suppressed with simple RE checks
+        if name.endswith('.mcmeta') and Path(name[:-len('.mcmeta')]).exists():
+            return
+        if name.endswith('.png') and Path(name + '.split').exists():
+            return
+
+        # What we really want here (I think) is that any files in textures/{blocks,models} should be reachable from a
+        # model in {blockstates,items}. The question is what to do with those that aren't. Some are used by other tools.
+        # I think it will be fine to use patterns to suppress these. If it becomes a problem, we can invent some easy
+        # pattern(s) for tool-only image names.
+
+        m = re.search('^(textures|models)/(item|block)', name)
+        if m:
+            source = models if m.group(1) == 'models' else textures
+            full_suffix = ''.join(Path(name).suffixes)
+            if name[len(m.group(1)) + 1:-len(full_suffix)] in source:
+                return
+        super().add_path(groups, name)
+
+
 class ChangedFileStatus(FileStatus):
     def __init__(self, prefix, pattern, same_file_status, reshaped_file_status):
         super().__init__(prefix, pattern, first_group)
@@ -292,7 +321,7 @@ class ChangedFileStatus(FileStatus):
         ratio1 = img1.size[0] / (img1.size[1] / frame_cnt1)
         ratio2 = img2.size[0] / (img2.size[1] / frame_cnt2)
         if ratio1 != ratio2:
-            # This is an error of a different category -- if the size rations are different, that may need to be addressed
+            # This is a different kind of error -- if the size rations are different, that may need to be addressed
             self.reshaped_file_status.add_path(groups, groups[0])
             return False
 
@@ -317,7 +346,8 @@ class ChangedFileStatus(FileStatus):
 
 class MissingFileStatus(FileStatus):
     def add_path(self, groups, path):
-        # Any missing texture (or model) that isn't in the list of used textures (or models) isn't really missing.
+        # Any missing texture (or model) in the other place that isn't in the list of used textures (or models) isn't
+        # really missing, it's just not used by Clarity.
         if not re.search('^(textures|models)/(item|block)', path):
             super().add_path(groups, path)
 
@@ -355,7 +385,7 @@ statuses = (
     same_checker,
     ChangedFileStatus('Changed', r'^Files (?:\./)?(.*) and ([^\s]*) differ', same_checker, reshaped_checker),
     MissingFileStatus('Missing', r'^Only in ' + other_esc + '/?(.*): (.*)', path_from_groups=path_from_only),
-    FileStatus('Added', r'^Only in \./?(.*): (.*)', path_from_groups=path_from_only),
+    AddedFileStatus('Added', r'^Only in \./?(.*): (.*)', path_from_groups=path_from_only),
 )
 
 diff = subprocess.Popen(['diff', '-rsq', '.', other], stdout=subprocess.PIPE)
