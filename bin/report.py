@@ -321,7 +321,7 @@ class ChangedFileStatus(FileStatus):
         ratio1 = img1.size[0] / (img1.size[1] / frame_cnt1)
         ratio2 = img2.size[0] / (img2.size[1] / frame_cnt2)
         if ratio1 != ratio2:
-            # This is a different kind of error -- if the size rations are different, that may need to be addressed
+            # This is a different kind of error -- if the size ratios are different, that may need to be addressed
             self.reshaped_file_status.add_path(groups, groups[0])
             return False
 
