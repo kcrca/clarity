@@ -9,6 +9,7 @@ import sys
 from pathlib import Path
 
 import clip
+from pynecraft.info import blocks_by_id
 
 blockstates = {}
 blocks = {}
@@ -116,11 +117,16 @@ def main():
     kidize(items)
 
     config_items = config.items('default')
-    n, shrink_list = config_items[0]
+    n, shrink_pats = config_items[0]
     assert n == 'shrink'
-    shrink = shrink_list.split()
+    shrink = shrink_pats.split()
 
-    for block_name in shrink:
+    shrink_pat = f'({"|".join(shrink)})'
+    shrink_re = re.compile(shrink_pat)
+
+    for block_name in blocks_by_id:
+        if not shrink_re.fullmatch(block_name):
+            continue
         blockstate = blockstates[block_name]
         refs = list(model_refs(blockstate))
         for ref in refs:
