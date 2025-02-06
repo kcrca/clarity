@@ -37,7 +37,9 @@ def orphans():
         try:
             textures_block = data['textures']
             for texture_name in textures_block:
-                textures.add(path_part(textures_block[texture_name]))
+                texture = path_part(textures_block[texture_name])
+                if re.search('^[a-z]', texture):
+                    textures.add(texture)
         except KeyError:
             pass
         return textures
@@ -281,9 +283,18 @@ class ReshapedFileStatus(FileStatus):
         super().__init__(prefix, pattern)
 
 
-class AddedFileStatus(FileStatus):
-    def status_match(self, line):
-        super().status_match(line)
+class OnlyInFileStatus(FileStatus):
+    def reachable(self, groups, name):
+        # Fles in our {textures,models}/{blocks,items} should be reachable from a model in {blockstates,items}. The
+        # question is what to do with those that aren't. Some are used by other tools. I think it will be fine to use
+        # patterns to suppress these. If it becomes a problem, we can invent some easy pattern(s) for tool-only file
+        # names.
+        if m:= re.search('^(textures|models)/(item|block)', name):
+            source = models if m.group(1) == 'models' else textures
+            full_suffix = ''.join(Path(name).suffixes)
+            if name[len(m.group(1)) + 1:-len(full_suffix)] in source:
+                return True
+        return False
 
     def add_path(self, groups, name):
         # These are things that can't be suppressed with simple RE checks
@@ -292,18 +303,12 @@ class AddedFileStatus(FileStatus):
         if name.endswith('.png') and Path(name + '.split').exists():
             return
 
-        # What we really want here (I think) is that any files in textures/{blocks,models} should be reachable from a
-        # model in {blockstates,items}. The question is what to do with those that aren't. Some are used by other tools.
-        # I think it will be fine to use patterns to suppress these. If it becomes a problem, we can invent some easy
-        # pattern(s) for tool-only image names.
+        if not self.reachable(groups, name):
+            super().add_path(groups, name)
 
-        m = re.search('^(textures|models)/(item|block)', name)
-        if m:
-            source = models if m.group(1) == 'models' else textures
-            full_suffix = ''.join(Path(name).suffixes)
-            if name[len(m.group(1)) + 1:-len(full_suffix)] in source:
-                return
-        super().add_path(groups, name)
+
+class AddedFileStatus(OnlyInFileStatus):
+    pass
 
 
 class ChangedFileStatus(FileStatus):
@@ -344,12 +349,14 @@ class ChangedFileStatus(FileStatus):
         super().add_path(groups, path)
 
 
-class MissingFileStatus(FileStatus):
-    def add_path(self, groups, path):
-        # Any missing texture (or model) in the other place that isn't in the list of used textures (or models) isn't
-        # really missing, it's just not used by Clarity.
-        if not re.search('^(textures|models)/(item|block)', path):
-            super().add_path(groups, path)
+class MissingFileStatus(OnlyInFileStatus):
+    def reachable(self, groups, name):
+        # For files that are only in the other pack, the sense of "reachability" is inverted -- files that are not
+        # reachable are ignorable. As a heuristic, models don't matter here because there are many original models
+        # that we don't use, so we just view all models as reachable.
+        if name.startswith('models'):
+            return True
+        return not super().reachable(groups, name)
 
 
 config_file = directory('config', 'report_default.cfg')

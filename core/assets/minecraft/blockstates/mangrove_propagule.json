@@ -1,7 +1,7 @@
 {
   "variants": {
     "age=0,hanging=false": {
-      "model": "minecraft:block/mangrove_propagule_0"
+      "model": "minecraft:block/mangrove_propagule"
     },
     "age=0,hanging=true": {
       "model": "minecraft:block/mangrove_propagule_hanging_0"
