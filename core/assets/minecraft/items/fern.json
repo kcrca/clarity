@@ -1,11 +1,13 @@
 {
   "model": {
-    "type": "minecraft:special",
-    "base": "minecraft:item/template_skull",
-    "model": {
-      "type": "minecraft:head",
-      "kind": "player",
-      "texture": "minecraft:player/slim/alex"
-    }
+    "type": "minecraft:model",
+    "model": "minecraft:block/fern",
+    "tints": [
+      {
+        "type": "minecraft:grass",
+        "downfall": 1.0,
+        "temperature": 0.5
+      }
+    ]
   }
 }
