@@ -7,8 +7,8 @@ for f in src/*/; do
   if test ! -f $out || find $name build.sh -type f -newer $out | grep -s . >&/dev/null; then
     case $out in
     download.gif)
-      echo - convert -delay 200 $name/\*.png -loop 0 -resize 32x32 $out
-      convert -delay 200 $name/*.png -loop 0 -scale 32x32 $out
+      echo - magick -delay 200 $name/\*.png -loop 0 -resize 32x32 $out
+      magick convert -delay 200 $name/*.png -loop 0 -scale 32x32 $out
       ;;
     *)
       if [ -f $name/build.sh ]; then (
@@ -16,8 +16,8 @@ for f in src/*/; do
         cd "$name"
         ./build.sh
       ); else
-        echo - convert -delay 200 $name/\*.png -loop 0 -resize 750x483 $out
-        convert -delay 200 $name/*.png -loop 0 -resize 750x483 $out
+        echo - magick -delay 200 $name/\*.png -loop 0 -resize 750x483 $out
+        magick -delay 200 $name/*.png -loop 0 -resize 750x483 $out
       fi
       ;;
     esac

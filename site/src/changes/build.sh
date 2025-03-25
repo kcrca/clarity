@@ -7,11 +7,11 @@ for s in spring summer fall winter; do
     c=$(echo *_${s}.png)
     uc=$(echo "$(tr a-z A-Z <<< ${s:0:1})${s:1}")
     g="${s}_frame.gif"
-    convert \
+    magick \
 	$c \
 	-fill white -font Verdana -pointsize 24 -gravity SouthWest -annotate +6+6 ${uc} \
 	$g
     files=("${files[@]}" "$g")
 done
-convert -delay 210 "${files[@]}" -loop 0 -resize 750x483 ../../changes.gif
+magick -delay 210 "${files[@]}" -loop 0 -resize 750x483 ../../changes.gif
 rm -f *.gif
