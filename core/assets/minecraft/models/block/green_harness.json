@@ -1,0 +1,9 @@
+{
+    "parent": "block/orientable_most",
+    "textures": {
+        "top": "block/green_harness_top",
+        "front": "block/green_harness_front",
+        "side": "block/green_harness_side",
+        "back": "block/blank"
+    }
+}

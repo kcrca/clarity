@@ -6,8 +6,9 @@ import glob
 
 import clip
 
-for f in glob.glob(f'{clip.directory("models")}*/cyan_*.json') + glob.glob(
+for f in glob.glob(f'{clip.directory("models")}/*/cyan_*.json') + glob.glob(
         f'{clip.directory("minecraft")}/items/cyan_*.json'):
+    print(f)
     with open(f) as src_file:
         src = src_file.read()
         for c in clip.colors:
