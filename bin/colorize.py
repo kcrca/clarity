@@ -138,9 +138,14 @@ def file_from_color(file_patterns, color_name):
         key_file = assets_re.sub('/assets/' + pkg, directory) + '/' + key_file
         return color_name, key_file
     for file_pat in file_patterns.split('|'):
-        orig_pat = file_pat
-        file_pat = file_opt_re.sub('', file_pat)
-        required = file_pat == orig_pat
+        m = file_opt_re.search(file_pat)
+        if m:
+            file_opt = m.group(0)
+            file_pat = file_opt_re.sub('', file_pat)
+        else:
+            file_opt = ''
+        force = file_opt == '!'
+        required = not force and file_opt != '?'
         for n in others:
             if camel_caps:
                 n = camel_caps_re.sub(to_camel_case, n[0].capitalize() + n[1:])
@@ -148,7 +153,7 @@ def file_from_color(file_patterns, color_name):
             if n in name_fixes:
                 for pat in name_fixes[n]:
                     cpath = cpath.replace(pat[0], pat[1])
-            if os.path.isfile(cpath):
+            if os.path.isfile(cpath) or force:
                 return color_name, cpath
 
         # Handle the case where one color is the canonical one. For example, as of 1.9,
