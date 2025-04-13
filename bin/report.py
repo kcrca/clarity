@@ -292,9 +292,11 @@ class OnlyInFileStatus(FileStatus):
         if m:= re.search('^(textures|models)/(item|block)', name):
             source = models if m.group(1) == 'models' else textures
             full_suffix = ''.join(Path(name).suffixes)
-            if name[len(m.group(1)) + 1:-len(full_suffix)] in source:
-                return True
-        return False
+            return name[len(m.group(1)) + 1:-len(full_suffix)] in source
+        return self.default_reachable()
+
+    def default_reachable(self):
+        return True
 
     def add_path(self, groups, name):
         # These are things that can't be suppressed with simple RE checks
@@ -308,7 +310,8 @@ class OnlyInFileStatus(FileStatus):
 
 
 class AddedFileStatus(OnlyInFileStatus):
-    pass
+    def default_reachable(self):
+        return False
 
 
 class ChangedFileStatus(FileStatus):
@@ -356,7 +359,8 @@ class MissingFileStatus(OnlyInFileStatus):
         # that we don't use, so we just view all models as reachable.
         if name.startswith('models'):
             return True
-        return not super().reachable(groups, name)
+        reachable = super().reachable(groups, name)
+        return not reachable
 
 
 config_file = directory('config', 'report_default.cfg')
