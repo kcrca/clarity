@@ -289,7 +289,7 @@ class OnlyInFileStatus(FileStatus):
         # question is what to do with those that aren't. Some are used by other tools. I think it will be fine to use
         # patterns to suppress these. If it becomes a problem, we can invent some easy pattern(s) for tool-only file
         # names.
-        if m:= re.search('^(textures|models)/(item|block)', name):
+        if m := re.search('^(textures|models)/(item|block)', name):
             source = models if m.group(1) == 'models' else textures
             full_suffix = ''.join(Path(name).suffixes)
             return name[len(m.group(1)) + 1:-len(full_suffix)] in source
