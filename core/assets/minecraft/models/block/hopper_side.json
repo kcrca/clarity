@@ -37,7 +37,6 @@
 		{
 			"from": [14, 11.02444, -0.00516],
 			"to": [16, 16.02444, 15.99484],
-			"rotation": {"angle": 0, "axis": "x", "origin": [14.99038, 13.51222, 7.99742]},
 			"faces": {
 				"north": {"uv": [14, 0, 16, 5], "rotation": 180, "texture": "#side"},
 				"east": {"uv": [0, 5, 16, 10], "texture": "#side"},
