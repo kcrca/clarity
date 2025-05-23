@@ -10,7 +10,7 @@ import clip
 # aesthetic reasons. This screws up all sorts of things for Clarity, especially with connected textures. This job
 # it does well.
 #
-# It also tries to build a simplified variant. That it doesn't do that so well, because some of them needs some special
+# It also tries to build a simplified variant. That it doesn't do that so well, because some of them need some special
 # handling. So we disable it for automatic runs, but running it when a new texture pack arrives will tell us which
 # blockstate files to look at and fix manually.
 if len(sys.argv) == 1:
