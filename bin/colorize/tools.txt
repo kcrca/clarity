@@ -4,6 +4,7 @@ crystal_green
 golden
 crystal_black
 emerald
+copper
 crystal_light_blue
 crystal_blue
 crystal_red

@@ -5,6 +5,7 @@ netherite
 crystal_black
 light
 emerald
+copper
 crystal_light_blue
 crystal_blue
 crystal_red
