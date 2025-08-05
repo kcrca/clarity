@@ -406,6 +406,7 @@ item/golden_horse_armor.png
 item/copper_horse_armor.png
 item/iron_horse_armor.png
 entity/equipment/horse_body/gold.png
+entity/equipment/horse_body/copper.png
 entity/equipment/horse_body/iron.png
 entity/equipment/happy_ghast_body/blue_harness.png
 entity/equipment/happy_ghast_body/brown_harness.png
@@ -485,9 +486,11 @@ item/copper_leggings.png
 item/iron_leggings.png
 entity/equipment/humanoid/gold.png
 entity/equipment/humanoid/netherite.png
+entity/equipment/humanoid/copper.png
 entity/equipment/humanoid/iron.png
 entity/equipment/humanoid_leggings/gold.png
 entity/equipment/humanoid_leggings/netherite.png
+entity/equipment/humanoid_leggings/copper.png
 entity/equipment/humanoid_leggings/iron.png
 block/heavy_weighted_pressure_plate_00.png
 block/heavy_weighted_pressure_plate_01.png
