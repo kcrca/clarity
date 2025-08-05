@@ -263,7 +263,7 @@ def main(argv=None):
         argv = sys.argv
     try:
         try:
-            opts, args = getopt.getopt(argv[1:], 'hl:x:d',
+            opts, args = getopt.getopt(argv[1:], 'vhl:x:d',
                                        ['help', 'list', 'exclude', 'dump'])
         except getopt.error as msg:
             raise Usage(msg)

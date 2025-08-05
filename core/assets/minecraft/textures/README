@@ -304,6 +304,12 @@ block/oxidized_copper_door.png
 block/exposed_chiseled_copper.png
 block/weathered_chiseled_copper.png
 block/oxidized_chiseled_copper.png
+block/exposed_lightning_rod.png
+block/weathered_lightning_rod.png
+block/oxidized_lightning_rod.png
+entity/copper_golem/exposed_copper_golem.png
+entity/copper_golem/weathered_copper_golem.png
+entity/copper_golem/oxidized_copper_golem.png
 block/pearlescent_froglight_top.png
 block/verdant_froglight_top.png
 block/pearlescent_froglight_side.png
