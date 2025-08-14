@@ -161,7 +161,10 @@ def file_from_color(file_patterns, color_name):
         # but it isn't called "yellow_sandstone.png" because when it was created, there was
         # only one color. So this code allows there to be a version of the file without the
         # "COLOR_" part of the file name, but only if it actually exists.
-        cpath = file_pat.replace('COLOR_', '')
+        #
+        # Sometimes this is the other way, such as "chest/copper.png" and "chest/exposed_copper.png", so we do
+        # _COLOR as well as COLOR_.
+        cpath = re.sub('COLOR_|_COLOR', '', file_pat)
         if os.path.isfile(cpath):
             return color_name, cpath
 
