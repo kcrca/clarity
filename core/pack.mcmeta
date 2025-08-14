@@ -1,6 +1,10 @@
 {
   "pack": {
-    "pack_format": 64,
-    "description": "Clarity's internal core source"
+    "description": "Clarity's internal core source",
+    "max_format": 65,
+    "min_format": [
+      65,
+      2
+    ]
   }
 }
