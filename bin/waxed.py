@@ -23,11 +23,6 @@ overlays = {}
 for k in overlays_spec.split():
     overlays[k] = Image.open(blocks_dir / f'waxed_{k}_overlay.png')
 
-try:
-    fixed = set(config.get('basic', 'fixed').split())
-except configparser.NoOptionError:
-    fixed = set()
-
 # Clean out existing blockstates and models for waxed stuff. Assumes there are NO custom files here.
 for file in (
         glob.glob(clip.directory('blockstates') + "/waxed_*")+
