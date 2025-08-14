@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/template_lantern",
+  "textures": {
+    "lantern": "minecraft:block/waxed_weathered_copper_lantern"
+  }
+}
