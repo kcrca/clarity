@@ -165,6 +165,16 @@ block/warped_planks.png
 block/crimson_planks.png
 block/mangrove_planks.png
 block/cherry_planks.png
+block/jungle_shelf.png
+block/birch_shelf.png
+block/spruce_shelf.png
+block/dark_oak_shelf.png
+block/pale_oak_shelf.png
+block/acacia_shelf.png
+block/warped_shelf.png
+block/crimson_shelf.png
+block/mangrove_shelf.png
+block/cherry_shelf.png
 block/jungle_pressure_plate.png
 block/birch_pressure_plate.png
 block/spruce_pressure_plate.png
