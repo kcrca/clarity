@@ -116,55 +116,11 @@ def orphans():
     # Now lets look for unused textures
     textures = set()
     unused_textures = set()
-    # Textures that are not reachable by the regular techniques
-    special_textures = (
-                           'block/books',
-                           'block/copper_copper',
-                           'block/current',
-                           'block/destroy_stage_0',
-                           'block/destroy_stage_1',
-                           'block/destroy_stage_2',
-                           'block/destroy_stage_3',
-                           'block/destroy_stage_4',
-                           'block/destroy_stage_5',
-                           'block/destroy_stage_6',
-                           'block/destroy_stage_7',
-                           'block/destroy_stage_8',
-                           'block/destroy_stage_9',
-                           'block/portal',  # animation for the nether portal
-                           'block/lava_flow',
-                           'block/note_block_names',
-                           'block/note_block_note',
-                           'block/note_block_staff',
-                           'block/water_flow',
-                           'block/waxed_overlay',
-                           'block/waxed_trapdoor_overlay',
-                           'item/clock_font',
-
-                           # Used in generating UI places where things are to be put
-                           'item/blank_banner_pattern',
-                           'item/carpet_for_llama',
-                           'item/empty_armor_slot_boots',
-                           'item/empty_armor_slot_chestplate',
-                           'item/empty_armor_slot_helmet',
-                           'item/empty_armor_slot_leggings',
-                           'item/empty_armor_slot_shield',
-                           'item/empty_slot_amethyst_shard',
-                           'item/empty_slot_diamond',
-                           'item/empty_slot_emerald',
-                           'item/empty_slot_ingot',
-                           'item/empty_slot_lapis_lazuli',
-                           'item/empty_slot_quartz',
-                           'item/empty_slot_redstone_dust',
-                           'item/empty_slot_smithing_template_armor_trim',
-                           'item/empty_slot_smithing_template_netherite_upgrade',
-                           'item/netherite_ingot',
-                       ) + tuple(('block/bookshelf_%02d' % i) for i in range(0, 20))
     # bookshelf images are only _probably_ used, so this allows for the case where one isn't
     for file in glob.glob('%s/item/*.png' % clip.directory('textures')) + glob.glob(
             '%s/block/*.png' % clip.directory('textures')):
         texture_name = subpath_re.search(file).group(1)
-        if texture_name not in special_textures and not Path(file + '.split').exists():
+        if not Path(file + '.split').exists():
             unused_textures.add(texture_name)
     for model_name in models:
         model = models[model_name]
@@ -176,7 +132,11 @@ def orphans():
             except KeyError:
                 pass
 
-    return models, unused_models, textures, unused_textures
+    for m in unused_models:
+        unused_checker.add_path([], f'models/{m}.json')
+    for m in unused_textures:
+        unused_checker.add_path([], f'textures/{m}.png')
+    return models, textures
 
 
 # noinspection PyUnusedLocal
@@ -367,23 +327,16 @@ config_file = directory('config', 'report_default.cfg')
 if len(sys.argv) > 1:
     config_file = sys.argv[1]
 
-models, unused_models, textures, unused_textures = orphans()
-print('Models: %s' % len(models))
-if unused_models:
-    print('UNUSED models:\n   ', end=' ')
-    print('\n    '.join(sorted(unused_models)))
-print('Textures: %d' % len(textures))
-if unused_textures:
-    print('UNUSED textures:\n   ', end=' ')
-    print('\n    '.join(sorted(unused_textures)))
-
-if unused_models or unused_textures:
-    sys.exit(1)
+config = configparser.ConfigParser()
+config.read(config_file)
+unused_checker = FileStatus('Unused', '')
 
 os.chdir(directory('minecraft'))
 
-config = configparser.ConfigParser()
-config.read(config_file)
+models, textures = orphans()
+print('Models: %s' % len(models))
+print('Textures: %d' % len(textures))
+unused_checker.dump()
 
 other = config.get('basic', 'top')
 other_esc = other.replace('.', '\\.')
