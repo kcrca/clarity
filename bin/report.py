@@ -193,8 +193,10 @@ class FileStatus(object):
         return m
 
     def dump(self):
-        for f in sorted(self.files):
-            print('%s: %s' % (self.prefix, f))
+        if self.files:
+            print(self.prefix)
+            for f in sorted(self.files):
+                print(f'    {f}')
         if len(self.unused_ignores) > 0:
             print('  UNUSED pattern:', ', '.join(sorted(self.unused_ignores)))
         if len(self.multi_matches) > 0:
