@@ -126,7 +126,7 @@ def to_camel_case(m):
     return m.group(1).upper()
 
 
-def file_from_color(file_patterns, color_name):
+def file_from_color(file_patterns, color_name, coloring):
     try:
         others = aliases[color_name]
     except KeyError:
@@ -165,11 +165,14 @@ def file_from_color(file_patterns, color_name):
         # Sometimes this is the other way, such as "chest/copper.png" and "chest/exposed_copper.png", so we do
         # _COLOR as well as COLOR_.
         cpath = re.sub('COLOR_|_COLOR', '', file_pat)
+        if cpath == 'block/copper.png':
+            # Stupid special case, maybe they'll fix this someday
+            cpath = 'block/copper_block.png'
         if os.path.isfile(cpath):
             return color_name, cpath
 
         if required:
-            raise Exception('No path found for %s in %s' % (file_pat, others))
+            raise Exception(f'{coloring}: No path found for {file_pat} in {others}')
 
     return color_name, ''
 
@@ -316,7 +319,7 @@ def main(argv=None):
         map_name, key_color, file_pat, ignore_spec = decode_coloring(coloring)
         ignores = tuple('' if x == "''" else x for x in ignore_spec.split(',')) if ignore_spec else ()
         # The key file is always required, so remove any options
-        key_color, key_file = file_from_color(file_opt_re.sub('', file_pat), key_color)
+        key_color, key_file = file_from_color(file_opt_re.sub('', file_pat), key_color, coloring)
         if verbose:
             print('%s: reading %s' % (coloring, key_file))
         src_img = Image.open(key_file)
@@ -330,7 +333,7 @@ def main(argv=None):
         for color_name, color_map in color_maps.items():
             if color_name in ignores:
                 continue
-            _, dst_file = file_from_color(file_pat, color_name)
+            _, dst_file = file_from_color(file_pat, color_name, coloring)
             if dst_file == '':
                 continue
             if verbose:
