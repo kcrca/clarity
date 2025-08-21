@@ -6,6 +6,11 @@
             "translation": [ 0, 9.5, 0],
             "scale":[ 2.2, 2.2, 2.2 ]
         },
+        "on_shelf": {
+            "rotation": [ 0, 225, 0 ],
+            "translation": [ 0, 9.5, 0],
+            "scale":[ 2.2, 2.2, 2.2 ]
+        },
         "ground": {
             "rotation": [ 0, 0, 0 ],
             "translation": [ 0, 3, 0],

@@ -6,6 +6,10 @@
             "rotation": [-67.5, 0, 45],
             "scale": [1.5, 1.5, 1.5]
         },
+        "on_shelf": {
+            "rotation": [0, 0, 125],
+            "scale": [1.5, 1.5, 1.5]
+        },
         "ground": {
             "rotation": [90, 45, 0],
             "scale": [0.8, 0.8, 0.8]
@@ -16,7 +20,7 @@
             "scale": [1.6, 1.6, 1.6]
         },
         "fixed": {
-            "rotation": [45, 0, 90],
+            "rotation": [0, 0, -125],
             "translation": [0, 0, -1.5],
             "scale": [1.5, 1.5, 1.5]
         }
