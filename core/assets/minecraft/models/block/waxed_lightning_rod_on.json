@@ -1,6 +1,0 @@
-{
-    "parent": "block/waxed_template_lightning_rod",
-    "textures": {
-        "texture": "block/waxed_lightning_rod_on"
-    }
-}

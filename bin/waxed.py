@@ -77,19 +77,19 @@ def in_and_out(in_path: str) -> tuple[str, str]:
 def translate(model, out_file):
     with (open(model) as in_fp):
         in_str = in_fp.read()
-        out_str = re.sub(r'(block|item)/(\w*(copper|lightning_rod(?!_on))\w*)*\b', r'\1/waxed_\2', in_str)
+        out_str = re.sub(r'(block|item)/(\w*(copper|lightning_rod(?!_on))\w*)\b', r'\1/waxed_\2', in_str)
         with open(out_file, 'w') as fp:
             fp.write(out_str)
         return out_str
 
 
-def remember(models, out_str):
+def remember(store, out_str):
     for texture in re.finditer(r'(block|item)/waxed_\w+', out_str):
-        model = texture.group().replace('waxed_', '')
-        # dump special case
-        if model == 'block/copper':
-            model = 'block/copper_block'
-        models.add(model)
+        key = texture.group().replace('waxed_', '')
+        # dumb special case
+        if key == 'block/copper':
+            key = 'block/copper_block'
+        store.add(key)
 
 
 # Look through the blockstates, creating new ones and new items/ entries also
@@ -108,22 +108,31 @@ for block_state in glob.glob(clip.directory('defaults', 'blockstates') + "/waxed
     in_item, out_item = in_and_out(item_state)
     out_str = translate(in_item, out_item)
     remember(models, out_str)
-
+v1 = True
 # Generate the waxed versions of the models
 textures = set()
 for model in models:
     if ignore_re.match(model):
         continue
     in_file, out_file = in_and_out(clip.directory('defaults', 'models') + f'/{model}.json')
-    with open(in_file) as in_fp:
-        in_str = in_fp.read()
-        out_str = re.sub(r'(block|itemº)/([^/]*(copper|lightning_rod)[^/][^"]*)', r"\1/waxed_\2", in_str)
-        for texture in re.finditer(r'((block|item)/waxed_\w+)', out_str):
-            textures.add(texture.group(1))
-        with open(out_file, 'w') as out_fp:
-            out_fp.write(out_str)
+    if v1:
+        out_str = translate(in_file, out_file)
+        remember(textures, out_str)
+    else:
+        with open(in_file) as in_fp:
+            in_str = in_fp.read()
+            out_str = re.sub(r'(block|itemº)/([^/]*(copper|lightning_rod)[^/][^"]*)', r"\1/waxed_\2", in_str)
+            for texture in re.finditer(r'((block|item)/waxed_\w+)', out_str):
+                textures.add(texture.group(1))
+            with open(out_file, 'w') as out_fp:
+                out_fp.write(out_str)
+
+with open(f'/tmp/{int(v1)}', 'w') as fp:
+    print('\n'.join(sorted(textures)), file=fp)
 
 for texture in textures:
+    if v1:
+        texture = texture.replace('/', '/waxed_')
     overlay = default_overlay
     override = blocks_dir.parent / f'{re.sub(r"(exposed|weathered|oxidized)_", "", texture)}_overlay.png'
     out_file = textures_dir / f'{texture}.png'
