@@ -16,35 +16,31 @@ import clip
 # There are only waxable copper blocks, no item-only things. So the list of waxed things to texture is the same as the
 # list of waxed-type blocks. So we do this all in a few steps.
 #
-# 1. We remove all waxed_* models and images. All are generated, and we don't want any crap left behind if names change
-# etc.
+# 1. We remove all waxed_* models. All are generated, and we don't want any crap left behind if names change, etc.
 #
 # 2. We look through vanilla's blockstates to find all waxed_* type blocks. For each block:
 #      a. For each blockstate, we make waxed_* from the existing one, or ours if there is one, replacing block/*copper
 #      with block/waxed_*copper. We remember the list of models we encounter.
-#      b. For the item model, if we have a custom items/ model, we make a copy like we do for the blockstate.
-#      Otherwise, we will either refer to the waxed block model directly or, if there is a custom model for the unwaxed
-#      item, we just let vanilla point to the item model, which we will fix up later.
+#      b. Then we do the analogous thing for the items/ directory.
 #
-# 3. For each block model encountered in step 2, we make a waxed_ copy of either ours or theirs, modified to use
-# waxed textures. From these we also build a list of the copper blocks we need.
+# 3. For each block or item model encountered in step 2, we make a waxed_ copy of either ours or theirs, modified to
+# use waxed textures. From these we also build a list of the copper blocks we need.
 #
-# 4. For each copper block generated from setp 3, we look to see if there is a waxed_copper_* overlay. If not we
+# 4. For each copper block generated from step 3, we look to see if there is a waxed_copper_* overlay. If not we
 # use the default overlay ('waxed_overlay.png'). We create waxed_*.png with an alpha-composite.
 #
 # This does _NOT_ handle entities, like copper armor or chests. Haven't figured that out yet.
 #
 # For all waxable blocks, this gives us:
-#   (*) Superseding blockstates that refer to the waxed_ block models.
-#   (*) Superseding items/ that point at either the block models or (for the overridden) item models
+#   (*) Superseding blockstates and items that refer to the waxed_ block and item models.
+#   (*) waxed_* block and item models that are like the unwaxed ones but using the waxed versions of the textures.
 #   (*) Waxed version of the textures.
-#   (*) waxed_* block models that are the same as the unwaxed ones but using the waxed versions of the textures.
 #   (*) For overridden items, simple item models that use the overridden block textures.
 #
 # Lightning rods are copper, but don't say "copper", so in all the above, "copper" means "(copper|lightning_rod)". But
 # we avoid lightning_rod_on because that's just white, it doesn't vary by exposure or waxing.
 #
-# Also, not every copper can be waxed, so the config lists types of copper files to ignore.
+# Also, not every copper thing can be waxed, so the config lists types of copper files to ignore.
 
 config_file = clip.directory('config', 'waxed.cfg')
 config = configparser.ConfigParser()
