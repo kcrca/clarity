@@ -10,6 +10,11 @@
             "translation": [ 2, 3, 0],
             "scale":[ 0.25, 0.25, 0.25 ]
         },
+        "on_shelf": {
+            "rotation": [ 270, 180, 180 ],
+            "translation": [ 0, 0, 5 ],
+            "scale":[ 0.75, 0.75, 0.75 ]
+        },
         "fixed": {
             "rotation": [ 270, 180, 0 ],
             "translation": [ 0, 0, -6 ],
