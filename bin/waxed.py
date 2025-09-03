@@ -73,6 +73,9 @@ def in_and_out(in_path: str) -> tuple[str, str]:
 def translate(model, out_file):
     with (open(model) as in_fp):
         in_str = in_fp.read()
+        # Stuff dealing with copper entity items are weird, so skip them (for now?)
+        if 'entity/' in in_str:
+            return None
         out_str = re.sub(r'(block|item)/(\w*(copper|lightning_rod(?!_on))\w*)\b', r'\1/waxed_\2', in_str)
         with open(out_file, 'w') as fp:
             fp.write(out_str)
@@ -97,13 +100,16 @@ for block_state in glob.glob(clip.directory('defaults', 'blockstates') + "/waxed
         continue
     in_file, out_file = in_and_out(block_state)
     out_str = translate(in_file, out_file)
-    remember(models, out_str)
+    if out_str:
+        remember(models, out_str)
 
     # Now we create the items/ for the waxed item in the same way
     item_state = block_state.replace('blockstates', 'items')
     in_item, out_item = in_and_out(item_state)
     out_str = translate(in_item, out_item)
-    remember(models, out_str)
+    if out_str:
+        remember(models, out_str)
+
 # Generate the waxed versions of the models
 textures = set()
 for model in models:
