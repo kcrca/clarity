@@ -1,5 +1,5 @@
 {
-    "parent": "item/handheld_item",
+    "parent": "item/melon_slice",
     "textures": {
         "layer0": "item/glistering_melon_slice"
     }
