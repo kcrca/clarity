@@ -71,7 +71,6 @@ license() {
     (echo "${ucname}: Part of the Clarity Resource Pack Family for Minecraft." && cat License.txt) >! $name/License.txt
 }
 
-pack_format="$(grep pack_format core/pack.mcmeta)"
 # This function will build a single zip file
 do_zip() {
     (
@@ -86,12 +85,14 @@ do_zip() {
 	for f in $(find . -name '*.png.split'); do
 	    rm $f $f:r
 	done
-	ed -s pack.mcmeta <<EOF
-/pack_format/c
-$pack_format
-.
+	if [[ -f ../$name.repack/override/pack.desc ]]; then
+	    cp ../core/pack.mcmeta pack.mcmeta
+	    desc=$(cat ../$name.repack/override/pack.desc)
+	    ed - -s pack.mcmeta <<EOF
+/description/s/.*/$desc/
 w
 EOF
+	fi
 	# The "-o" flag says to make the mod time on the zip file the same
 	# as the most recent mod time on any of the files. This lets the
 	# zip file's mod time stand for the most recent change in the entire
@@ -137,7 +138,6 @@ for name in "${dirs[@]}"; do
 	done
 	;;
     "contraption")
-	#cp -r $name.repack/override/* $name/
 	mkdir -p $name
 	rsync --safe-links -a $name.repack/override/* $name/
 	;;

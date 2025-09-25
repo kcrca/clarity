@@ -8,7 +8,7 @@ for f in $places; do
     loc="$f/$1/minecraft-$1-client.jar"
     if [ -f "$loc" ]; then
 	rm -rf [a-df-z]*
-	unzip -qq "$loc" -x '*.class' log4j2.xml META-INF/'*'
+	unzip -qq "$loc" -x '*.class' META-INF/'*'
 	rm -f pack.*
 	to_rm=`cat .gitignore`
 	#rm -rf $to_rm

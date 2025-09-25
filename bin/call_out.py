@@ -15,9 +15,6 @@ src_dir = top_dir / 'default_resourcepack'
 dst_dir = top_dir / 'call_out'
 common = '/assets/minecraft'
 copy_pat = re.compile('(textures|blockstates|models)')
-with open(src_dir / 'version.json') as fp:
-    version_info = json.load(fp)
-version = version_info['pack_version']['resource']
 
 dst_dir.mkdir(0o755, exist_ok=True)
 this_dir = Path(__file__).parent
@@ -85,10 +82,15 @@ def call_out(dst_dir, full):
     thumb = Image.open(icon)
     thumb.thumbnail((64, 64), Image.Resampling.LANCZOS)
     thumb.save(dst_dir / 'pack_thumb.png')
-    desc = 'Call out %s textures not in any pack (except fonts) by making them bright green.' % (
-        'remaining' if full else 'most')
+
+    core_dir = Path(clip.directory('core'))
+    with open(core_dir / 'pack.mcmeta') as fp:
+        mcmeta = json.load(fp)
+    most = "remaining" if full else "most"
+    desc = f'Call out {most} textures not in any pack (except fonts) by making them bright green.'
+    mcmeta['pack']['description'] = desc
     with open(dst_dir / 'pack.mcmeta', 'w') as fp:
-        json.dump({'pack': {'pack_format': version, 'description': desc}}, fp, indent=2)
+        json.dump(mcmeta, fp, indent=2)
         fp.write('\n')
 
 
