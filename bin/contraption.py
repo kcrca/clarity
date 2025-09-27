@@ -9,6 +9,7 @@ import sys
 from pathlib import Path
 
 import clip
+from pynecraft.commands import Block
 from pynecraft.info import blocks_by_id
 
 blockstates = {}
@@ -119,12 +120,16 @@ def main():
     config_items = config.items('default')
     n, shrink_pats = config_items[0]
     assert n == 'shrink'
-    shrink = shrink_pats.split()
 
+    shrink = shrink_pats.split()
     shrink_pat = f'({"|".join(shrink)})'
     shrink_re = re.compile(shrink_pat)
 
-    for block_name in blocks_by_id:
+    # This isn't normally a block, but we want to adjust its size, so we force it in.
+    my_blocks_by_id = blocks_by_id.copy()
+    my_blocks_by_id['piston_head'] = Block('piston_head')
+
+    for block_name in my_blocks_by_id:
         if not shrink_re.fullmatch(block_name):
             continue
         blockstate = blockstates[block_name]
