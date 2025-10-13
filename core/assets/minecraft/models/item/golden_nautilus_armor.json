@@ -1,0 +1,19 @@
+{
+    "parent": "block/cube_inner_faces",
+    "display": {
+        "fixed": {
+            "rotation": [ 0, 90, 0 ],
+            "translation": [ 0, 0, 0],
+            "scale":[ 0.5, 0.5, 0.5 ]
+        }
+    },
+    "textures": {
+        "particle": "item/golden_nautilus_armor_side",
+        "up": "item/golden_nautilus_armor_other",
+        "down": "item/golden_nautilus_armor_other",
+        "east": "item/golden_nautilus_armor_side",
+        "west": "item/golden_nautilus_armor_side",
+        "north": "item/golden_nautilus_armor_back",
+        "south": "item/golden_nautilus_armor_other"
+    }
+}
