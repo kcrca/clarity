@@ -452,9 +452,11 @@ item/copper_ingot.png
 item/iron_ingot.png
 item/netherite_ingot.png
 item/golden_horse_armor.png
+item/netherite_horse_armor.png
 item/copper_horse_armor.png
 item/iron_horse_armor.png
 entity/equipment/horse_body/gold.png
+entity/equipment/horse_body/netherite.png
 entity/equipment/horse_body/copper.png
 entity/equipment/horse_body/iron.png
 entity/equipment/nautilus_body/gold.png
