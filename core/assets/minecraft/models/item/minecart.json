@@ -1,9 +1,9 @@
 {
     "parent": "block/block",
     "textures": {
-        "particle": "item/minecart_sides",
-        "sides": "item/minecart_sides",
-        "top": "item/minecart_top"
+        "particle": "block/item_parts/minecart_sides",
+        "sides": "block/item_parts/minecart_sides",
+        "top": "block/item_parts/minecart_top"
     },
     "elements": [
         {   "from": [ -2, 0, 0 ],
