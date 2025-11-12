@@ -2,8 +2,8 @@
 	"parent": "block/block",
 	"comment": "In a regular raft the chest is just invisible",
 	"textures": {
-		"particle": "item/bamboo_raft",
-		"raft": "item/bamboo_raft",
+		"particle": "block/item_parts/bamboo_raft",
+		"raft": "block/item_parts/bamboo_raft",
 		"chest_top": "block/transparent",
 		"chest_side": "#chest_top",
 		"chest_front": "#chest_top"

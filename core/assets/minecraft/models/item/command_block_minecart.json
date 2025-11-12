@@ -1,8 +1,8 @@
 {
     "parent": "item/combo_minecart",
     "textures": {
-        "sides": "item/minecart_sides",
-        "top": "item/minecart_top",
+        "sides": "block/item_parts/minecart_sides",
+        "top": "block/item_parts/minecart_top",
 	"block_bottom": "block/command_block_side",
         "block_top": "block/command_block_side",
         "block_front": "block/command_block_front",
