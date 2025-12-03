@@ -61,7 +61,7 @@ entity/bed/cyan.png
 entity/bed/orange.png
 entity/bed/green.png
 entity/bed/magenta.png
-entity/bed/white.png
+entity/bed/red.png
 entity/bed/lime.png
 entity/axolotl/axolotl_blue.png
 entity/axolotl/axolotl_cyan.png
@@ -76,10 +76,10 @@ item/light_gray_dye.png
 item/light_blue_dye.png
 item/pink_dye.png
 item/black_dye.png
+item/cyan_dye.png
 item/orange_dye.png
 item/green_dye.png
 item/magenta_dye.png
-item/white_dye.png
 item/red_dye.png
 item/lime_dye.png
 block/blue_candle.png
@@ -95,7 +95,7 @@ block/cyan_candle.png
 block/orange_candle.png
 block/green_candle.png
 block/magenta_candle.png
-block/white_candle.png
+block/red_candle.png
 block/lime_candle.png
 block/blue_candle_lit.png
 block/brown_candle_lit.png
@@ -110,7 +110,7 @@ block/cyan_candle_lit.png
 block/orange_candle_lit.png
 block/green_candle_lit.png
 block/magenta_candle_lit.png
-block/white_candle_lit.png
+block/red_candle_lit.png
 block/lime_candle_lit.png
 block/light_gray_stained_glass.png
 block/pink_stained_glass.png
