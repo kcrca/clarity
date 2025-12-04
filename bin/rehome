@@ -11,7 +11,7 @@ dst=/Applications/MultiMC.app/Data/instances/$1/.minecraft
     cd home/saves
     setopt nullglob
     for f in RestWorld*; do
-	if [[ -d $f ]]; then
+	if [[ $f == *.bak ]] && [[ -d $f ]]; then
 	    [[ -d $dst/saves/$f ]] || cp -r $f $dst/saves/$f
 	fi
     done
