@@ -18,6 +18,10 @@ entity/villager/parts/hair_styles/hair_queue_albino.png
 entity/villager/parts/hair_styles/hair_queue_blond.png
 entity/villager/parts/hair_styles/hair_queue_dark_brown.png
 entity/villager/parts/hair_styles/hair_queue_red.png
+entity/villager/profession_level/stone.png
+entity/villager/profession_level/gold.png
+entity/villager/profession_level/emerald.png
+entity/villager/profession_level/iron.png
 block/blue_wool.png
 block/brown_wool.png
 block/gray_wool.png
@@ -63,10 +67,6 @@ entity/bed/green.png
 entity/bed/magenta.png
 entity/bed/red.png
 entity/bed/lime.png
-entity/axolotl/axolotl_blue.png
-entity/axolotl/axolotl_cyan.png
-entity/axolotl/axolotl_gold.png
-entity/axolotl/axolotl_wild.png
 item/blue_dye.png
 item/brown_dye.png
 item/gray_dye.png
@@ -127,6 +127,10 @@ block/cyan_stained_glass.png
 block/magenta_stained_glass.png
 block/red_stained_glass.png
 block/lime_stained_glass.png
+entity/axolotl/axolotl_blue.png
+entity/axolotl/axolotl_cyan.png
+entity/axolotl/axolotl_gold.png
+entity/axolotl/axolotl_wild.png
 block/gold_ore.png
 block/lapis_ore.png
 block/coal_ore.png
