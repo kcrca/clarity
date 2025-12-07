@@ -1,3 +1,8 @@
-steel
-wood
-aluminum
+stone
+diamond
+golden
+copper
+wooden
+iron
+netherite
+turtle

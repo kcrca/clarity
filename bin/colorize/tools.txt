@@ -1,7 +1,0 @@
-stone
-diamond
-golden
-copper
-wood
-iron
-netherite

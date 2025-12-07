@@ -1,6 +1,0 @@
-diamond
-golden
-netherite
-emerald
-copper
-iron
