@@ -1,16 +1,6 @@
 diamond
-crystal_green
 golden
 netherite
-crystal_black
-light
 emerald
 copper
-crystal_light_blue
-crystal_blue
-crystal_red
-quartz
 iron
-obsidian
-empty_armor_slot
-crystal_white
