@@ -6,3 +6,4 @@ wooden
 iron
 netherite
 turtle
+emerald
