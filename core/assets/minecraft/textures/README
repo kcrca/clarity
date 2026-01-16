@@ -333,9 +333,9 @@ item/oxidized_copper_chain.png
 block/exposed_copper_lantern.png
 block/weathered_copper_lantern.png
 block/oxidized_copper_lantern.png
-entity/copper_golem/exposed_copper_golem.png
-entity/copper_golem/weathered_copper_golem.png
-entity/copper_golem/oxidized_copper_golem.png
+entity/copper_golem/copper_golem.png
+entity/copper_golem/copper_golem.png
+entity/copper_golem/copper_golem.png
 entity/chest/copper_exposed.png
 entity/chest/copper_weathered.png
 entity/chest/copper_oxidized.png
