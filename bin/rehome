@@ -4,18 +4,21 @@ set -e
 cd ~/clarity
 
 src=$PWD
-dst=/Applications/MultiMC.app/Data/instances/$1/.minecraft
+dst=~/MultiMC/instances/$1/.minecraft
 [[ -d $dst ]] || exec file $dst
 
-(
-    cd home/saves
-    setopt nullglob
-    for f in RestWorld*; do
-	if [[ -d $f ]]; then
-	    [[ -d $dst/saves/$f ]] || cp -r $f $dst/saves/$f
-	fi
-    done
-)
+if [[ -d home/saves ]]; then
+    (
+	cd home/saves
+	setopt nullglob
+	for f in RestWorld*; do
+	    if [[ -d $f ]]; then
+		[[ -d $dst/saves/$f ]] || cp -r $f $dst/saves/$f
+	    fi
+	done
+    )
+fi
+
 rm -f home
 ln -s $dst home
 cd home
