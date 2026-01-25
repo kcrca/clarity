@@ -53,7 +53,7 @@ ignore_re = re.compile(basic.get('ignore'))
 blocks_dir = Path(clip.directory('textures', 'block'))
 simple_items_re = re.compile('|'.join(basic.get('simple_items').split()))
 
-# Clean out existing blockstates and models for waxed stuff..
+# Clean out existing blockstates and models for waxed stuff.
 for file in (glob.glob(clip.directory('blockstates') + "/waxed_*") +
              glob.glob(clip.directory('items') + "/waxed_*") +
              glob.glob(clip.directory('models') + "/*/waxed_*")):
