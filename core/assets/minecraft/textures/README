@@ -131,6 +131,10 @@ entity/axolotl/axolotl_blue.png
 entity/axolotl/axolotl_cyan.png
 entity/axolotl/axolotl_gold.png
 entity/axolotl/axolotl_wild.png
+entity/axolotl/axolotl_blue_baby.png
+entity/axolotl/axolotl_cyan_baby.png
+entity/axolotl/axolotl_gold_baby.png
+entity/axolotl/axolotl_wild_baby.png
 block/gold_ore.png
 block/lapis_ore.png
 block/coal_ore.png
