@@ -36,7 +36,7 @@ def directory(name, *args, **kwargs) -> str:
     """
     Returns the directory with the specified name, as an absolute path.
     :param name: The name of the directory. One of "textures" or "models".
-    :args Elements that will be appended to the named directory.
+    :args: Elements that will be appended to the named directory.
     :return: The full path of the named directory.
     """
     top = os.path.dirname(os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
@@ -117,13 +117,13 @@ def dump(path, src):
 
 
 # This composites an image onto another merging the alpha properly. This should be part of PIL, but I can't find it.
-# (This differs from Image.alpha_composite by working on a specific subimage.
+# (This differs from Image.alpha_composite by working on a specific subimage.)
 # From http://stackoverflow.com/questions/3374878/with-the-python-imaging
 # -library-pil-how-does-one-compose-an-image-with-an-alp
 def alpha_composite(output, image, pos, rotation=0):
     if rotation:
         size = image.size
-        image = image.rotate(rotation, expand=1).resize(size, Image.ANTIALIAS)
+        image = image.rotate(rotation, expand=1).resize(size, Image.Resampling.LANCZOS)
     # output.paste(Image.alpha_composite(output, image), output)
     r, g, b, a = image.split()
     rgb = Image.merge("RGB", (r, g, b))

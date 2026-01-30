@@ -15,16 +15,16 @@ os.chdir(clip.directory('textures'))
 os.chdir('block')
 
 msk_img = Image.open('stone.png').convert('RGBA')
-msk_dat = msk_img.getdata()
+msk_dat = msk_img.get_flattened_data()
 rpl_img = Image.open('deepslate.png').convert('RGBA')
-rpl_dat = rpl_img.getdata()
+rpl_dat = rpl_img.get_flattened_data()
 top_rpl_img = Image.open('deepslate_top.png').convert('RGBA')
-top_rpl_dat = top_rpl_img.getdata()
+top_rpl_dat = top_rpl_img.get_flattened_data()
 for f in glob.glob('*_ore.png'):
     if re.search('deepslate|nether', f) is not None:
         continue
     src_img = Image.open(f).convert('RGBA')
-    src_dat = src_img.getdata()
+    src_dat = src_img.get_flattened_data()
     out_dat = []
     top_dat = []
     for p in range(0, len(src_dat)):

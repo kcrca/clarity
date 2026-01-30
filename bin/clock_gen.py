@@ -163,7 +163,7 @@ for f in glob.glob(f'{model_dir}/fixed_*'):
             dst.write(txt.replace('fixed_', 'clock_'))
 
 one = digit_imgs['1']
-data = one.getdata()
+data = one.get_flattened_data()
 left = 1000
 for i in range(len(data)):
     px = data[i]

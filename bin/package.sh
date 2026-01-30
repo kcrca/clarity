@@ -12,7 +12,7 @@ cd $bin/..
 top="$PWD"
 packs=$top/site/packs
 version=`cat core/pack_version.txt`
-path=($top/venv/bin $path)
+path=($top/.venv/bin $path)
 
 setopt nullglob
 

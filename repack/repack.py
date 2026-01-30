@@ -14,6 +14,8 @@ from PIL import ImageDraw
 
 __author__ = 'arnold'
 
+from PIL.Image import Palette
+
 re_re = re.compile(r'[][?*()\\+|]')
 target_opt_re = re.compile(r'([^:@]*):?(.*)')
 tile_spec_re = re.compile(r'(\d+)x(\d+)(?:@(\d+),(\d+))?')
@@ -221,8 +223,10 @@ def save(dst_img, dst):
     """Save an image to a file after remove any unused alpha channel."""
     if 'A' in dst_img.getbands():
         alpha = dst_img.split()[-1]
-        if all(c == 255 for c in alpha.getdata()):
-            dst_img = dst_img.convert('RGB')
+        if all(c == 255 for c in alpha.get_flattened_data()):
+            dst_img = dst_img.convert('P', palette=Palette.ADAPTIVE)
+    else:
+        dst_img = dst_img.convert('P', palette=Palette.ADAPTIVE)
     dst_img.save(dst)
 
 
