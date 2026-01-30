@@ -41,7 +41,7 @@ if (( $#newest_zip > 0 && $#newer > 0 )); then
     for f in bin/*.py; do
 	script=`basename $f`
 	case $script in
-	    report.py)
+	    report.py | changes.py)
 		;;
 	    colorize.py)
 		for cfg in `find $top -name colorize.cfg`; do
