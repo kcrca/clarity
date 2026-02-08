@@ -20,19 +20,24 @@ angry_baby = Image.open(f'{dst_dir}/wolf_angry_overlay_baby.png')
 for img_file in glob.glob(f'{dst_dir}/wolf*_tame*.png'):
     # Open the generic of the wolf type
     img = Image.open(img_file.replace('_tame', '')).convert('RGBA')
+    tame_img = img.copy()
 
     # Make the "tame" eyes
     if 'baby' in img_file:
         eye_px = (255, 255, 255, 255)
-        img.putpixel((5, 19), eye_px)
-        img.putpixel((6, 18), eye_px)
-        img.putpixel((9, 18), eye_px)
-        img.putpixel((10, 19), eye_px)
+        tame_img.putpixel((5, 19), eye_px)
+        tame_img.putpixel((5, 18), eye_px)
+        tame_img.putpixel((6, 18), eye_px)
+        tame_img.putpixel((9, 18), eye_px)
+        tame_img.putpixel((10, 19), eye_px)
+        tame_img.putpixel((10, 18), eye_px)
     else:
         eye_px = img.getpixel((4, 6))
-        img.putpixel((5, 5), eye_px)
-        img.putpixel((8, 5), eye_px)
-    img.save(img_file)
+        tame_img.putpixel((5, 5), eye_px)
+        tame_img.putpixel((4, 5), eye_px)
+        tame_img.putpixel((8, 5), eye_px)
+        tame_img.putpixel((9, 5), eye_px)
+    tame_img.save(img_file)
 
     # Overlay the "angry" mask
     if 'baby' in img_file:
