@@ -48,6 +48,9 @@ def orphans():
         return find_models(state)
 
     def path_part(model_name):
+        # Sometimes texture is {'sprite': ...}
+        if isinstance(model_name, dict):
+            model_name = model_name['sprite']
         return model_name.replace('minecraft:', '')
 
     def import_model(model_name):
