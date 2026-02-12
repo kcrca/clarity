@@ -564,6 +564,10 @@ entity/equipment/humanoid/gold.png
 entity/equipment/humanoid/copper.png
 entity/equipment/humanoid/iron.png
 entity/equipment/humanoid/netherite.png
+entity/equipment/humanoid_baby/gold.png
+entity/equipment/humanoid_baby/copper.png
+entity/equipment/humanoid_baby/iron.png
+entity/equipment/humanoid_baby/netherite.png
 entity/equipment/humanoid_leggings/gold.png
 entity/equipment/humanoid_leggings/copper.png
 entity/equipment/humanoid_leggings/iron.png
