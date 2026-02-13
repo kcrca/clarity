@@ -33,8 +33,7 @@ skin_imgs = {}
 
 os.chdir(clip.directory('textures', 'entity', 'villager'))
 
-all_desc = config.get('settings', 'common_styles')
-common_styles = all_desc.split()
+common_styles = config.get('settings', 'common_styles').split()
 
 only_listed = set()
 only_listed_desc = config.get('settings', 'only_listed')
@@ -45,7 +44,6 @@ eyebrows = ()
 eyebrows_desc = config.get('settings', 'eyebrows')
 for eyebrow_desc in eyebrows_desc.split():
     m = eyebrows_re.match(eyebrow_desc)
-    eyebrow_width, x, y = m.groups()
     eyebrows += (tuple((int(v) for v in m.groups()), ),)
 
 no_eyebrows = set(config.get('settings', 'no_eyebrows').split())
