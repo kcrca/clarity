@@ -2,12 +2,12 @@
     "parent": "block/block",
     "ambientocclusion": false,
     "textures": {
-        "plant": "block/azalea_plant",
-	"top": "minecraft:block/azalea_top",
-	"side": "minecraft:block/azalea_side",
-	"blossoms": "block/azalea_blossoms",
-	"blossoms_upper": "block/azalea_blossoms_upper",
-        "particle": "block/azalea_top"
+        "plant": {"force_transluscent": true, "sprite":  "block/azalea_plant"},
+	"top": {"force_transluscent": true, "sprite":  "minecraft:block/azalea_top"},
+	"side": {"force_transluscent": true, "sprite":  "minecraft:block/azalea_side"},
+	"blossoms": {"force_transluscent": true, "sprite":  "block/azalea_blossoms"},
+	"blossoms_upper": {"force_transluscent": true, "sprite":  "block/azalea_blossoms_upper"},
+        "particle": {"force_transluscent": true, "sprite":  "block/azalea_top"}
     },
     "elements": [
         {   "from": [ 0, 16, 0 ],
@@ -17,29 +17,29 @@
                 "up":    { "uv": [ 0, 0, 16, 16 ], "texture": "#top", "cullface": "up" }
             }
         },
-        {   "from": [ 0, 5, 0 ],
-            "to": [ 16, 16, 0.01 ],
+        {   "from": [ 0, 5, 0.1 ],
+            "to": [ 15.9, 15.9, 0.01 ],
             "faces": {
                 "north": { "uv": [ 0, 0, 16, 11 ], "texture": "#side", "cullface": "north"},
                 "south": { "uv": [ 16, 0, 0, 11 ], "texture": "#side"}
             }
         },
-        {   "from": [ 0, 5, 15.99 ],
-            "to": [ 16, 16, 16 ],
+        {   "from": [ 0, 5, 15.9 ],
+            "to": [ 15.9, 15.9, 15.9 ],
             "faces": {
                 "north": { "uv": [ 16, 0, 0, 11 ], "texture": "#side"},
                 "south": { "uv": [ 0, 0, 16, 11 ], "texture": "#side", "cullface": "south"}
             }
         },
-        {   "from": [ 0, 5, 0 ],
-            "to": [ 0.01, 16, 16 ],
+        {   "from": [ 0.1, 5, 0 ],
+            "to": [ 0.00, 15.9, 15.9 ],
             "faces": {
                 "west":  { "uv": [ 0, 0, 16, 11 ], "texture": "#side", "cullface": "west"},
                 "east":  { "uv": [ 16, 0, 0, 11 ], "texture": "#side"}
             }
         },
-        {   "from": [ 15.99, 5, 0 ],
-            "to": [ 16, 16, 16 ],
+        {   "from": [ 15.9, 5, 0 ],
+            "to": [ 15.9, 15.9, 15.9 ],
             "faces": {
                 "west":  { "uv": [ 16, 0, 0, 11 ], "texture": "#side"},
                 "east":  { "uv": [ 0, 0, 16, 11 ], "texture": "#side", "cullface": "east"}
@@ -61,8 +61,8 @@
                 "east": { "uv": [ 0, 0, 16, 16 ], "texture": "#plant" }
             }
       },
-      {   "from": [ -0.1, 0, -0.1 ],
-	  "to": [ 16.1, 16.1, 16.1 ],
+      {   "from": [ 0, 0, 0 ],
+	  "to": [ 16, 16, 16 ],
 	  "faces": {
 	      "up":    { "texture": "#blossoms", "cullface": "up" },
 	      "north": { "texture": "#blossoms_upper", "cullface": "north" },
