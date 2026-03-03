@@ -10,11 +10,9 @@ dst=~/MultiMC/instances/$1/.minecraft
 if [[ -d home/saves ]]; then
     (
 	cd home/saves
-	setopt nullglob
-	for f in RestWorld*; do
-	    if [[ -d $f ]]; then
-		[[ -d $dst/saves/$f ]] || cp -r $f $dst/saves/$f
-	    fi
+	setopt nullglob extended_glob
+	for f in RestWorld*~*.bak; do
+	    [[ -d $f && -d $dst/saves/$f ]] || cp -r $f $dst/saves/$f
 	done
     )
 fi
